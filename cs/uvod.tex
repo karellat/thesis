@@ -1,0 +1,13 @@
+\chapter*{Úvod}
+\addcontentsline{toc}{chapter}{Úvod}
+
+\title{Úvod}
+Využití robotických hejn(robotic swarms) patří mezi rentabilní metody pro řešení složitějších úkolů. Zdá se, že velký počet jednoduchých robotů dokáže plně nahradit komplexnější jedince. Dostatečná velikost hejna umožní řešení úloh, které by jednotlivec z hejna provést nesvedl. Navíc přináší několik výhod, díky kvantitě jsou odolnější proti poškození či zničení, neboli zbytek robotů pokračuje v plnění cílů. Dále výroba jednodušších robotů vychází levněji než komplexní jedinců, což přináší vhodnou výhodu pro práci v nebezpečném prostředí. Hejno také může pokrývat vícero různých úkolů než specializovaný robot, který bude při plnění úkolů lišících se od typu úloh zamýšlených při konstrukci mnohem více nemotorný a nejspíše pomalejší. Hejno pokryje větší plochu při plnění úkolů. 
+\par
+Existuje mnoho aplikací robotických hejn, vetšinou se používají k úlohů týkajících se průzkumu a mapování prostředí, hledání nejkratších cest, nasazení robotů v nebezpečných místech \citep{swarmApp}. Jako příklad můžeme uvést asistenci záchraným složkám při požáru \citep{fireRobots}. Mnoho projektů zabývající se řízením robotického hejna se inspiruje přírodou, používá se analogie k chování mravenců a jiného hmyzu \citep{PheroRobot}. Objevují se i harwarové implementace chování hejn, zmiňme projekty Swarm-bots \citep{swarmBots}, Colias \citep{Colias}  
+\par 
+Elementárnost senzorů i efektorů jednotlivých robotů vybízí k použití genetického programování, jelikož prostor řešení je velmi velký a plnění cílu lze vhodně ohodnotit. Dokonce na toto téma také vzniklo několik vědeckých prací \citep{ENovel} \citep{geneticSwarm}.
+\section*{Cíl práce}
+Všechny zmíněné práce používají pro tvorbu řídicích programů genetické programování (GP) pracují s homogenními hejny. Cílem této práce je vyzkoušet využití GP na generování chování hejna heterogenních robotů, tedy skupiny robotů, kde se objevuje několik druhů jedinců a společně plní daný úkol. V rámci práce byl sestaven program pro simulaci různých scénářů a poz jejich úspěšnosti v rámci GP. Byli zvoleny 3 odlišné scénáře, kde se objevují 2-3 druhy robotů.
+\section*{Struktura práce}
+Rozdělení práce je následující. První kapitola je věnována obecnému úvodu do tématiky genetického programování.  
