@@ -10,8 +10,12 @@ Rechenberg a Schwefell (1965, 1973) představuje \textit{Evoluční strategie}, 
 \href{http://ieeexplore.ieee.org/xpl/RecentIssue.jsp?reload=true&punumber=4235}{IEEE Transactions on Evolutionary Computation}, 
 \href{http://www.springer.com/computer/ai/journal/10710}{Genetic Programming and Evolvable Machines},
 \href{https://www.journals.elsevier.com/swarm-and-evolutionary-computation/}{Swarm and Evolutionary Computation}
-\section{Obecný evoluční algoritmus)
-Popišme si základní myšlenku všech evolučních algoritmů. Jedná se o stochastické prohledávací algoritmy, které jsou inspirované přírodou. Slouží k prohledávání prostoru řešení daného řešeného problému. 
+\section{Co je evoluční algoritmus?}
+Ač existuje mnoho variant evolučních algoritmů, jak jsme zmínili v krátké pohledu do historie, spojuje je společná myšlenak populace jedinců uvnitř prostředí s omezenými podmínkami. Jedinci, jinak také nazývání kandidáti, soutěží o zdroje daného prostředí, tím je docíleno přírodní selekce(, přežijí jen Ti nejlepší). Pokud budeme mít k dispozici kvalitativní funkci, kterou se snažíme maximalizovat. Pak nebude problém vytvořit náhodné jedince z definičního oboru přesně této funkce. Náhodně vzniklé jedince můžeme ohodnotit, tímto způsobem dáme vzniku abstraktu pro měření fitness(, z anglického fit nejvíce vhodný). Z vzniklých a ohodnocených jedinců lze zvolit ty nejlepší pro tvorbu nové generace jedinců. Tvorba nové generace probíhá kombinováním zvolených rodičů a mutacemi jedinců. Jako kombinaci uvažujeme operátor, který je aplikován na 2-více zvolených kandidátů(, proto se jim také říká rodiče,) a tvořící 1-více nových jedinců(, také nazývány děti). Mutace je aplikována pouze na 1 jedince a její výsledkem je také pouze 1 jedinec. Tyto dvě operace aplikované na rodičovskou generaci vedou k vytvoření nových kandidátů(potomků,offsprings). I tato nová generace je ohodnocena fitness a dále soutěží se starými jedinci na základě fitness(, občas také v závislosti na stáří kandidáta,) o místo v nové generaci. Popsaný proces je opakován dokud není nalezen kandidát s dostatečně velkou fitness nebo narazíme na výpoční limit(, bylo dosaženo požadovaného počtu opakovaní apod). Základy Evolučního systému pohání 2 základní hnací síly: variační operátory, selektivní operátory. Variační operátory zajišťují potřebnou různorodost v populaci a tím tvoří nové cesty k úspěšnému kandidátovi. 
+  \par 
+TODO: Obrazek
+\par
+Ze schéma na obrázku můžeme vyčíst, že EA patří mezi algoritmy \"generate and test (vygeneruj a vyzkoušej)\". Vyhodnocení fitness funkce poskytuje heuristický odhad kvality řešení, pro hledávací proces je řízen variací a selekcí. 
 \subsection{Jedinec}
 Jedinec reprezentuje kandidáta na řešení problému. Může být reprezentován různými způsoby, např. v kontextu l-bitové vektory(GA), konečné automaty(EP), reálné vektory(ES). 
 \subsection{Populace}
@@ -23,7 +27,7 @@ Fitness je funkce, která každému jedinci přiřadí reálné číslo, slouž�
 \subsection{Kritérium ukončení}
 Kritérium ukončení určuje koncovou podmínky pro ukončení prohledávání prostoru řešení. Většinou se jedná o počet generací, časový limit nebo dosáhnutí určité hodnoty fitness.  
 \subsection{Základ EA}
-Nejdříve se náhodně vygenerujeme inicializační populaci(P(0)), ohodnotíme jedince pomocí fitness funkce. Dokud není splněno koncové kritérium opakujeme následujíci algoritmus z P(t) vytvářej P(t+1). \par
+Nejdříve se náhodně vygenerujeme inicializační populaci(P(0)), ohodnotíme jedince pomocí fitness funkce. Dokud není splněno koncové kritérium opakujeme následujíci algoritmus z P(t) vytvářej P(t+1). 
 \begin{itemize}
     \item Výběr z rodičů 
     \item Rekombinace jedinců a jejich následná mutace, co odpovídá vzniku nových jedinců
