@@ -58,3 +58,12 @@ Rozlišme dvě varianty vhodné ukončovací podmínky. Pokud řešený problém
 \item Rozmanitost v populaci nedosahuje předem určených hodnot
 \end{enumerate}
 Prakticky ukončovací podmínka bývá disjukce: dosáhli jsme optima or podmínka X ze seznamu. Může se stát, že optimum známé není. Pak se používá pouze zmíněných podmínek nebo se smíříme s nekonečností algoritmu. 
+\subsection{Differciální evoluce}
+Differrenciální evoluce(DE) se objevila v roce 1995, kdy Storn a Price vydali technický report TODO:citace popisující hlavní koncept skrývající se za pojmem DE \"New heuristic approach for minimizing possibly nonlinear and nondifferentiable continuous space functions\". Tento evoluční algoritmus popíši trochu více, protože je klíčovým algoritmem mého řešení. 
+\subsubsection{Charakteristické vlastnosti}
+DE dostala své jméno hlavně díky změnám obvyklých reprodučkních operátorů v EA. Differciální mutace, jak jsou mutace v DE nazývány, z dané populace kandidátů vektorů v $\mathbb{R}^n$ vzniká nový mutant $\overline{x}'$ přičtením pertubačního vektoru(pertubation vector) k existujícímu kandidátovi. \par
+$\overline{x}'=\overline{x}+\overline{p}$ \par
+Kde pertubační vektor $\overline{p}$ je vektor rozdílů dvou náhodně zvolených kandidátů z populace \overline{y} a \overline{z}. \par 
+$\overline{p}=F\dot(\overline{y}-\overline{z})$ \par
+Škálovací faktor $F>0$, $F \in \mathbb{R}$, který kontroluje míru mutace v populaci. Jako rekombinační operátor v DE slouží uniformní křížení, pravděpodobnost křížení je dáne $C_r \in [0,1]$, která definuje šanci jakékoli pozice v rodiči, že odpovídající allela potomka bude brána z 1. rodiče. DE také upravuje křížení, neboť 1 náhodná allela je brána vždy z 1. rodiče, aby nedocházelo k duplikaci 2. rodiče. \par 
+V hlavních implementacích DE reprezentují populace spíše listy, odpovídají lépe než množiny, umožňují referenci i-tého jedince podle pozice $i\in{1,..,\ny}$ v listu. Pořadí kandidátů v této populaci $P=<\overline{x_1}...\overline{x_i}...\overline{x_{\ny}}>$ není závislé na hodnotě fitness.Evoluční cyklus začíná vytvořením populace vektorů mutantů $M=<\overline{v_1}...\overline{v_{\ny}}>$. Pro každého nového mutanta $\overline{v_i}$ jsou zvoleny 3 vektory z P, base vektora a dva definující pertubační vektor. Po vytvoření populace mutantů V, pokračujeme..... 
