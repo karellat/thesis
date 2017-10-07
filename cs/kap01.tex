@@ -58,21 +58,3 @@ Rozlišme dvě varianty vhodné ukončovací podmínky. Pokud řešený problém
 \item Rozmanitost v populaci nedosahuje předem určených hodnot
 \end{enumerate}
 Prakticky ukončovací podmínka bývá disjukce: dosáhli jsme optima or podmínka X ze seznamu. Může se stát, že optimum známé není. Pak se používá pouze zmíněných podmínek nebo se smíříme s nekonečností algoritmu. 
-\subsection{Jedinec}
-Jedinec reprezentuje kandidáta na řešení problému. Může být reprezentován různými způsoby, např. v kontextu l-bitové vektory(GA), konečné automaty(EP), reálné vektory(ES). 
-\subsection{Populace}
-Populace označuje množinu jedinců.
-\subsection{Generace}
-Generace je populaci jednotlivého kroku EA.
-\subsection{Fitness}
-Fitness je funkce, která každému jedinci přiřadí reálné číslo, slouží k ohodnocení úspěšnosti kandidáta v kotextu řešeného problému. Pomocí EA se snažíme maximalizovat fitness v rámci další generace. Cíle EA je tedy nalézt jedince s nejvyšší fitness. 
-\subsection{Kritérium ukončení}
-Kritérium ukončení určuje koncovou podmínky pro ukončení prohledávání prostoru řešení. Většinou se jedná o počet generací, časový limit nebo dosáhnutí určité hodnoty fitness.  
-\subsection{Základ EA}
-Nejdříve se náhodně vygenerujeme inicializační populaci(P(0)), ohodnotíme jedince pomocí fitness funkce. Dokud není splněno koncové kritérium opakujeme následujíci algoritmus z P(t) vytvářej P(t+1). 
-\begin{itemize}
-    \item Výběr z rodičů 
-    \item Rekombinace jedinců a jejich následná mutace, co odpovídá vzniku nových jedinců
-    \item Ohodnocení nově vzniklých jedinců
-    \item Enviromentální selekce ta vybere P(t+1) z P(t) a nově vzniklých jedinců
-\end{itemize}
