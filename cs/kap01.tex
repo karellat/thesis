@@ -58,7 +58,7 @@ Rozlišme dvě varianty vhodné ukončovací podmínky. Pokud řešený problém
 \item Rozmanitost v populaci nedosahuje předem určených hodnot
 \end{enumerate}
 Prakticky ukončovací podmínka bývá disjukce: dosáhli jsme optima or podmínka X ze seznamu. Může se stát, že optimum známé není. Pak se používá pouze zmíněných podmínek nebo se smíříme s nekonečností algoritmu. 
-\subsection{Differciální evoluce}
+\section{Differciální evoluce}
 Differrenciální evoluce(DE) se objevila v roce 1995, kdy Storn a Price vydali technický report TODO:citace popisující hlavní koncept skrývající se za pojmem DE \"New heuristic approach for minimizing possibly nonlinear and nondifferentiable continuous space functions\". Tento evoluční algoritmus popíši trochu více, protože je klíčovým algoritmem mého řešení. 
 \subsubsection{Charakteristické vlastnosti}
 DE dostala své jméno hlavně díky změnám obvyklých reprodučkních operátorů v EA. Differciální mutace, jak jsou mutace v DE nazývány, z dané populace kandidátů vektorů v $\mathbb{R}^n$ vzniká nový mutant $\overline{x}'$ přičtením pertubačního vektoru(pertubation vector) k existujícímu kandidátovi. \par
@@ -70,25 +70,38 @@ V hlavních implementacích DE reprezentují populace spíše listy, odpovídaj�
 DE algoritmus upravují 3 parametry, ?scalovací? faktor F, velikost populace $\mu$ (obvykle značen NP v DE literatuře) a pravděpodobnost křížení $C_r$. Na $C_r$ lze také pohlížet jako na míru mutace, tzn. allela nebude odděděna od mutanta.\par
 
 \begin{center}
-\begin{tabular}{ |l|l| }
-    \hline
-    \multicolumn{2}{|c|}{Vlastnosti Differciální Evoluce:} \\
+\begin{tabular}{ l l }
+    \multicolumn{2}{c}{Vlastnosti Differciální Evoluce:} \\
     \hline \hline
-    Reprezentace & vektor $\mathbb{R}^n$ \\
+    Reprezentace: & vektor $\mathbb{R}^n$ \\
     \hline  
-    Rekombinace & uniformní křížení \\
+    Rekombinace: & uniformní křížení \\
     \hline  
-    Mutace & differeční mutace \\
+    Mutace: & differeční mutace \\
     \hline   
-    Rodičovská selekce & uniformní náhodné selekce 3 nezbytných vektorů \\
+    Rodičovská selekce: & uniformní náhodné selekce 3 nezbytných vektorů \\
     \hline   
-    Selekce prostředí & deterministická selekce elity (dítě vs rodič) \\
-    \hline
+    Selekce prostředí: & deterministická selekce elity (dítě vs rodič) \\
   \end{tabular}
 \end{center} \par
 \subsubsection{Varianty DE:}
 Během let, vzniklo a bylo publikováno mnoho variant DE. Jedna z modifikací zahrnuje možnost base vektoru, když vytváříme mutatnské populace M. Může být náhodně zvolen pro každé $v_i$, jak bylo řečeno, ale také lze využít jen nejlepšího vektoru a nechat změny na pertubačním vektoru. Další možnost otevírá použitím více pertubačních vektorů v mutačním operátoru. Což by vypadalo následovně: \par
-$\overline{p} = F (\overline{y}-\overline{z} + \overline{y}' - \overline{z}')$, kde $\overline{y},\overline{z},\overline{y}',\overline{z}'$ jsou náhodně vybrány z původní populace.\par
+$\overline{p} = F (\overline{y}-\overline{z} + \overline{y}' - \overline{z}')$, kde $\overline{y}, \overline{z}, \overline{y}',\overline{z}'$ jsou náhodně vybrány z původní populace.\par
 Abychom odlišili různé varianty, používá se následující notace DE/a/b/c, kde \textbf{a} specifikuje base vektor(rand, best), \textbf{b} specifiuje počet differečních  vektorů při vzniku pertubačního vektoru, \textbf{c} značí schéma křížení (bin=uniformní). Takže podle této notace by základní verze DE byla zapsána takto: DE/rand/1/bin. 
-
-
+\section{Evoluční strategie}
+Evoluční strategie(Evolution Strategies) byly představeny na počátku 60. let pány Rechenbergem a Schwefelem \citep{Beyer2002}, oba jmenovaní pánové se zabývali optimalizací tvarů křídel na Technické univerzitě v Berlíně. Jedná se o evoluční algoritmus cílící na optimalizaci vektorů reálných čísel. Objevili si dvě schémata (1+1) a (1,1). Starší (1+1) (one plus one ES) vytvářejí potomka mutací a to přičtením náhodných nezávislých hodnot ke složkám rodičovského vektoru, následně je potomek přijat, pokud získal lepší fitness než jeho rodič. Jako další vznikl (1,1) (one comma one ES), které neimplementovalo elitismus, tzn. měnila vždy rodiče potomkem. Mutační funkce bere náhodná čísla z Normální rozdělení s se střední hodnotou 0 a odchylkou $\sigma$. $\sigma$ se také nazývá velikost mutačního operátoru(mutation step size). Vylepšení původního algoritmu bylo představeno v 70. letech, jedná se o koncept multisložkových ES, které se skládají ze $\mu$ jedinců(velikost populace) a $\lambda$ jedinců vygenerovaných během jednoho cyklu. Opět tento koncept existuje ve 2 verzích $(\mu,\lambda)$ a $(\mu + \lambda)$. Zatímco bežné rekombinační schéma zahrnuje dva rodiče a jednoho potomka, intermediate křížení, které se u ES používá, zprůměruje hodnoty z rodičovských alel. Tímto způsobem můžeme používat i rekombinační operátory s použitím více než 2 rodičů, tyto operátory se nazývají globalní rekombinace. Konkrétně se na potomkovi podílí $\lambda$ rodičů. V praxi se preferuje $(\mu,\lambda)$ před $(\mu + \lambda)$, protože zahazuje všechny rodiče tím pádem se snadno nezastaví na lokálním optimu, $(\mu,\lambda)$ se zvládá lépe adaptovat i při hledání pohyblivého optima. Pro typické použití se používá poměr 1:4 a 1:7. 
+\begin{center}
+  \begin{tabular}{ l l }
+      \multicolumn{2}{c}{Vlastnosti Evolučních strategií:} \\
+      \hline \hline
+      Reprezentace: & vektor $\mathbb{R}^n$ \\
+      \hline  
+      Rekombinace: & intermediary křížení \\
+      \hline  
+      Mutace: &  pomocí náhodných hodnot z normálního rozdělení \\
+      \hline   
+      Rodičovská selekce: & uniformní náhodná \\
+      \hline   
+      Selekce prostředí: & Deterministický elitismus nahrazený (sigma,lambda) nebo (sigma + lambda) \\
+    \end{tabular}
+  \end{center} \par
