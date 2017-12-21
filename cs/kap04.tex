@@ -1,4 +1,24 @@
-%%% Fiktivní kapitola s instrukcemi k PDF/A
-
+%%% Kapitoly
 \chapter{Experimenty}
 \section{Úvod}
+Všechny práce zmíněné v úvodní kapitole, sice používají evolučních algoritmů k vytvoření řízení chování robotického swarmu s pouze jedním druhem robotů. Cílem této práce je zmapovat použití jednoduchých evolučních algoritmů i pro heterogenní swarmy. Následující části mají přiblížit obecný postup při hledání optimálního chování hejn, stručně popsat jednotlivé experimenty a poté se věnovat podrobněji každému experimentu zvlášť. Nejvíce se rozepíši o prvním experimentu, protože ten sloužil jako testující pro rozličné postupy a podle něj jsem přistupoval i k ostatním experimentům.  
+\section{Použité algoritmy}
+Vybral jsem dva evoluční algoritmy, které se zdáli při prvotních testech nejvíce perspektivní. Při evoluci homogenních robotů se nejčastěji používají Evoluční Strategie jako jeden z optimalizačních algoritmů, také proto jsem je zvolil jako jeden z využívaných algoritmů. Druhá volba padla na o něco méně agresivní optimalizaci v podobě Diferenciální Evoluce. Oba algoritmy jsou popsány v kapitole o evolučních algoritmech. \par 
+Při prvotních zkušebních optimalizací se ukázalo, že optimalizovat rovnou celý cíl jednotlivých scénářů není příliš slibné. Po konzultaci s vedoucím, jsem se rozhodl rozdělit vždy cíl na jednotlivé podúkoly hlavního cíle scénaře. Jednotlivé podúkoly neřeší vždy všichni roboti najednou, ale některé jen homogenní skupina. Nicméně nejpozději v posledním podúkolu už jsou evolvovány společně. 
+\section{Experimenty}
+Pro testování jsem zvolil tři rozličné scénáře. Hlavní motivací bylo jednotlivé úkoly pro hejno udělat udělat komplexnější, aby každá skupina robotů uměla řešit pouze část ze zadání úkoli. Také jsem se snažil, aby se scénáře blížili reálným situacím v dnešním každodenním světě.\par 
+\textbf{Pracovní názvy}
+\begin{enumerate}
+    \item Wood Scene
+    \item Mineral Scene
+    \item Competitive Scece
+\end{enumerate}
+
+
+\subsection{Wood Scene}
+Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. První robot plní úkol objevovávání a kácení stromu, ale neumí je převážet, v mém frameworku se nazývá Wood Scout. Oproti tomu druhý robot má vlastní kontajner na objekty, také je umí zvedat a následně pokládat. Ve frameworku pojmenovaný Wood Worker. Ovšem neumí stromy zpracovávat. Jedná se tedy o úkol typu najdi označ a převez.
+\subsection{Mineral Scene}
+Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze sensory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh.
+\subsection{Competitive Scene}
+Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
+
