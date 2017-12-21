@@ -1,48 +1,28 @@
-%%% Fiktivní kapitola s ukázkami citací
+%%% Druhá kapitola
 
-\chapter{Odkazy na literaturu}
+\chapter{Robotický Swarm}
+V češtině se také používá výraz Rojová Robotika nebo Robotický Roj, v angličtině je známý pod pojmem Swarm Robotics. Myšlenka Robotického Swarmu pochází podobně jak u Genetických Algoritmů z inspirace matkou Přírodou. Podle souhrnu \citep{swarmRobotic} popíši základní myšlenku RS.
+\{Základní vlastnosti}
+Motivací pro použití RS může být chování živočichů na Zemi, když se zaměříme na skupiny živočichů jako jsou mravenci, včely, ryby a dokonce i někteří savci. Pokud bychom vložili do prostředí jednotlivce z některé ze zmíněných skupin, nebude schopen konkurovat nepřátelskému prostředí a nejspíše příliš dlouho nepřežije. Na druhou stranu, když budeme uvažovat celé společenství, tak se nám ze slabého jedince stane velmi adaptivní, odolný a rychle se vyvíjející roj. Podobnému účinku bychom se chtěli přiblížit v RS. Pro relativně jednoduchého robota, který není schopen plnit obtížný úkol, se pokusíme použít vícero robotů stejného typu, kteří společně zadaný úkol vyřeší. Navíc chceme těžit ze všech výhod hejna. \par
+Jako nejčastější výhody RS oproti jednomu robotovi se nejčastěji uvádějí:
+    \begin{enumerate}
+        \item Paralelnost - Díky malé ceně jedince, si můžeme dovolit velkou populaci jedinců. Malou cenou jedince v ES myslíme jednoduchý robot s malou pořizovací cenou, v kontextu živočichů můžeme uvažovat množství energie, jídla pro tvorbu takového jedince. Velká populace nám umožňuje řešit vícero úkolů na ráz, také na velké ploše. Zvláště pro vyhledávací úkoly ušetříme nemalé množství času. 
+        \item Škálovnatelnost - Změna velikosti populace hejna neovlivniví chování ostatních jedinců. Samozřejmě plnění úkolu bude rychlejší resp. pomalejší, ale původní hejno bude stále plnit původní úkol. Tím pádem můžeme celkem snadno upravovat velikost populace bez větší obtíží. V přírodě můžeme pozorovat, že smrt pár jednotlivých mravenců dělníků znatelně neovlivní práci celého mraveniště. Nově narození mravenci se mohou vydat do práce, zatímco zbytek mraveniště nemění činnost. 
+        \item Houževnatost - Související se škálovatelností, jen v tomto případě máme na mysli necílenou změnu populace. Jak v předchozím příkladu u smrti mravenců, část robotů ES může selhat z rozličných důvodů. Zbytek hejna však bude pokračovat k cíli i když ve výsledku jim bude jeho dosáhnutí trvat o něco déle. Což se nám může vyplatit v nebezpečných prostředích. 
+        \item Ekonomické výhody - Cena návrhu a konstrukce jednoduchých robotů hejna vyjde většinou levněji než jeden specializovaný robot schopný uspokojit stejné požadavky. V dnešním světě výroba ve velkém množství  vychází mnohem levněji než tvorba jednoho drahého konkrétního robota.
+        \item Úspora energie - Díky menší velikosti a složitosti jednotlivých robotů vyžadují mnohem menší množství energie. Což má za důsledek, že si u nich můžeme dovolit energetickou rezervu na delší čas. Navíc když je pořizovací cena jednoho robota menší než náklady na dobití, tak díky škálovatelnosti můžeme pouze připojit nové roboty, což u drahého robota jde málokdy. 
+        \item Autonomie a Decentralizace - V kontextu RS musí každý jediden hejna jednat autonomně, jedinci nejsou řízeny žádnou autoritou. Takže umí pracuje i při ztrátě komunikace. Opět se vychází z chování živých organismů. Pokud se chovají jedinci hejna dostatečně kooperativně. Tak mohou pracovat bez centrálního řízení, důsledkem toho se stává celé hejno ještě flexibilnější a odolnější, hlavně v prostředích s omezenou komunikací. Navíc hejno mnohem rychleji reaguje na změny. 
+    \end{enumerate}
+\par 
+Mimo RS existuje i řada jiných přístupů, které se inspirovaly životem hejn v přírodě. Občas jsou zaměňovány za RS, nejčastěji se jedná o multi-agentní systémy a sensorové sítě(sensor networks). V následující tabulce jsou popsány jejich nejklíčovější vlastnosti. 
+%%% TODO: TABULKA
+\newpage
+\section{Použití}
+Existuje několik vědeckých prací, které studují a navrhují použití RS v reálném nasazení. Některé jsem zmínil už v úvodu této práce jako například hasičům asistující roboty \citep{fireRobots}. RS se ukázala také jako dobrá aplikace u ekologický pohrom, španělští vědci testovali jejich použití při úniku ropy \citep{oilSwarm}, či hledání centra radiace \citep{radiationSwarm}. Některé neskončili u simulací a také využívali RS u fyzických robotů, u robotů na vodním povrchu \citep{aquaticRobots}. \par
+\section{Řízení robotických swarmů}
+Chování swarmů se řadí mezi velmi obtížné úkoly pro svět informatiky. Pro reprezentaci chování se využívá neuronových sítí, které se optimalizují pomocí nastavování vah jednotlivých perceptronů. Neboť se jedná o velký prostor vstupních informací ze sensorů a prostor pro interakci s prostředím je taktéž velmi rozsáhlý. Přímé prohledávání takto obřího prostoru nepřichází v úvahu, proto v poslední získavají na oblibě evoluční algoritmy. Mezi nejvíce používané patří Evoluční strategie. \par 
+TODO: Rozepsat \par
+http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4717871 \par
+https://www.researchgate.net/profile/Alan_Winfield/publication/318307713_Evolving_behaviour_trees_for_swarm_robotics/links/59620cdbaca2728c11fc8dfe/Evolving-behaviour-trees-for-swarm-robotics.pdf \par
+https://link.springer.com/article/10.1007/s11721-012-0075-2 \par
 
-Odkazy na literaturu vytváříme nejlépe pomocí příkazů
-\verb|\citet|, \verb|\citep| atp.
-(viz {\LaTeX}ový balíček \textsf{natbib}) a~následného použití
-Bib{\TeX}u. V~matematickém textu obvykle odkazujeme stylem \uv{Jméno
-autora/autorů (rok vydání)}, resp. \uv{Jméno autora/autorů [číslo
-odkazu]}. V~českém/slovenském textu je potřeba se navíc vypořádat
-s~nutností skloňovat jméno autora, respektive přechylovat jméno
-autorky. Je potřeba mít na paměti, že standardní příkazy
-\verb|\citet|, \verb|\citep|
-produkují referenci se jménem autora/autorů v~prvním pádě a~jména
-autorek jsou nepřechýlena.
-
-Pokud nepoužíváme bib\TeX{}, řídíme se normou ISO 690 a zvyklostmi
-oboru.
-
-Jména časopisů lze uvádět zkráceně, ale pouze v~kodifikované podobě.
-
-\section{Několik ukázek}
-
-Mezi nejvíce citované statistické články patří práce Kaplana a~Meiera a~Coxe
-\citep{KaplanMeier58, Cox72}. \citet{Student08} napsal článek o~t-testu.
-
-Prof. Anděl je autorem učebnice matematické statistiky
-\citep[viz][]{Andel98}. Teorii odhadu se věnuje práce
-\citet{LehmannCasella98}. V~případě odkazů na specifickou informaci
-(definice, důkaz, \dots) uvedenou v~knize bývá užitečné uvést
-specificky číslo kapitoly, číslo věty atp. obsahující požadovanou
-informaci, např. viz \citet[Věta 4.22]{Andel07} nebo \citep[viz][Věta
-4.22]{Andel07}.
-
-Mnoho článků je výsledkem spolupráce celé řady osob. Při odkazování
-v~textu na článek se třemi autory obvykle při prvním výskytu uvedeme
-plný seznam: \citet*{DempsterLairdRubin77} představili koncept EM
-algoritmu. Respektive: Koncept EM algoritmu byl představen v~práci
-Dempstera, Lairdové a~Rubina \citep*{DempsterLairdRubin77}. Při každém
-dalším výskytu již používáme zkrácenou verzi:
-\citet{DempsterLairdRubin77} nabízejí též několik příkladů použití EM
-algoritmu. Respektive: Několik příkladů použití EM algoritmu lze
-nalézt též v~práci Dempstera a~kol. \citep{DempsterLairdRubin77}.
-
-U~článku s~více než třemi autory odkazujeme vždy zkrácenou formou:
-První výsledky projektu ACCEPT jsou uvedeny v~práci Genbergové a~kol.
-\citep{Genberget08}. V~textu \emph{nenapíšeme}: První výsledky
-projektu ACCEPT jsou uvedeny v~práci \citet*{Genberget08}.
