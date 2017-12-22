@@ -60,10 +60,21 @@ Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až nakonci 
         \item sebrané dřevo = zpracované dřevo, které mají roboti unitř kontajnerů 
         \item uskladněné dřevo = dřevo, které dovezli na vyznačené místo 
 \end{enumerate}
+
 \subsection{Podúkoly} 
 Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů postupně težších a těžších cílů. Hlavně také, abych mohl porovnat oba evoluční algoritmy. TODO: Bojím se, že pro ES to nebude stačit 
 \begin{enumerate}
-        \item  vygenerování robotů = Na záčátku je vygenerováno chování robotů naprosto náhodně. Pro každého robota, je vygenerována náhodná jednovrstvá neuronová síť. 
+        \item vygenerování robotů = Na záčátku je vygenerováno chování robotů naprosto náhodně. Pro každého robota, je vygenerována náhodná jednovrstvá neuronová síť. 
         \item učení chůze = Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali, co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí(záporným ohodnocením) a na nalezené stromy(kladným ohodnocením).
-        \item težba stromů = Pro Scout Roboty s obstojným pohybem v prostředí, 
+        \item težba stromů = Scout roboty, kteří se už obstojně po mapě pohybují, je třeba naučit kácet stromy. Proto dalším podúkol cílí ve fitness funkci na počet pokácených stromů. Nicméně stále také na počet stromů nalezných. 
+        \item převoz dřeva = Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
+        \item kooperace = V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
+
+\subsection{Nastavení EA}
+
+\subsubsection{Diferenciální Evoluce}
+
+\subsubsection{Evoluční Strategie}
+
+\subsection{Výsledek Experimentu}
