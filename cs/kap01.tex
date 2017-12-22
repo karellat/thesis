@@ -30,11 +30,15 @@ Abychom vytvořili běhu schopný evoluční algoritmus, musíme specifikovat ka
 \end{itemize}
 \subsection{Reprezentace}
 Při tvorbě EA nejdříve musíme propojit prostor původního problému s prostorem řešení, kde se bude vlastní evoluce odehrávat. K docílení propojení je většinou potřeba zjednošit či vytvořit abstrakci nad aspekty reálného světa(prostor problému), abychom vytvořili vhodný prostor řešení, kde mohou být jednotlivá řešení ohodnocena. Neboli chceme docílit, aby možná řešení mohla být specifikována a uložena, tak aby s nimi mohl počítač pracovat. Objekty reprezentující možné řešení v kontextu původního problému jsou názývána \textbf{fenotyp}, zatímco kódování na straně EA prostoru \textbf{genotyp}. Reprezentace označuje mapování z fenotypů na genotypy, používá se ve významu funkci z fenotypu na genotyp(encode) i genotypu na fenotyp(decode) a předpokládá se, že pro každý genotyp existuje nejvýše jeden fenotyp. Například pro optimalizační problém, kde množinou řešení jsou celá čísla. Celá čísla tvoří množinu fenotypu a můžeme se rozhodnout pro reprezentaci v binárních číslech. Tedy 18 by byl fenotyp a 10010 jeho genotyp. Prostor fenotypů a genotypů se zpravidla velmi liší a celý proces EA se odehrává pouze v genotypovém prostoru, vlastní řešení dostanema rozkódováním nejlepšího genotypu po ukončení EA. Jelikož nevíme, jak vlastní řešení vypadá, je nanejvýš vhodné umět reprezentovat všechny možná řešení, v G\&T bychom řekli, že generátor je kompletní.
-\begin{itemize}
-\item V kontextu původního problému jsou následující výrazy ekvivaletní: fenotyp, kandidát(na řešení), jedinec, individuum (Množina všech možných řešení = fenotypový prostor)
-\item V kontextu EA: getotyp, chromozon, jedinec, individuum (Množina kde probíhá EA prohledávání = genotypový prostor)
-\item Části individuí jsou nazývány gen, locus, proměnná a dále se dělí na allely, či hodnoty
-\end{itemize}
+\begin{itemize}   
+  \item V kontextu původního problému jsou následující výrazy ekvivaletní: fenotyp, kandidát(na řešení), jedinec, individuum (Množina všech možných řešení = fenotypový prostor)
+  \item V kontextu EA: getotyp, chromozon, jedinec, individuum (Množina kde probíhá EA prohledávání = genotypový prostor)
+  \item Části individuí jsou nazývány gen, locus, proměnná a dále se dělí na allely, či hodnoty
+  \end{itemize}
+\subsubsection{Neuronové sítě} Pro reprezentaci jedinců v oblasti robotiky, rozpoznávání obrazů a dalších oblastí umělé inteligence se v poslední době používají nejčastěji neuronové sítě. Neuronová síť se strukturou podobá neuronovým sítím v mozku. Základní sítě se skládají z jednotlivých neuronů. V informackém světě se jmenují perceptrony. Perceptron je funkce $\mathbb{R}^n \rightarrow \mathbb{R}$ a definovaná $\sum{i < n+1} w_{i} x_{i}$, kde pro $i < n$ $x_{i}$ je ítý prvek vstupního vektoru, pro  $i == n$ je $x_{i}=1$. $w_{i}$ se označuje jako váha a většinou $w_{i} \in \mathbb(R)$. \par
+Jedno vrstvou neuronovou sítí, pak myslíme n perceptronů, tedy funkci $\mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$, kde í-tý prvek výstupního vektoru dosteneme aplikací i-té perceptronové funkce neuronové sítě. \par 
+Pokud dovolíme skládání perceptronů, vzniknou nám tzv. více vrstvé neurovnové sítě. Podmnožiny výstupů z první vrtstvy neuronů neurčují přímo výstup, ale jsou opět zvoleny jako vstupní vektory pro další jednovrstvou neuronovou síť. \par
+Skrytá vrstva(hiden layer) je taková jednovrstvá neuronová síť, jejíž výstup je pouze vstupem jiné neuronové sítě. \par
 \subsection{Populace}
 Populace je multimnožina genotypů, slouží jako jednotka evoluce. Populace utváří adaptaci a změny, zatímco vlastní jedinci se nijak nemění, jen vznikají nový a nahrazují předešlé. Pro danou reprezentaci je definice populace velmi jednoduchá charakterizuje ji pouze velikost. U některých specifických EA má populace další prostorové struktury, definované vzdáleností jedinců nebo relacemi sousedních jedinců. Což by se dalo připodobnit, reálným populacím, které se vyvíjejí v různých geografických prostředích. U většiny EA se velikost populace nemění, což vede k soutěživosti mezi jedinci(,zůstanou ti nejlepší). Na úrovni populací pracují právě selektivní operátory. Například zvolí nejlepší jedince aktuální populace jako rodiče následující, nahradí nejhorší jedince novými. Rozmanitost populace, vlastnost které chceme zpravidal docílit, je měřena jako počet různých řešení v multimnožině. Neexistuje však jediné hledisko podle, kterého lze tuto vlastnost měřit, většinou se používá počet rozdílných hodnot fitness, rozdílných fenotypů či genotypů a také například entropie(míra neuspořádanosti). Ovšem musíme mít na paměti, že jedna hodnota fitness v populaci neznamená, že populace obsahuje pouze jeden fenotyp, stejně tak jeden fenotyp nemusí odpovídat jednomu genotypu apod. 
 \subsection{Selekce rodičů}
@@ -58,6 +62,7 @@ Rozlišme dvě varianty vhodné ukončovací podmínky. Pokud řešený problém
 \item Rozmanitost v populaci nedosahuje předem určených hodnot
 \end{enumerate}
 Prakticky ukončovací podmínka bývá disjukce: dosáhli jsme optima or podmínka X ze seznamu. Může se stát, že optimum známé není. Pak se používá pouze zmíněných podmínek nebo se smíříme s nekonečností algoritmu. 
+
 \section{Differciální evoluce}
 Differrenciální evoluce(DE) se objevila v roce 1995, kdy Storn a Price vydali technický report TODO:citace popisující hlavní koncept skrývající se za pojmem DE \"New heuristic approach for minimizing possibly nonlinear and nondifferentiable continuous space functions\". Tento evoluční algoritmus popíši trochu více, protože je klíčovým algoritmem mého řešení. 
 \subsubsection{Charakteristické vlastnosti}

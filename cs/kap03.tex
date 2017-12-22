@@ -118,20 +118,18 @@ Dále jsou od Entity odděleny základní dva tvary entit abstraktní třídy Ci
 \subsubsection{Příklady robotů:}
 \begin{itemize}
 \item ScoutCuttorRobot - robot, který je určen pro scénář těžení stromů, obstarává kácení
-\item ScoutCuttorRobotWithMemory -  stejný jako předchozí jen má navíc paměťový slot
+\item ScoutCuttorRobotMem -  stejný jako předchozí jen má navíc paměťový slot
 \item WoodWorkerRobot - robot ze scénáře těžení stromů, obstarává přesun pokáceného dřeva 
 \item WoodWorkerRobotMem - stejný jako předchozí jen má navíc paměťový slot
 \end{itemize}
 \newpage 
 \subsection{Experiment:}
-Experimenty jsou určeny pro nastavení vývoje mozků. Jedná se o počet iterací jedné simulace mapy, velikost populací, algoritmus, který vytváří nové generace, ohodnocení fitness pro jednotlivé mozky. Jejich hlavním cílem poskytovat třídu, kterou používá GUI nebo konzole a v ní běží všechny simulace. Tomuto konceptu jsou v programu věnovány dvě třídy Experiment(GUI) a MultiThreadExperiment(výkon). \par
-\subsubsection{Experiments:}
-Základem experimentů je abstraktní třída Experimet<T>, kde T je potomek IRobotBrain typ mozku, který chceme vyvíjet. Obsahuje spoustu proměnných pro nastavení prostředí a evoluce. Viz. komentáře u dané třídy. Třída je uzpůsobena na jednotlivé kroky evoluce, aby po nich mohla přijít na řadu visualizace. Slouží výhradně k testování prostředí a výsledných mozků z experimentů. \par
+Experimenty jsou určeny pro nastavení vývoje mozků. Jedná se o počet iterací jedné simulace mapy, velikost populací, algoritmus, který vytváří nové generace, ohodnocení fitness pro jednotlivé mozky. Jejich hlavním cílem poskytovat třídu, kterou používá GUI nebo konzole a v ní běží všechny simulace. Tomuto konceptu jsou v programu věnovány třídy MultiThreadExperiment(Differenciální Evoluce) a Evolution Strategies(Evoluční strategie) . \par
 \textbf{Jednotlivé experimenty:} \par
-TODO: fix nové experimenty s ES 
 \subsection{MultiThread}
-Základem MT experimentů je bstract class MultiThreadExperiment<T>, kde T je potomek IRobotBrain druh mozku, který vyvíjí. Tato třída obsahuje základní nastavení evoluce. (velikost populace, jméno, počet iterací atd..). Před spuštěním fce Run() je potřeba připravit Mapu a modely mozků, robotů pomocí přetížení abstraktní metody Init(). Funkce Run() - pouští jednotlivé členy aktuální populace každou na jiném vlákně, jejich ohodnocení je implementována pomocí abstraktní metody CountFitness(map). Takto pokračuje napříč všemi generacemi až do poslední. Během běhu serializuje nejlepší mozky, graf(,pokud PC obsahuje GNUplot, tak i vykresluje), všechny mozky(ve zvolených generacích) . \\
-Složky Mineral Scene a WoodScene obsahují vzorové příklady experimentů pro scénáře WoodScene a MineralScene.
+Základem MT experimentů je abstract class MultiThreadExperiment<T>, kde T je potomek IRobotBrain druh mozku, který vyvíjí. Tato třída obsahuje základní nastavení evoluce. (velikost populace, jméno, počet iterací atd..). Před spuštěním fce Run() je potřeba připravit Mapu a modely mozků, robotů pomocí přetížení abstraktní metody Init(). Funkce Run() - pouští jednotlivé členy aktuální populace každou na jiném vlákně, jejich ohodnocení je implementována pomocí abstraktní metody CountFitness(map). Takto pokračuje napříč všemi generacemi až do poslední. Během běhu serializuje nejlepší mozky, graf(,pokud PC obsahuje GNUplot, tak i vykresluje), všechny mozky(ve zvolených generacích) . \\
+\subsection{Další experimety:}
+Evoluční strategie nepoužívají MultiThread Experiment. Z hlediska výkonu se u nich vyplatí, používat jednotlivá vlákno pro každého člena populace zvlášť. Z tohoto důvodu je průběh simulace mapy implementován přímo ve třídě Evolution Strategy. 
 \subsection{RobotBrains} 
 Třídy definující chování robotů. Základním principem je funkce, která přijme vektor float hodnot a  z něj vytvoří jiný vektor float. Vstupní hodnoty předává robot ze sensorů a výstupní hodnoty jsou použity pro nastavení efektorů. Projekt obsahuje 3 základní mozky:
 \begin{itemize}
@@ -139,8 +137,6 @@ Třídy definující chování robotů. Základním principem je funkce, která 
 \item Perceptron - základní prvek neuronových sítí (vážený součet)  lib. vstup a jeden výstup
 \item SingleLayerNeuronNetwork - neuronová síť tvořená z perceptronů.
 \end{itemize}
-
-Pro SingleLayredNetwork je připravený evoluční algoritmus Differenciální evoluce, definovaná dle  \url{https://en.wikipedia.org/wiki/Differential_evolution}.
 
 \subsection{Externí knihovny, NuGet}
 \begin{itemize}
