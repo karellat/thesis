@@ -72,9 +72,8 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 \end{enumerate}
 
 \subsection{Nastavení EA}
-
 \subsubsection{Diferenciální Evoluce}
-
+Pro differenciální evoluci jsem zvolil 100 jedinců jako velikost populace, kteří procházejí přes 1000 generací. Mezi nejtěžší připravy evolučních algoritmů patří volba parametrů evoluce u DE se konkrétně jedná o pravděpodnost křížení(CR) a váhu diference(F) (, v angličtině se nazývá Differential weight). Po první testech jsem uvážil $F = 0.8 $ a $CR = 0.5$ jako nejlepší volbu. 
 \subsubsection{Evoluční Strategie}
-
+U Evolučních Strategiích, které mají trochu jinou formu mutací, budu evolvovat 8 jedinců. Tyto jedinci projdou 200 generací a velikost mutačního kroku  v každé generaci je právě 20. Varianta $(\sigma,\lambda)$ se ukázala jako vhodnější volba, neaplikuji tedy elitimus, při testech se stávalo, že se jedinec na začátku zasekl v lokálním optimu a dál se vůbec nevyvíjel. Jako learnig rate neboli alpha se osvědčila hodnota 0.05 a rozptyl u šumů normálního rozdělení sigma roven 0.1. TODO: Asi bude třeba měnit u jednotlivých experimentů.
 \subsection{Výsledek Experimentu}
