@@ -44,12 +44,58 @@ Cílem tohoto scénáře je shromáždit uprostřed mapy, co nejvíce zpracovan�
 \subsubsection{Scout robot}
 Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených stromů. Pro komunikaci s ostatními roboty má možnost vysílat rádiový signál s hodnotou 0. Oproti Worker robotovi je menší, rychlejší, jeho sensory mají větší dosah, navíc proti němu disponuje type sensorem a refaktorem nalezených stromů. Type sensor představuje formu radaru, říká robotovi s jakou četností se vyskytují v dosahu sensoru. Refaktor reprezentuje techniku kácení mění strom na dřevo. 
 \par 
-TODO: Tabulka velikostí
-
+\begin{center}
+\begin{tabular}{l  l  l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+        \toprule
+        Tvar: & Kruh & Poloměr: & 2.5 \\
+        Název: & WoodCutterM \\
+        Velikost kontajneru: & 0 \\
+        \hline
+        Efektory \\
+        \midrule
+        Motor: & Dvou kolečkový & Maximální rychlost: & 3 \\
+        Kód rádiového signálu: & 0 & Poloměr signálu: & 200\\
+        Refaktor: & $Strom \Rightarrow Dřevo$ & Dosah refaktoru: & 10\\
+        Počet paměťových slotů: &10 & Obsah slotu: & float\\
+        \hline 
+        Sensory \\
+        \midrule
+        Počet line sensorů: &  3 & délka: & 50\\
+        Orientace line sensorů: & $0^\circ$ & $45^\circ$ & $-45^\circ$\\
+        Type sensor: & Poloměr: & 50\\
+        Rádiový příjímač: & Poloměr: & 100 \\
+        Touch sensory: & Počet: & 8 \\  
+        Lokátorový sensor\\ 
+        \bottomrule
+\end{tabular}
+\end{center}
 \subsubsection{Worker robot}
 Worker robot se stará o transport objektů na mapě. Ke komunikaci využívá signálů s kódem 1. Sebrané objekty ukládá do kontejneru, kam se vejde 5 entit. Zvedání a pokádání probíhá skrze efektor Picker. 
 \par 
-TODO: Tabulka velikostí
+\begin{center}
+\begin{tabular}{l  l  l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+                \toprule
+                Tvar: & Kruh & Poloměr: & 5\\
+                Název: & WoodWorkerM \\
+                Velikost kontajneru: & 5\\
+                \hline
+                Efektory \\
+                \midrule
+                Motor: & Dvou kolečkový & Maximální rychlost: & 2 \\
+                Kód rádiového signálu: & 0 & Poloměr signálu: & 200\\
+                Picker: & Dosah pickeru: & 10\\
+                Počet paměťových slotů: &10 & Obsah slotu: & float\\
+                \hline 
+                Sensory \\
+                \midrule
+                Počet line sensorů: &  3 & délka: & 30\\
+                Orientace line sensorů: & $0^\circ$ & $45^\circ$ & $-45^\circ$\\
+                Rádiový příjímač: & Poloměr: & 100 \\
+                Touch sensory: & Počet: & 8 \\  
+                Lokátorový sensor\\ 
+                \bottomrule
+\end{tabular}
+\end{center}
 
 \subsection{Vyhodnocování Fitness}
 Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až nakonci simulace. Ikdyž se úspěšnost v podúkolech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
@@ -75,5 +121,6 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 \subsubsection{Diferenciální Evoluce}
 Pro differenciální evoluci jsem zvolil 100 jedinců jako velikost populace, kteří procházejí přes 1000 generací. Mezi nejtěžší připravy evolučních algoritmů patří volba parametrů evoluce u DE se konkrétně jedná o pravděpodnost křížení(CR) a váhu diference(F) (, v angličtině se nazývá Differential weight). Po první testech jsem uvážil $F = 0.8 $ a $CR = 0.5$ jako nejlepší volbu. 
 \subsubsection{Evoluční Strategie}
-U Evolučních Strategiích, které mají trochu jinou formu mutací, budu evolvovat 8 jedinců. Tyto jedinci projdou 200 generací a velikost mutačního kroku  v každé generaci je právě 20. Varianta $(\sigma,\lambda)$ se ukázala jako vhodnější volba, neaplikuji tedy elitimus, při testech se stávalo, že se jedinec na začátku zasekl v lokálním optimu a dál se vůbec nevyvíjel. Jako learnig rate neboli alpha se osvědčila hodnota 0.05 a rozptyl u šumů normálního rozdělení sigma roven 0.1. TODO: Asi bude třeba měnit u jednotlivých experimentů.
-\subsection{Výsledek Experimentu}
+U Evolučních Strategiích, které mají trochu jinou formu mutací, budu evolvovat 8 jedinců. Tyto jedinci projdou 200 generací a velikost mutačního kroku  v každé generaci je právě 20. Varianta $(\sigma,\lambda)$ se ukázala jako vhodnější volba, neaplikuji tedy elitimus, při testech se stávalo, že se jedinec na začátku zasekl v lokálním optimu a dál se vůbec nevyvíjel. Jako learnig rate neboli alpha se osvědčila hodnota 0.05 a rozptyl u šumů normálního rozdělení sigma roven 0.1.
+\subsection{Výsledky Experimentu}
+\subsection{První běh}

@@ -125,7 +125,7 @@ Dále jsou od Entity odděleny základní dva tvary entit abstraktní třídy Ci
 \newpage 
 \subsection{Experiment:}
 Experimenty jsou určeny pro nastavení vývoje mozků. Jedná se o počet iterací jedné simulace mapy, velikost populací, algoritmus, který vytváří nové generace, ohodnocení fitness pro jednotlivé mozky. Jejich hlavním cílem poskytovat třídu, kterou používá GUI nebo konzole a v ní běží všechny simulace. Tomuto konceptu jsou v programu věnovány třídy MultiThreadExperiment(Differenciální Evoluce) a Evolution Strategies(Evoluční strategie) . \par
-\textbf{Jednotlivé experimenty:} \par
+\par
 \subsection{MultiThread}
 Základem MT experimentů je abstract class MultiThreadExperiment<T>, kde T je potomek IRobotBrain druh mozku, který vyvíjí. Tato třída obsahuje základní nastavení evoluce. (velikost populace, jméno, počet iterací atd..). Před spuštěním fce Run() je potřeba připravit Mapu a modely mozků, robotů pomocí přetížení abstraktní metody Init(). Funkce Run() - pouští jednotlivé členy aktuální populace každou na jiném vlákně, jejich ohodnocení je implementována pomocí abstraktní metody CountFitness(map). Takto pokračuje napříč všemi generacemi až do poslední. Během běhu serializuje nejlepší mozky, graf(,pokud PC obsahuje GNUplot, tak i vykresluje), všechny mozky(ve zvolených generacích) . \\
 \subsection{Další experimety:}

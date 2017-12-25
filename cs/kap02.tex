@@ -1,7 +1,7 @@
 %%% Druhá kapitola
 
 \chapter{Robotický Swarm}
-V češtině se také používá výraz Rojová Robotika nebo Robotický Roj, v angličtině je známý pod pojmem Swarm Robotics. Myšlenka Robotického Swarmu pochází podobně jak u Genetických Algoritmů z inspirace matkou Přírodou. Podle souhrnu \citep{swarmRobotic} popíši základní myšlenku RS.
+V češtině se také používá výraz Rojová Robotika nebo Robotický Roj, v angličtině je známý pod pojmem Swarm Robotics. Myšlenka Robotického Swarmu pochází podobně jak u Genetických Algoritmů z inspirace matkou Přírodou. Podle souhrnu \cite{swarmRobotic} popíši základní myšlenku RS.
 \section{Základní vlastnosti}
 Motivací pro použití RS může být chování živočichů na Zemi, když se zaměříme na skupiny živočichů jako jsou mravenci, včely, ryby a dokonce i někteří savci. Pokud bychom vložili do prostředí jednotlivce z některé ze zmíněných skupin, nebude schopen konkurovat nepřátelskému prostředí a nejspíše příliš dlouho nepřežije. Na druhou stranu, když budeme uvažovat celé společenství, tak se nám ze slabého jedince stane velmi adaptivní, odolný a rychle se vyvíjející roj. Podobnému účinku bychom se chtěli přiblížit v RS. Pro relativně jednoduchého robota, který není schopen plnit obtížný úkol, se pokusíme použít vícero robotů stejného typu, kteří společně zadaný úkol vyřeší. Navíc chceme těžit ze všech výhod hejna. \par
 Jako nejčastější výhody RS oproti jednomu robotovi se nejčastěji uvádějí:
@@ -15,12 +15,95 @@ Jako nejčastější výhody RS oproti jednomu robotovi se nejčastěji uváděj
     \end{enumerate}
 \par 
 Mimo RS existuje i řada jiných přístupů, které se inspirovaly životem hejn v přírodě. Občas jsou zaměňovány za RS, nejčastěji se jedná o multi-agentní systémy a sensorové sítě(sensor networks). V následující tabulce jsou popsány jejich nejklíčovější vlastnosti. 
-%%% TODO: TABULKA
-\newpage
+\begin{center}
+    \begin{table} \resizebox{\textwidth}{!}{%
+    \begin{tabular}{l l l l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+            \toprule
+             & Robotická hejna &  Multi-robotické systémy & Sensorové sítě & Multi-agentní systémy \\
+            Velikost populace & Variabilní ve velkém rozsahu & Malá & Fixní & V malém rozsahu \\
+            Řízení & decentralizované a autonomní & centralizované & centralizované & centralizované \\
+            Odlišnosti & většinou homogenní & většinou heterogenní & homogenní & homogenní nebo heterogenní \\
+            Flexibilita & vysoká & nízká & nízká & střední \\
+            Škálovnatelnos & vysoká & nízká & střední & střední \\
+            Prostředí & neznámé & známé nebo neznámé & známé & známé\\
+            Pohyblivost & ano & ano & ne & vyjímečně\\
+            \hline 
+    \end{tabular}}
+    \end{table}
+    \end{center}
+    Také se liší svojí aplikací Robotická hejna se nejčastěji používají v vojenských, nebezpečných úkolech a také pro řešení ekologických katastrof. Multi-robotické systémy potkáváme v transportních, skenovacích úkolech, dále pro řízení robotických fotbalových hráčů. Oproti tomu nejčetnější využití sensorových sítí zasahuje do medicínské oblasti, ochraně životního prostředí. Multi-agentní systémy zase nejvíce zasahují do řízení síťových zdrojů a distribuovaného řízení. 
 \section{Použití}
-Existuje několik vědeckých prací, které studují a navrhují použití RS v reálném nasazení. Některé jsem zmínil už v úvodu této práce jako například hasičům asistující roboty \citep{fireRobots}. RS se ukázala také jako dobrá aplikace u ekologický pohrom, španělští vědci testovali jejich použití při úniku ropy \citep{oilSwarm}, či hledání centra radiace \citep{radiationSwarm}. Některé neskončili u simulací a také využívali RS u fyzických robotů, u robotů na vodním povrchu \citep{aquaticRobots}. \par
+Existuje několik vědeckých prací, které studují a navrhují použití RS v reálném nasazení. Některé jsem zmínil už v úvodu této práce jako například hasičům asistující roboty \cite{fireRobots}. RS se ukázala také jako dobrá aplikace u ekologický pohrom, španělští vědci testovali jejich použití při úniku ropy \cite{oilSwarm}, či hledání centra radiace \cite{radiationSwarm}. Některé neskončili u simulací a také využívali RS u fyzických robotů, u robotů na vodním povrchu \cite{aquaticRobots}. \par
+
 \section{Řízení robotických swarmů}
-Chování swarmů se řadí mezi velmi obtížné úkoly pro svět informatiky. Pro reprezentaci chování se využívá neuronových sítí, které se optimalizují pomocí nastavování vah jednotlivých perceptronů. Neboť se jedná o velký prostor vstupních informací ze sensorů a prostor pro interakci s prostředím je taktéž velmi rozsáhlý. Přímé prohledávání takto obřího prostoru nepřichází v úvahu, proto v poslední získavají na oblibě evoluční algoritmy. Mezi nejvíce používané patří Evoluční strategie. \par 
+Chování swarmů se řadí mezi velmi obtížné úkoly pro svět informatiky. Pro reprezentaci chování se využívá neuronových sítí, které se optimalizují pomocí nastavování vah jednotlivých perceptronů. Neboť se jedná o velký prostor vstupních informací ze sensorů a prostor pro interakci s prostředím je taktéž velmi rozsáhlý. Přímé prohledávání takto obřího prostoru nepřichází v úvahu, proto v poslední získavají na oblibě evoluční algoritmy. Mezi nejvíce používané patří Evoluční strategie, či Genetické programování \par 
+
+\subsection{Genetické programování a stromy chování}
+V práci "Evolving behaviour trees for Swarm robotics" \cite{jonesevolving} Alan F T Winfield s kolegy podporují myšlenku evoluce chování v hejnové robotice. Pro řízení navrhují vcelku zajímavé využití stromů chování(SC)(Behaviour tree), které mají uplatnění především v herním průmyslu pro chování charakterů, které nejsou ovládány hráčem. Jako optimalizační algoritmus zvolili Genetické programování. 
+\par
+Strom chování je strom, jehož listy intereagují s prostředím, vnitřní vrcholy spojují tyto akce dohromady a tvoří rozhodovací a závislostní pravidla. Celý strom je vyhodnocován v pravidelných intervalech, v práci se značí jako "tick". Opírají se o článek \cite{shoulson2011parameterizing},kde bylo ukázáno, že SC může plnohodnotně reprezentovat konečné automaty, dokonce i když budeme používat pravděpodobností konečné automaty. Jako jedince z hejna zvolili Kilobot, které byl představen Rubenstein \cite{Kilobots}. Kilobot se pohybuje pomocí dvou vibračních motorů, komunikují přes infračervený kanál, v prostředí se orientují pomocí foto detektoru a signalizují pomocí LED diod s barevným spektrem. Následující části zjednodušují komunikaci s efektory robota a nad nimi optimalizováno SC. 
+\par
+\begin{center}
+    \begin{tabular}{l  l  l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+        \toprule
+        Efektor/Sensor & Read or Write & Popis \\
+        \midrule
+        motor & W & vypnut, vřed, vlevo, vpravo \\
+        přídavná paměť & R\&W & libovolná hodnota \\
+        vysílač signálu & R\&W & vysilá při větší hodnotě než 0.5\\
+        přijímač signálu & R & 1 pokud přijímá signál \\
+        detektor potravy & R  & 1 pokud světelný snímač vidí potravu\\
+        nosič jídla & R & 1 pokud nese jídlo \\
+        hustota robotů & R & hustota Kilobotů v blízkosti \\
+        $\delta hustota$ & R & změna v hustotě \\
+        $\delta vzdálenost_{potrava}$ & R & změna ve vzdálenosti k potravě \\
+        $\delta vzdálenost_{hnízdo}$ & R & změna ve vzdálenosti k hnízdu \\ 
+        \bottomrule
+    \end{tabular}
+\end{center}
+\par
+Tyto akce pak odpovídají listům v SC, vnitřní vrcholy mohou být následujících kompoziční: \textbf{seqm}, \textbf{selm}, \textbf{probm} a tyto mohou mít 2 až 4 syny. Informace procházející mezi vrcholy mohou být následujícího druhu \textit{success}, \textit{failure},\textit{running}. Zpracovávají informace následujícím způsobem posílají tick do každého syna dokud od nějakého nepřijde hodnota \textit{failure} nebo tick proběhne na všech synech, pokud proběhne úspěšně tick u všech synů vrací \textit{success}, \textit{failure} jinak. Oproti tomu \textbf{selm} vysílá tick, dokud mu nějaký syn nevrátí hodnotu \textit{success} nebo všichni synové provedli tick, pokud se nevrátí jediná hodnota \textit{success}, tak vrací \textit{failure}, v opačném případě \textit{success}. Od obou se liší \textbf{probm}, ten s danou pravděpodobností vybere jednoho syna a vrátí jeho odpověď. Vrchol, který má alespoň jednoho syna se statusem \textbf{running} vrací stejnou hodnotu. \par
+Vrcholy jen s jedním synem patří do jedné z následujících kategorií: \textbf{repeat}, \textbf{successd}, \textbf{failured}. Vrchol \textbf{repeat} vrací tick svým synům, s daným početem pokusů, dokud nedostane hodnotu \textit{success}. Následující dva vrcholy vrací konstatní odpověď na tick dle svého jména, i přesto pošlou tick svému následníkovi. \par
+Poslední skupinu vrcholu tvoří tzv. akční vrcholy \textbf{ml},\textbf{mr},\textbf{mf}, což ve stejném pořádí jsou: zatoč vlevo, zatoč vpravo, jeď kupředu. Vrcholy pohybu při první ticku vrací \textit{running} při druhém \textit{success} K akčím vrcholům také patří \textbf{if}, který implementuje porovnávání synů a vrací \textit{success}, pokud porovnání platí. Poslední z akčních vrcholů je \textbf{set}, který nastavuje danou hodnotu synům. 
+\par
+V prostředí jsou s konstantní frekvencí prováděny tzv. update cykly. Jeden takový cyklus se skládá z: 
+\par
+\begin{enumerate}
+    \item Spočítají se hodnoty v synech z vysílaných signálů a prostředí. 
+    \item Na SC je proveden tick, což čte a zapisuje hodnoty do synů. 
+    \item Pohybové motory jsou aktivovány a vysílání je upraveno, oboje dle zapsaných hodnot do synů.
+\end{enumerate}
+\par 
+Jako zátěžový test používají obvyklý scénář, který spočívá v hledání potravy a odvážení potravy zpět do hnízda. Fitness se hodnotí podle vzdálenosti doneseného jídla, čím blíže k hnízdu tím lépe. Jako optimalizační metodu vybrali genetické programování a používají DEAP knihovnu \cite{deap}. \
+Celá populace velikosti $n_{pop}$ je ohodnocena fitness, každý jedinec se hodnotí podle 10 simulací, každá simulace má jinou startovní konfiguraci. Roboti startují vždy na poli o velikosti 5x5, jejich orientace je vybírána náhodně. Běží 300 simulovaných sekund, frekvence update cyklu 8Hz pro vnímání prostředí a u ovladačů s 2Hz. Používané Genetické programování implementuje elitimus přenáš $n_{elite}$ nejlepších jedinců do další generace, zatímco zbylá část je zvolena pomocí turnajovou selekcí s velikostí $t_{size}$. A křížící(rekombinační) operátor, který kříží části stromů, je aplikován s pravděpodobností $p_{xover}$ na všechny páry vybrané turnajovou selekcí. Na vzniklé páry se aplikují 3 mutační operátory. \par
+\begin{enumerate}
+    \item S pravděpodobností $p_{mutu}$ je náhodný vrchol stromu vyměněn za nový náhodně vytvořený 
+    \item S pravděpodobností $p_{muts}$ je náhodná větev stromu aje  vyměnena za náhodně zvolený terminál(vyskytující se na této větvi)
+    \item S pravděpodobností $p_{mutn}$ je náhodný vrchol vyměnen za nový, ale se stejným počtem argumentů
+    \item S pravděpodobností $p_{mute}$ je náhodná konstanta vyměněna za jinou náhodnou hodnotu
+\end{enumerate}
+Krom simulace 25 nezávislých běhů evoluce. Také byly otestovány algoritmy na reálných strojích, vytrénované chování bylo otestováno 20 běhy s rozdílnou startovací pozicí a ohodnoceni stejnou fitness. 
+\par 
+
+\begin{center}
+    \begin{tabular}{l  l  l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+        \toprule
+        \textbf{Konkrétní nastavení parametrů} \\
+        \hline
+        Parametr & Hodnota & Popis\\
+        \midrule
+        $n_{gen}$ & 200 & Generace\\
+        $t_{test}$ & 300 & Délka testu ve vteřinách \\
+        $n_{pop}$ & 25 & Velikost populace \\
+        $n_{elite}$ & 3 & Velikost Elity \\
+        $p_{xover}$ & 0.8 & Pravděpodobnost křížení \\
+        $p_{mutu}$ & 0.05 & Pravděpodobnost výměny podstromu \\
+        $p_{muts}$ & 0.1 & Pravděpodobnost scvrknutí podstromu \\
+        $p_{mutn}$ & 0.5 & Pravděpodobnost výměny vrholu \\
+        $p_{mute}$ & 0.5 & Pravděpodobnost výměny konstanty \\
+        \bottomrule
+    \end{tabular}
+\end{center}
 TODO: Rozepsat \par
 %% http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4717871 \par
 %% https://www.researchgate.net/profile/Alan_Winfield/publication/318307713_Evolving_behaviour_trees_for_swarm_robotics/links/59620cdbaca2728c11fc8dfe/Evolving-behaviour-trees-for-swarm-robotics.pdf \par
