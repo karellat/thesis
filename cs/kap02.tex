@@ -110,8 +110,9 @@ Výsledky simulace byly více než uspojivé maximální fitness, v simulační 
 \begin{center}
 \includegraphics[scale=0.8  ]{../img/kilobotsGraph.png}
 \end{center}
-\subsection{Evoluční strategie a neuronová síť}
-Cagri a Yalcin používají ve své práci \citep{yalcin2008evolving} práci neuronových sítí místo SC a pro nastavení vah používají Evoluční strategie i když je v práci uvádí pod pojemem Getického algoritmu, v naší definici odpovídají ES. Shodují se s Winfieldem a jeho kolegy, že evoluce chování robotického hejna přináší zajímavých strategií, která mohou být mnohem komplexnější než explicitně vytvořené chování. Také však popisují obtížnosti použití Evoluce, zvláště volbu Evolučního algoritmu a efektivnost celého výpočtu. 
+
+\subsection{Genetické algoritmy a neuronová síť}
+Cagri a Yalcin používají ve své práci \citep{yalcin2008evolving} práci neuronových sítí místo SC a pro nastavení vah Getického algoritmu. Shodují se s Winfieldem a jeho kolegy, že evoluce chování robotického hejna přináší zajímavých strategií, která mohou být mnohem komplexnější než explicitně vytvořené chování. Také však popisují obtížnosti použití Evoluce, zvláště volbu Evolučního algoritmu a efektivnost celého výpočtu. 
 \par
 Využívají již existujícího simulátoru Cobot2D, pro všechny experimenty bylo použita mapa bez překážek velikosti 400x400. Roboti se pohybují pomocí dvou-kolečkových motorů, orientují se 4 infračervenými sensory a 4 zvukovo-směrovými sensoru, v jejich středu je umístěn všesměrový zvukový vysílač. Vysílače mají pevný rozsah kruhu vysílání a dynamickou sílu. Zvukové sensory se rozhodují pouze podle signálů, jejichž vysílače spadají do $90^\circ$ výseče od sensoru a také jejich vzdálenost musí být menší než daná konstanta. Síla signálu se zmenšuje směrem od vysílače a sensory vrací součet sil signálů. Infračervené sensory úsečku dané velikosti a orientace vzhledem k robotovi, a vrací vzdálenost k nejbližšímu průsečíku. Aby se simulace přiblížila, co nejvíce reálnému nasazení, tak jsou generovány náhodné šumy pro každou interakci s prostředím. Pro ovládání robota byla navržena neuronová síť, která má 8 vstupů(4 pro infra-sensory a 4 pro zvukové) a 3 výstupy a není zde žádná skrytá vrstva. Nákres robota a jeho ovládací neuronové sítě, můžete vidět na obrázku. \par
 \begin{center} 
@@ -160,7 +161,9 @@ Druhá $fitness_2$ používá metodu "inverse of hierarchical social entropy" Ba
 H se nazývá entropie, $p_k$ je proporce jedince z clusteru $k$, $M$ je počet clusterů pro dané $h$. Konečně celý předpis daný Balchem vypadá následovně: 
 \par
 \begin{center}
-\textbf{$fitness_2 = \frac{1}{\int_{0}{\infty}H(h)dh}$}
+\textbf{$fitness_2 = \frac{1}{\int_{0}^{\infty}H(h)dh}$}
 \end{center}
+\par 
+Ve výsledku se ukázalo použití neuronových sítí a genetického algoritmu jako vhodného prostředku pro učení robotického hejna. Neboť se vygenerované chování se obstojně shlukují do úzkých skupin. Definují další tzv. cost funkci pro měření úspěchu nalezených chování, aby mohli porovnávat funkce fitness. A $fitness_2$ se ukazuje jako účinější. 
 %% https://link.springer.com/article/10.1007/s11721-012-0075-2 \par
 
