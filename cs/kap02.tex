@@ -104,8 +104,63 @@ Krom simulace 25 nezávislých běhů evoluce. Také byly otestovány algoritmy 
         \bottomrule
     \end{tabular}
 \end{center}
-TODO: Rozepsat \par
-%% http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4717871 \par
-%% https://www.researchgate.net/profile/Alan_Winfield/publication/318307713_Evolving_behaviour_trees_for_swarm_robotics/links/59620cdbaca2728c11fc8dfe/Evolving-behaviour-trees-for-swarm-robotics.pdf \par
+\par
+Výsledky simulace byly více než uspojivé maximální fitness, v simulační části si hejno vedlo o trochu lépe 0.075 z maximální hodnoty 0.12(minimum 0) a co se týče reálného nasazení vygenerovaného chování 0.058. Což opravdu není velký rozdíl, když přihlédneme k tomu, že evoluce probíhala čístě na simulační rovině. Následující graf zachycuje výslednou fitness. 
+\par
+\begin{center}
+\includegraphics[scale=0.8  ]{../img/kilobotsGraph.png}
+\end{center}
+\subsection{Evoluční strategie a neuronová síť}
+Cagri a Yalcin používají ve své práci \citep{yalcin2008evolving} práci neuronových sítí místo SC a pro nastavení vah používají Evoluční strategie i když je v práci uvádí pod pojemem Getického algoritmu, v naší definici odpovídají ES. Shodují se s Winfieldem a jeho kolegy, že evoluce chování robotického hejna přináší zajímavých strategií, která mohou být mnohem komplexnější než explicitně vytvořené chování. Také však popisují obtížnosti použití Evoluce, zvláště volbu Evolučního algoritmu a efektivnost celého výpočtu. 
+\par
+Využívají již existujícího simulátoru Cobot2D, pro všechny experimenty bylo použita mapa bez překážek velikosti 400x400. Roboti se pohybují pomocí dvou-kolečkových motorů, orientují se 4 infračervenými sensory a 4 zvukovo-směrovými sensoru, v jejich středu je umístěn všesměrový zvukový vysílač. Vysílače mají pevný rozsah kruhu vysílání a dynamickou sílu. Zvukové sensory se rozhodují pouze podle signálů, jejichž vysílače spadají do $90^\circ$ výseče od sensoru a také jejich vzdálenost musí být menší než daná konstanta. Síla signálu se zmenšuje směrem od vysílače a sensory vrací součet sil signálů. Infračervené sensory úsečku dané velikosti a orientace vzhledem k robotovi, a vrací vzdálenost k nejbližšímu průsečíku. Aby se simulace přiblížila, co nejvíce reálnému nasazení, tak jsou generovány náhodné šumy pro každou interakci s prostředím. Pro ovládání robota byla navržena neuronová síť, která má 8 vstupů(4 pro infra-sensory a 4 pro zvukové) a 3 výstupy a není zde žádná skrytá vrstva. Nákres robota a jeho ovládací neuronové sítě, můžete vidět na obrázku. \par
+\begin{center} 
+\includegraphics[scale=0.5]{../img/Cobot.png}
+\end{center}
+\par
+Genetický algoritmus, jak jej nazývají, má následující podobu.\par 
+\ \newline
+\textbf{Genetický algoritmus}:
+\begin{enumerate}
+    \item inicializuj populace P 100 jedinců a každý jedinec reprezentován váhovým vektorem
+    \item nastav všem váhovým vektorům z populace náhodné floating point hodnoty v intervalu $\in (-1,1)$ 
+    \item $G_{current}$ nastav na 0(,id generace)
+    \item dokud $G_{current} < 100$ prováděj \begin{enumerate}
+        \item Pro každý vektor $w \in P$ \begin{enumerate}
+            \item vytvoř 5 simulací prostředí s 10 roboty a orientovanými náhodně
+            \item přiřad každému roboty jako ovladač neuronovou síť s váhami w
+            \item spust simulaci pro 5000 kroků v každé imulci
+            \item každé simulaci spočítej fitness pro skupinku robotů
+            \item průměr z vypočítaných fitness z předchozího kroku přiřaď jako fitness vektoru w
+        \end{enumerate} 
+    \item setřiď vektory podle jejich fitness 
+    \item nejlepších 20 zvol jako elitu $P_{e}$
+    \item zvol náhodně 80 vektorů $P_c$ a aplikuj na ně křížení(prohazuje 1/3 vektoru a shodné páry)
+    \item náhodně 40 vektorů z $P_c$ a aplikuj mutační operátor(přičtení náhodného čásla z $(-1,1)$)
+    \item jako P zvol $P_c \cup P_e$
+    \item $G_{current} += 1$
+    \end{enumerate} 
+    \item Vrať jedince, který má z P největší fitness    
+\end{enumerate} 
+\par 
+\textbf{Fitness Funkce}: První použitá $fitness_1$ z tohoto experimentu, obrácená hodnota průměrné vzdálenosti do středu robotické skupiny. 
+\par
+\begin{center}
+\textbf{$fitness_1 = \frac{1}{\frac{1}{n\sum\limits_{r=1}^{n} d{rc}}} $}
+\end{center}
+\par 
+Kde $n$ je počet robotů v robotické skupině, $r$ je robotův index, $d_{rc}$ je euklidovská vzdálenost mezi $r$ středem robotické skupiny $c$. 
+\par
+Druhá $fitness_2$ používá metodu "inverse of hierarchical social entropy" Balche \citep{balch2000hierarchic}. Tato metoda počítá kompaktnost skupiny, tím že hledá každý možnou skupinku(cluster) pomocí změn maximální vzdálenosti $h$ mezi jedinci ze stejného clusteru. Přidávají ještě rozšíření od "Shannon's information entropy", jenž používá pevné $h$. Toto rozšíření je definováno: 
+\par 
+\begin{center}
+\textbf{$H(h)=-\sum\limits_{k=1}^{M} p_k log_2(p_k)$}
+\end{center}
+\par 
+H se nazývá entropie, $p_k$ je proporce jedince z clusteru $k$, $M$ je počet clusterů pro dané $h$. Konečně celý předpis daný Balchem vypadá následovně: 
+\par
+\begin{center}
+\textbf{$fitness_2 = \frac{1}{\int_{0}{\infty}H(h)dh}$}
+\end{center}
 %% https://link.springer.com/article/10.1007/s11721-012-0075-2 \par
 
