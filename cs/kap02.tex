@@ -165,5 +165,19 @@ H se nazývá entropie, $p_k$ je proporce jedince z clusteru $k$, $M$ je počet 
 \end{center}
 \par 
 Ve výsledku se ukázalo použití neuronových sítí a genetického algoritmu jako vhodného prostředku pro učení robotického hejna. Neboť se vygenerované chování se obstojně shlukují do úzkých skupin. Definují další tzv. cost funkci pro měření úspěchu nalezených chování, aby mohli porovnávat funkce fitness. A $fitness_2$ se ukazuje jako účinější. 
-%% https://link.springer.com/article/10.1007/s11721-012-0075-2 \par
+\subsection{Evoluční strategie a neuronová síť}
+V článku "Self-organised path formation in a swarm of robots" \citep{sperati2011self} aplikují pro řízení robotických hejn Evoluční strategie. Jako cíl si článek klade problém průzkumu a navigace v neznámém prostředí v kontextu robotických hejn. Experiment, který měl otestovat uvedené vlastnosti robotického hejna, spočíval v co nejrychlejším přesunu celého hejna mezi dvoumi prostory v neznámém prostředí. 
+\par 
+Pro simulaci bylo využito upravené verze OS Evorobota a jako model jedince z hejna e-puck robot \citep{mondada2009puck}. Tento robot se pohybuje pomocí dvou-koleček, má 8 infračervených sensorů, navíc jeden infračervený sensor na povrch a jeden rozpoznávací bravy vpředu(,černobílé prostředí v tomto případě,). Navíc mu byl přidělána LED vpředu s modrou barvou a červenou vzadu, které může zapínat a vypínat dle potřeby, a snímač barev na vrchu. 
+\par
+Pro ovládání robota zvolili autoři neronovou síť se 13 vstupy(8 infračervené sensory, 1 binární podlahový sensor (bílá vs. černá), 4 binární visuální snímače), dále 3 skryté neurony a 4 výstupní neurony(2 ovládající kolečka, 2 aktivující přední a zadní led). Formou jsou podobné předchozím modelům robotů. 
+\par
+Fitness funkce je vyhodnoce po nasazení do robotů a provedení simulace, vlastní fitness je pak průměr z 15 běhů. Ve vyznačených místech se roboti nabíjí, což trvá daný čas a roboti s lepší efektivitou přesunů z jednoho místa do druhého stihnout cestu tam a zpět mnohem rychleji.
+\par 
+Výsledky prokazatelně ukazují úspěšné použití Evolučních strategií na optimalizaci chování robotického hejna. Pro většinu prostředí dokázali najít efektivní řešení a jak lze vidět na nákresech,dráhy se optimalizují ve dvou směrnou cestu pro přesun z A do B.
+\par
+\begin{center}
+    \includegraphics[scale=0.8]{../img/drahyEs.png}
+\end{center}
+
 
