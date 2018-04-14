@@ -1,9 +1,39 @@
 %%% Kapitoly
 \chapter{Experimenty}
 \section{Úvod}
-Všechny práce zmíněné v úvodní kapitole, sice používají evolučních algoritmů k vytvoření řízení chování robotického swarmu s pouze jedním druhem robotů. Cílem této práce je zmapovat použití jednoduchých evolučních algoritmů i pro heterogenní swarmy. Následující části mají přiblížit obecný postup při hledání optimálního chování hejn, stručně popsat jednotlivé experimenty a poté se věnovat podrobněji každému experimentu zvlášť. Nejvíce se rozepíši o prvním experimentu, protože ten sloužil jako testující pro rozličné postupy a podle něj jsem přistupoval i k ostatním experimentům.  
+Všechny práce zmíněné v úvodní kapitole, sice používají evolučních algoritmů k vytvoření řízení chování homogenního robotického hejna, tzn. s pouze jedním druhem robotů. Cílem této práce je najít použití evolučních algoritmů i pro heterogenní hejna. Následující části mají přiblížit obecný postup při hledání optimálního chování hejn, stručně popsat jednotlivé experimenty a poté podrobněji rozebereme každý  experiment zvlášť.
+\par 
+\subsection{Experimenty}
+Pro testování jsem zvolil tři rozličné scénáře. Hlavní motivací bylo jednotlivé úkoly pro hejno udělat komplexnější, aby každá skupina robotů byla schopna řešit pouze část ze zadání scénáře. Také jsem se snažil, aby se scénáře blížily reálným situacím z reálného světa.\par 
+\textbf{Pracovní názvy}
+\begin{enumerate}
+	\item Wood Scene
+	\item Mineral Scene
+	\item Competitive Scece
+\end{enumerate}
+\subsubsection{Wood Scene}
+Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. První robot plní úkol objevování a kácení stromu, ale neumí je převážet, v mém frameworku se nazývá Wood Scout. Oproti tomu druhý robot má vlastní kontejner na objekty, také je umí zvedat a následně pokládat. Ve frameworku pojmenovaný Wood Worker. Ovšem neumí stromy zpracovávat. Jedná se tedy o úkol typu najdi označ a převez.
 
+\subsubsection{Mineral Scene}
+Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní 
+nerostné suroviny pro běh.
+
+\subsubsection{Competitive Scene}
+Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
+\subsection{První Kroky}
+\unsure{Pravděpodobně špatný název kapitoly}
+\par
+Nejvíce se budu věnovat prvnímu scénáři, protože jsem na něm strávil většinu času a testoval na něm různé postupy. Také jsem jej používal  jako benchmark pro počítání průsečíků, paralelního zpracování jednotlivých generací, v neposlední řadě sloužil pro odhalení většiny chyb simulace, návrhu vizualizace a formátu souboru pro nastavení ES,DE. Nakonec se ukázalo, že postup aplikovaný na jeho řešení je rentabilní i pro další dva scénáře. Takže pro další dva scénáře už bylo klíčové nalézt pouze fitness funkci a nastavení parametrů DS a ES.
+\par
+V úvodu bych se také rád zmínil o prvotních pokusech řešení problému evoluce heterogenní skupiny robotů právě na prvním ze scénářů. Nejdříve jsem pro otestování prostředí a ověření dostatečné obtížnosti testovacích scénářů zkoušel generovat náhodné neuronové sítě a po-té měřit jejich úspěšnost. Pokud jsem se soustředil pouze na hlavní úkol a roboti nebyly hodnoceny za žádné další interakce, tak žádný ani z 20 000 jedinců nedosáhl na jiné hodnocení než 0. Což prokázalo komplexnost scénářů a jich obtížnost.
+\par 
+Dále nastal čas vyzkoušet evoluční algoritmy pro vytvoření chování(, tzn. optimalizaci neuronové sítě). Zvolil jsem, stejně jako v předchozím případě, fitness funkci hodnotící pouze hlavní cíl scénáře. Tento postup se také ukázal opět jako nedostatečný, jelikož žádná z náhodně vytvořených neuronových sítí nebyla schopna řešit žádným způsobem (, ani velmi hloupě). Diferenciální evoluce se v tomto případě chovala velmi podobně jako "random search" algoritmus, jelikož hodnota fitness byla pro  všechny řešení 0,. Evoluční strategie měly problém se pohnout jakýmkoli směrem, protože směr prohledávání řešení je závislý na velikostech fitness. Což lze jednoduše vypozorovat z definice algoritmu v kapitole \ref{sec:ES} o ES. Takže i tento postup se ukázal bez jakéhokoli výsledku. \unsure{Nenapadá mě, jak kreslit graf s nulovou fitness, nakreslit vzdálenosti mezi jednotlivými neuronkami?}
+\redo{Přidat tabulku s parametry funkce těchto běhů} 
+\par 
+Dalším vylepšením bylo přidat některé meta-úkoly, které budou jednoduché a dosažitelné i pro vygenerované algoritmy. Předpokládal jsem, že jejich postupné vylepšování evolučními algoritmy povede k řešení složitějších úkolů a nakonec až k hlavnímu cíli. Například zahrnout fitness počet navštívený částí mapy, už před připraveným objektů a podobně. V ideální případě by se měla populace blížit k ideálnímu řešení jednoho z jednodušších meta-úloh. Díky tomu by mělo být jednoduší narazit na chování řešící i složitější úlohy, protože spolu evidentně souvisí. Což můžeme ilustrovat na WoodScene scénáři, kde roboti prozkoumávající rychle a ve velké rozptylu mají možnost pokácet vícero stromů. I přes mé optimistické výhledy se ukázalo, že jedinci jsou díky složitější fitness funkci mnohem náchylnější k zaseknutí v lokálním optimu. Zasekávaly se u jednodušších úkolů, vylepšovali jen je. Nové komplexnější chování se objevilo velmi zřídka a jedinci obdařeny těmito vlastnosti opět vylepšovali pouze jednoduché chování. Pokusil jsem se zabránit zaseknutím v lokálních maximech přes různé ohodnocení fitness, ale výsledky opět neukázali přívětivé.\par
+Z předchozích zkušeností jsem usoudil, že bude potřeba vytvořit nějakou postupnou cestu k řešení tolik náročného cíle. \unsure{Můžu přiznat, že mi vedoucí radí?} Na základě konzultací se svým vedoucím jsem vytvořil koncept meta-úkolů, jedná se o jednodušší úlohy vedoucí k té hlavní. Od předchozího postupu se odlišuje oddělením jednotlivých fitness funkcí odpovídající meta-úkolu. Použiji evoluční algoritmy s fitness funkcí pouze aktuálního meta-úkolu a po dosažení dostatečné úrovně splnění meta-úkolu, vezmu vytvořenou generaci a použiji na ní evoluční algoritmus s fitness soustředěnou na následující meta-úkol. Tento postup opakuji až jako fitness funkci použiji vlastní ohodnocení scénáře. Uvedený přístup konečně vedl k uspokojivým výsledkům a jednotlivé průběhy budou popsány v dalších kapitolách. 
 \section{Použité algoritmy}
+\redo{Předělat tuto kapitolu}
 Vybral jsem dva evoluční algoritmy, které se zdáli při prvotních testech nejvíce perspektivní. Při evoluci homogenních robotů se nejčastěji používají Evoluční Strategie jako jeden z optimalizačních algoritmů, také proto jsem je zvolil jako jeden z využívaných algoritmů. Druhá volba padla na o něco méně agresivní optimalizaci v podobě Diferenciální Evoluce. Oba algoritmy jsou popsány v kapitole o evolučních algoritmech. \par 
 Při prvotních zkušebních optimalizací se ukázalo, že optimalizovat rovnou celý cíl jednotlivých scénářů není příliš slibné. Po konzultaci s vedoucím, jsem se rozhodl rozdělit vždy cíl na jednotlivé pod-úkoly hlavního cíle scénáře. Jednotlivé pod-úkoly neřeší vždy všichni roboti najednou, ale některé jen homogenní skupina. Nicméně nejpozději v posledním pod-úkolu už jsou evolvovány společně.
 \par
@@ -17,24 +47,6 @@ Jako samozřejmostí u každého robota najdeme line senzory, touch senzory, dvo
 \subsection{Evoluční strategie}
 \redo{Nastavení parametrů, varianta, praktická implementace}
 
-\section{Experimenty}
-Pro testování jsem zvolil tři rozličné scénáře. Hlavní motivací bylo jednotlivé úkoly pro hejno udělat komplexnější, aby každá skupina robotů uměla řešit pouze část ze zadání úkoly. Také jsem se snažil, aby se scénáře blížili reálným situacím v dnešním každodenním světě.\par 
-\textbf{Pracovní názvy}
-\begin{enumerate}
-    \item Wood Scene
-    \item Mineral Scene
-    \item Competitive Scece
-\end{enumerate}
-
-\subsection{Wood Scene}
-Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. První robot plní úkol objevování a kácení stromu, ale neumí je převážet, v mém frameworku se nazývá Wood Scout. Oproti tomu druhý robot má vlastní kontejner na objekty, také je umí zvedat a následně pokládat. Ve frameworku pojmenovaný Wood Worker. Ovšem neumí stromy zpracovávat. Jedná se tedy o úkol typu najdi označ a převez.
-
-\subsection{Mineral Scene}
-Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní 
-nerostné suroviny pro běh.
-
-\subsection{Competitive Scene}
-Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
 
 \section{WoodScene experiment}
 Cílem tohoto scénáře je shromáždit uprostřed mapy, co nejvíce zpracovaného dřeva. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru, po-té následuje 2000 iterací simulace mapy. 
@@ -121,10 +133,10 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 \subsubsection{Diferenciální Evoluce}
 Pro diferenciální evoluci jsem zvolil 100 jedinců jako velikost populace, kteří procházejí přes 1000 generací. Mezi nejtěžší přípravy evolučních algoritmů patří volba parametrů evoluce u DE se konkrétně jedná o pravděpodobnost křížení(CR) a váhu diference(F) (, v angličtině se nazývá Differential weight). Po první testech jsem uvážil $F = 0.8 $ a $CR = 0.5$ jako nejlepší volbu. 
 \subsubsection{Evoluční Strategie}
-U Evolučních Strategiích, které mají trochu jinou formu mutací, budu evolvovat 8 jedinců. Tyto jedinci projdou 200 generací a velikost mutačního kroku  v každé generaci je právě 20. Varianta $(\sigma,\lambda)$ se ukázala jako vhodnější volba, neaplikuji tedy elitimus, při testech se stávalo, že se jedinec na začátku zasekl v lokálním optimu a dál se vůbec nevyvíjel. Jako learning rate neboli alpha se osvědčila hodnota 0.05 a rozptyl u šumů normálního rozdělení sigma roven 0.1.
+U Evolučních Strategiích, které mají trochu jinou formu mutací, budu evolvovat 8 jedinců. Tyto jedinci projdou 200 generací a velikost mutačního kroku  v každé generaci je právě 20. Varianta $(\sigma,\lambda)$ se ukázala jako vhodnější volba, neaplikuji tedy elitismus, při testech se stávalo, že se jedinec na začátku zasekl v lokálním optimu a dál se vůbec nevyvíjel. Jako learning rate neboli alpha se osvědčila hodnota 0.05 a rozptyl u šumů normálního rozdělení sigma roven 0.1.
 \subsection{Výsledky Experimentu}
 \subsection{První běh}
-Pro ověření správnosti obou evolučních algoritmů jsem nejprve, v mém programu sloužícímu k optimalizaci, pozoroval chování robotů s náhodně vygenerovaným chováním, kdy se většina z nich točila dokola uprostřed mapy a objevila pouze objekty v nejbližším okolí. Oba druhy robotů použité v WoodScene scénáři se od sebe v podstatě v chování neliši. První pod-úkol, který měl naučit pohybu, jak WoodWorker robota tak WoodCutter robota, jsem nastavil dle následujících tabulek. WoodWorker je ohodnocen za nález zpracovaného dřeva a WoodCutter za stromů, aby se připravovali na budoucí hlavní úkol.\par
+Pro ověření správnosti obou evolučních algoritmů jsem nejprve, v mém programu sloužícímu k optimalizaci, pozoroval chování robotů s náhodně vygenerovaným chováním, kdy se většina z nich točila dokola uprostřed mapy a objevila pouze objekty v nejbližším okolí. Oba druhy robotů použité v WoodScene scénáři se od sebe v podstatě v chování nelišily. První pod-úkol, který měl naučit pohybu, jak WoodWorker robota tak WoodCutter robota, jsem nastavil dle následujících tabulek. WoodWorker je ohodnocen za nález zpracovaného dřeva a WoodCutter za stromů, aby se připravovali na budoucí hlavní úkol.\par
 \redo{Tabulka s konkrétním nastavením fitness \textbf{WoodCutter} pro první úlohu.} \par
 \redo{Tabulka s konkrétním nastavením fitness \textbf{WoodWorker} pro první úlohu.} \par
 \par
