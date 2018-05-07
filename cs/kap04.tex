@@ -31,7 +31,9 @@ Dále nastal čas vyzkoušet evoluční algoritmy pro vytvoření chování(, tz
 \redo{Přidat tabulku s parametry funkce těchto běhů} 
 \par 
 Dalším vylepšením bylo přidat některé meta-úkoly, které budou jednoduché a dosažitelné i pro vygenerované algoritmy. Předpokládal jsem, že jejich postupné vylepšování evolučními algoritmy povede k řešení složitějších úkolů a nakonec až k hlavnímu cíli. Například zahrnout fitness počet navštívený částí mapy, už před připraveným objektů a podobně. V ideální případě by se měla populace blížit k ideálnímu řešení jednoho z jednodušších meta-úloh. Díky tomu by mělo být jednoduší narazit na chování řešící i složitější úlohy, protože spolu evidentně souvisí. Což můžeme ilustrovat na WoodScene scénáři, kde roboti prozkoumávající rychle a ve velké rozptylu mají možnost pokácet vícero stromů. I přes mé optimistické výhledy se ukázalo, že jedinci jsou díky složitější fitness funkci mnohem náchylnější k zaseknutí v lokálním optimu. Zasekávaly se u jednodušších úkolů, vylepšovali jen je. Nové komplexnější chování se objevilo velmi zřídka a jedinci obdařeny těmito vlastnosti opět vylepšovali pouze jednoduché chování. Pokusil jsem se zabránit zaseknutím v lokálních maximech přes různé ohodnocení fitness, ale výsledky opět neukázali přívětivé.\par
-Z předchozích zkušeností jsem usoudil, že bude potřeba vytvořit nějakou postupnou cestu k řešení tolik náročného cíle. \unsure{Můžu přiznat, že mi vedoucí radí?} Na základě konzultací se svým vedoucím jsem vytvořil koncept meta-úkolů, jedná se o jednodušší úlohy vedoucí k té hlavní. Od předchozího postupu se odlišuje oddělením jednotlivých fitness funkcí odpovídající meta-úkolu. Použiji evoluční algoritmy s fitness funkcí pouze aktuálního meta-úkolu a po dosažení dostatečné úrovně splnění meta-úkolu, vezmu vytvořenou generaci a použiji na ní evoluční algoritmus s fitness soustředěnou na následující meta-úkol. Tento postup opakuji až jako fitness funkci použiji vlastní ohodnocení scénáře. Uvedený přístup konečně vedl k uspokojivým výsledkům a jednotlivé průběhy budou popsány v dalších kapitolách. 
+Z předchozích zkušeností jsem usoudil, že bude potřeba vytvořit nějakou postupnou cestu k řešení tolik náročného cíle. \unsure{Můžu přiznat, že mi vedoucí radí?} Na základě konzultací se svým vedoucím jsem vytvořil koncept meta-úkolů, jedná se o jednodušší úlohy vedoucí k té hlavní. Od předchozího postupu se odlišuje oddělením jednotlivých fitness funkcí odpovídající meta-úkolu. Použiji evoluční algoritmy s fitness funkcí pouze aktuálního meta-úkolu a po dosažení dostatečné úrovně splnění meta-úkolu, vezmu vytvořenou generaci a použiji na ní evoluční algoritmus s fitness soustředěnou na následující meta-úkol. Tento postup opakuji až jako fitness funkci použiji vlastní ohodnocení scénáře. Uvedený přístup konečně vedl k uspokojivým výsledkům a jednotlivé průběhy budou popsány v dalších kapitolách. \par 
+Zkoušel jsem také testovat, roboty s paměťovými sloty oproti těm bez. Úspěšnost a konvergence robotů s pamětí se znatelně se učil pomaleji. Největší problém byl s tím, že robot se dostal do kolize s prostředí a pak vycouval, ale protože si nedrží žádný stav, tak znovu najel do kolize a stále dokola. Roboty bez slotů se nebyly schopni přiblížit k výsledkům těm s pamětí ani při velkém počtu generací. Z tohoto důvodu všichni roboti mají připojeno alespoň 5 paměťových slotů. Paměťový slot zároveň chová jako senzor i jako efektor. 
+
 \section{Použité technologie}
 \subsection{Reprezentace Chování}
 Pro ovládání robotů jsem zvolil v poslední době velmi oblíbené neuronové sítě. Použil jsem jejich oblíbenou definici podle pánů Warren S. McCulloch a  Walter Pitts \citep{neuron}, kteří ji prezentovali už v roce 1943. 
@@ -52,21 +54,10 @@ Pro ovládání robotů jsem zvolil v poslední době velmi oblíbené neuronov�
 \subsection{Evoluční algoritmy}
 Neuronovou sítě si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel(, vah vstupů + práh \boldsymbol{$v =(x_0,x_1...x_n,\Theta)$}. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají Evoluční strategie a Diferenciální evoluce. I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu jsou popsány v přiložené dokumentaci. \redo{Přidat do docu}
 \par
-\redo{Předělat}
-Zkoušel jsem také testovat, roboty s paměťovými sloty oproti těm bez. Úspěšnost a konvergence robotů s pamětí se znatelně se učil pomaleji. Roboty bez slotů se nebyly schopni přiblížit k výsledkům těm s pamětí ani při velkém počtu generací. Z tohoto důvodu všichni roboti mají připojeno alespoň 10 paměťových slotů. Paměťový slot zároveň chová jako senzor i jako efektor. 
-\par 
-Jako samozřejmostí u každého robota najdeme line senzory, touch senzory, dvou-kolečkový motor, lokátor. \par 
-
-\subsubsection{Diferenciální Evoluce}
- \redo{Nastavení parametrů, varianta, praktická implementace}
-
-\subsubsection{Evoluční strategie}
-\redo{Nastavení parametrů, varianta, praktická implementace}
-
-
 \section{WoodScene experiment}
+\subsection{Cíl Experimentu}
 Cílem tohoto scénáře je shromáždit uprostřed mapy, co nejvíce zpracovaného dřeva. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru, po-té následuje 2000 iterací simulace mapy. 
-
+\redo{Přidat obrázky s popisem scény}
 \subsection{Roboti}
 \subsubsection{Scout robot}
 Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených stromů. Pro komunikaci s ostatními roboty má možnost vysílat rádiový signál s hodnotou 0. Oproti Worker robotovi je menší, rychlejší, jeho senzory mají větší dosah, navíc proti němu disponuje type senzorem a refaktorem nalezených stromů. Type senzor představuje formu radaru, říká robotovi s jakou četností se vyskytují v dosahu senzoru. Refaktor reprezentuje techniku kácení mění strom na dřevo. 
@@ -135,7 +126,7 @@ Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci
 \end{enumerate}
 
 \subsection{Pod-úkoly} 
-Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů postupně těžších a těžších cílů. Hlavně také, abych mohl porovnat oba evoluční algoritmy. \redo{Bojím se, že pro ES to nebude stačit} 
+Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů postupně těžších a těžších cílů. Hlavně také, abych mohl porovnat oba evoluční algoritmy.  
 \begin{enumerate}
         \item vygenerování robotů = Na začátku je vygenerováno chování robotů naprosto náhodně. Pro každého robota, je vygenerována náhodná jednovrstvá neuronová síť. 
         \item učení chůze = Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali, co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí(záporným ohodnocením) a na nalezené stromy(kladným ohodnocením).
@@ -143,18 +134,273 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
         \item převoz dřeva = Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
         \item kooperace = V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
+\subsubsection{Scout chůze}
+\paragraph{Nastavení experimentu}
+\begin{center}
+\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+	\toprule
+	& \mc{} & \mc{}\\
+	\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+	\midrule
+	Roboti:     & Scout-5 \\
+	Počet generací: & 1000\\
+	Počet iterací map & 1000\\
+	Velikost generace(DE) & 200\\
+	Počet jedinců(ES) & 10\\
+	Počet mutovaný potomků(ES)&20\\
+	Elitismus(ES)& Ano\\
+	Elitismus(DE)& Ne \\
+	\bottomrule
+	\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+	  Nastavení evolučních algoritmů}
+\end{tabular}
 
-\subsection{Nastavení EA}
-\subsubsection{Diferenciální Evoluce}
-Pro diferenciální evoluci jsem zvolil 100 jedinců jako velikost populace, kteří procházejí přes 1000 generací. Mezi nejtěžší přípravy evolučních algoritmů patří volba parametrů evoluce u DE se konkrétně jedná o pravděpodobnost křížení(CR) a váhu diference(F) (, v angličtině se nazývá Differential weight). Po první testech jsem uvážil $F = 0.8 $ a $CR = 0.5$ jako nejlepší volbu. 
-\subsubsection{Evoluční Strategie}
-U Evolučních Strategiích, které mají trochu jinou formu mutací, budu evolvovat 8 jedinců. Tyto jedinci projdou 200 generací a velikost mutačního kroku  v každé generaci je právě 20. Varianta $(\sigma,\lambda)$ se ukázala jako vhodnější volba, neaplikuji tedy elitismus, při testech se stávalo, že se jedinec na začátku zasekl v lokálním optimu a dál se vůbec nevyvíjel. Jako learning rate neboli alpha se osvědčila hodnota 0.05 a rozptyl u šumů normálního rozdělení sigma roven 0.1.
+\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+	\toprule
+	& \mc{} & \mc{}\\
+	\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+	\midrule
+	Hodnota nalezeného stromu &  10 \\
+	Ostatní hodnoty: & 0\\
+	Počet stromů: & 300\\
+	Počet už pokácených stromů & 100\\
+	\bottomrule
+	\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+		Nastavení hodnocení fitness}
+\end{tabular}
+\end{center}
+\paragraph{Průběh fitness u ES} 
+\paragraph{Průběh fitness u DE}
+\paragraph{Porovnání ES a DE}
+  
+\begin{center}
+\par
+\subsubsection{Worker chůze}
+\begin{center}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Roboti:     & Worker-4 \\
+		Počet generací: & 1000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 200\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&20\\
+		Elitismus(ES)& Ano\\
+		Elitismus(DE)& Ne \\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Hodnota nalezeného pokáceného stromu &  100 \\
+		Ostatní hodnoty: & 0\\
+		Počet stromů: & 200\\
+		Počet už pokácených stromů & 200\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení hodnocení fitness}
+	\end{tabular}
+\end{center}
+\paragraph{Průběh fitness u ES} 
+\paragraph{Průběh fitness u DE}
+\paragraph{Porovnání ES a DE}
+
+\par 
+\subsubsection{Scout kácení}
+
+\begin{center}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Roboti:     & Scout-5 \\
+		Počet generací: & 1500\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 200\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&20\\
+		Elitismus(ES)& Ano\\
+		Elitismus(DE)& Ne \\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Hodnota nalezeného stromu &  1000\\
+		Hodnota pokáceného stromu & 10000\\
+		Hodnota kolize & -1\\
+		Ostatní hodnoty: & 0\\
+		Počet stromů: & 400\\
+		Počet už pokácených stromů & 0\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení hodnocení fitness}
+	\end{tabular}
+\end{center}
+
+\par 
+\subsubsection{Worker sbírání}
+\begin{center}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Roboti:     & Worker-4 \\
+		Počet generací: & 2000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 200\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&20\\
+		Elitismus(ES)& Ano\\
+		Elitismus(DE)& Ne \\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Hodnota nalezeného pokáceného stromu &  100 \\
+		Hodnota uloženého dřeva & 1010\\
+		Hodnota dřeva v kontejneru & 1000\\
+		Hodnota jiné entity v kontejneru & -100\\
+		Hodnota kolize & -1\\
+		Ostatní hodnoty: & 0\\
+		Počet stromů: & 200\\
+		Počet už pokácených stromů & 200\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení hodnocení fitness}
+	\end{tabular}
+\end{center}
+\paragraph{Průběh fitness u ES} 
+\paragraph{Průběh fitness u DE}
+\paragraph{Porovnání ES a DE}
+
+
+\par 
+\par 
+\subsubsection{Worker ukládání doprostřed}
+\begin{center}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Roboti:     & Worker-4 \\
+		Počet generací: & 2000\\
+		Počet iterací map & 2000\\
+		Velikost generace(DE) & 200\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&20\\
+		Elitismus(ES)& Ano\\
+		Elitismus(DE)& Ne \\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Hodnota nalezeného pokáceného stromu &  100 \\
+		Hodnota uloženého dřeva & 1000\\
+		Hodnota dřeva v kontejneru & 100\\
+		Hodnota jiné entity v kontejneru & -100\\
+		Hodnota kolize & -1\\
+		Ostatní hodnoty: & 0\\
+		Počet stromů: & 200\\
+		Počet už pokácených stromů & 200\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení hodnocení fitness}
+	\end{tabular}
+\end{center}
+
+
+
+\par 
+\paragraph{Průběh fitness u ES} 
+\paragraph{Průběh fitness u DE}
+\paragraph{Porovnání ES a DE}
+\subsubsection{Kooperace  hlavní úkol}
+\begin{center}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Roboti:     & Scout-5, Worker-4 \\
+		Počet generací: & 4000\\
+		Počet iterací map & 2000\\
+		Velikost generace(DE) & 200\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&20\\
+		Elitismus(ES)& Ano\\
+		Elitismus(DE)& Ne \\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		Hodnota nalezeného pokáceného stromu &  100 \\
+		Hodnota uloženého dřeva & 1000\\
+		Hodnota dřeva v kontejneru & 100\\
+		Hodnota jiné entity v kontejneru & -100\\
+		Hodnota kolize & -1\\
+		Ostatní hodnoty: & 0\\
+		Počet stromů: & 400\\
+		Počet už pokácených stromů & 0\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení hodnocení fitness}
+	\end{tabular}
+\end{center}
+\par 
+\paragraph{Průběh fitness u ES} 
+\paragraph{Průběh fitness u DE}
+\paragraph{Porovnání ES a DE}
+\subsubsection{Nastavení parametrů}
+\begin{center}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Parametr:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		F(DE):     & 0.8 \\
+		CR(DE):  & 0.5 \\
+		alpha(ES) & 0.05 \\
+		sigma(ES) & 0.1\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	\par 
 \subsection{Výsledky Experimentu}
 \redo{Předělat vyhodit první běh, použít jen poslední }
-\subsection{První běh}
-Pro ověření správnosti obou evolučních algoritmů jsem nejprve, v mém programu sloužícímu k optimalizaci, pozoroval chování robotů s náhodně vygenerovaným chováním, kdy se většina z nich točila dokola uprostřed mapy a objevila pouze objekty v nejbližším okolí. Oba druhy robotů použité v WoodScene scénáři se od sebe v podstatě v chování nelišily. První pod-úkol, který měl naučit pohybu, jak WoodWorker robota tak WoodCutter robota, jsem nastavil dle následujících tabulek. WoodWorker je ohodnocen za nález zpracovaného dřeva a WoodCutter za stromů, aby se připravovali na budoucí hlavní úkol.\par
-\redo{Tabulka s konkrétním nastavením fitness \textbf{WoodCutter} pro první úlohu.} \par
-\redo{Tabulka s konkrétním nastavením fitness \textbf{WoodWorker} pro první úlohu.} \par
-\par
-Po dokončení evoluce prvního pod-úkolu, se v populaci už dále neobjevovali jedinci, kteří by měli problém s pohybem. Vyhýbali se překážkám a snažili se rozptýlit po, co největší ploše. Nejlepší z jedincí byli schopni objevit až 80\% všech stromů na mapě. Na následujících dvou grafech můžeme pozorovat změnu hodnotu fitness u každého EA a druhu robota. Co se týče porovnání WoodWorkera a WoodCuttera, tak si WoodCuttera vedl znatelně lépe, což přisuzuji větší délce jeho line senzorům a absenci type senzoru u WoodWorkera. Tento pod-úkol by se dal považovat za benchmark obou optimalizačních algoritmů a také za kontrolu jejich správnosti. 
 
