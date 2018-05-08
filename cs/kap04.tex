@@ -12,7 +12,6 @@ Pro testování jsem zvolil tři rozličné scénáře. Hlavní motivací bylo j
 	\item Competitive Scece
 \end{enumerate}
 \subsubsection{Wood Scene}
-Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. První robot plní úkol objevování a kácení stromu, ale neumí je převážet, v mém frameworku se nazývá Wood Scout. Oproti tomu druhý robot má vlastní kontejner na objekty, také je umí zvedat a následně pokládat. Ve frameworku pojmenovaný Wood Worker. Ovšem neumí stromy zpracovávat. Jedná se tedy o úkol typu najdi označ a převez.
 
 \subsubsection{Mineral Scene}
 Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní 
@@ -56,65 +55,99 @@ Neuronovou sítě si lze představit jako množinu vektorů, kde jeden perceptro
 \par
 \section{WoodScene experiment}
 \subsection{Cíl Experimentu}
-Cílem tohoto scénáře je shromáždit uprostřed mapy, co nejvíce zpracovaného dřeva. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru, po-té následuje 2000 iterací simulace mapy. 
-\redo{Přidat obrázky s popisem scény}
+Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru. Na náhodných pozicích jsou rozmístěny stromy. Scout roboti musí nejdříve strom nalézt a zpracovat, disponují totiž efektorem zpracovávající dřevo. Ovšem Scout roboti neuvezou žádné entity, proto Worker roboti mají za úkol zpracovaný strom naložit a odvézt do skládacího prostoru.
+\par
+V rámci bakalářské práce byla připraven program zajišťující jednoduchou vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena čtvercovými hranicemi, které se chovají jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva. Hnědé kolečka zastupují pokácené dřevo. V některých pod-úkolech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplněny červenou barvou, jejich sensory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. \par
+Pro potvrzení, že scénář není triviálně řešitelný. Bylo vygenerováno tisíc náhodných chování. Hodnoceny byly dle fitness funkce podúkolu kooperace popsaný níže. Nejlepší z nich můžete vidět těsně po inicializaci mapy \ref{obr04:WoodSceneRandomStart}. Výsledek krátce před 10 000 iterací je zachycen v obrázku \ref{obr04:WoodSceneRandomEnd}
+
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/StartRandom.png}
+	\caption{Příklad WoodScene mapy: start náhodného chování}
+	\label{obr04:WoodSceneRandomStart}
+\end{figure}
+\par
+
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/EndRandom.png}
+	\caption{Příklad WoodScene mapy: po 9000 iteracích náhodného chování}
+	\label{obr04:WoodSceneRandomEnd}
+\end{figure}
+\clearpage
 \subsection{Roboti}
 \subsubsection{Scout robot}
 Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených stromů. Pro komunikaci s ostatními roboty má možnost vysílat rádiový signál s hodnotou 0. Oproti Worker robotovi je menší, rychlejší, jeho senzory mají větší dosah, navíc proti němu disponuje type senzorem a refaktorem nalezených stromů. Type senzor představuje formu radaru, říká robotovi s jakou četností se vyskytují v dosahu senzoru. Refaktor reprezentuje techniku kácení mění strom na dřevo. 
 \par 
 \begin{center}
-\begin{tabular}{l  l  l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-        \toprule
-        Tvar: & Kruh & Poloměr: & 2.5 \\
+\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+	\toprule
+	\mc{Scout Robot} \\
+	\midrule
+        Tvar: & Kruh & \\
+        Poloměr: & 2.5 \\
         Název: & WoodCutterM \\
-        Velikost kontejner: & 0 \\
+        Velikost kontejner: & 0\\
         \hline
         Efektory \\
         \midrule
-        Motor: & Dvou kolečkový & Maximální rychlost: & 3 \\
-        Kód rádiového signálu: & 0 & Poloměr signálu: & 200\\
-        Refaktor: & $Strom \Rightarrow Dřevo$ & Dosah refaktoru: & 10\\
-        Počet paměťových slotů: &10 & Obsah slotu: & float\\
+        Motor: & Dvou kolečkový \\
+        Maximální rychlost: & 3 \\
+        Kód rádiového signálu: & 0 \\
+        Poloměr signálu: & 200\\
+        Refaktor: & Strom \Rightarrow Dřevo \\
+        Dosah refaktoru: & 10\\
+        Počet paměťových slotů: & 10 \\
+        Obsah slotu: & float\\
         \hline 
         Senzory \\
         \midrule
-        Počet line senzorů: &  3 & délka: & 50\\
-        Orientace line senzorů: & $0^\circ$ & $45^\circ$ & $-45^\circ$\\
-        Type senzor: & Poloměr: & 50\\
-        Rádiový přijímač: & Poloměr: & 100 \\
-        Touch senzory: & Počet: & 8 \\  
+        Počet line senzorů: &  3 \\
+        Délka line senzorů: & 50\\
+        Orientace line senzorů: & 0^\circ, 45^\circ, -45^\circ \\
+        Poloměr type senzoru: & 50\\
+        Poloměr rádiového přijímače: &  100 \\
+        Počet touch senzorů: & 8 \\  
         Lokátor senzor\\ 
-        \bottomrule
+	\bottomrule
+	\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+	Scout robot popis}
 \end{tabular}
 \end{center}
 \subsubsection{Worker robot}
 Worker robot se stará o transport objektů na mapě. Ke komunikaci využívá signálů s kódem 1. Sebrané objekty ukládá do kontejneru, kam se vejde 5 entit. Zvedání a pokládání probíhá skrze efektor Picker. 
 \par 
 \begin{center}
-\begin{tabular}{l  l  l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-                \toprule
-                Tvar: & Kruh & Poloměr: & 5\\
+	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+			\toprule
+			\mc{Worker Robot} \\
+			\midrule
+                Tvar: & Kruh\\
+                Poloměr: & 5\\
                 Název: & WoodWorkerM \\
                 Velikost kontejner: & 5\\
                 \hline
                 Efektory \\
                 \midrule
-                Motor: & Dvou kolečkový & Maximální rychlost: & 2 \\
-                Kód rádiového signálu: & 0 & Poloměr signálu: & 200\\
-                Picker: & Dosah pickeru: & 10\\
-                Počet paměťových slotů: &10 & Obsah slotu: & float\\
+                Motor: & Dvou kolečkový \\
+                Maximální rychlost: & 2 \\
+                Kód rádiového signálu: & 0\\
+                Poloměr signálu: & 200\\
+                Dosah pickeru: & 10\\
+                Počet paměťových slotů: &10 \\
+                Obsah slotu: & float\\
                 \hline 
                 Senzory \\
                 \midrule
-                Počet line senzorů: &  3 & délka: & 30\\
-                Orientace line senzorů: & $0^\circ$ & $45^\circ$ & $-45^\circ$\\
-                Rádiový přijímač: & Poloměr: & 100 \\
-                Touch senzory: & Počet: & 8 \\  
+                Počet line senzorů: &  3\\
+                Délka line senzorů: & 30\\
+                Orientace line senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+                Poloměr rádiového přijímače: & 100 \\
+                Počet touch senzorů: & 8 \\  
                 Lokátorový senzor\\ 
-                \bottomrule
+	\bottomrule
+\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+	Scout robot popis}
 \end{tabular}
 \end{center}
-
 \subsection{Vyhodnocování Fitness}
 Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace. I když se úspěšnost v pod-úkolech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
 \begin{enumerate}
@@ -134,127 +167,211 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
         \item převoz dřeva = Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
         \item kooperace = V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
-\subsubsection{Scout chůze}
-\paragraph{Nastavení experimentu}
 \begin{center}
-\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-	\toprule
-	& \mc{} & \mc{}\\
-	\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-	\midrule
-	Roboti:     & Scout-5 \\
-	Počet generací: & 1000\\
-	Počet iterací map & 1000\\
-	Velikost generace(DE) & 200\\
-	Počet jedinců(ES) & 10\\
-	Počet mutovaný potomků(ES)&20\\
-	Elitismus(ES)& Ano\\
-	Elitismus(DE)& Ne \\
-	\bottomrule
-	\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-	  Nastavení evolučních algoritmů}
-\end{tabular}
-
-\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-	\toprule
-	& \mc{} & \mc{}\\
-	\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-	\midrule
-	Hodnota nalezeného stromu &  10 \\
-	Ostatní hodnoty: & 0\\
-	Počet stromů: & 300\\
-	Počet už pokácených stromů & 100\\
-	\bottomrule
-	\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-		Nastavení hodnocení fitness}
-\end{tabular}
+	\subsubsection{Nastavení parametrů}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Parametr:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		F(DE):     & 0.8 \\
+		CR(DE):  & 0.5 \\
+		alpha(ES) & 0.05 \\
+		sigma(ES) & 0.1\\
+		\bottomrule
+		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+	\end{tabular}
+	\par 
 \end{center}
-\paragraph{Průběh fitness u ES} 
-\paragraph{Průběh fitness u DE}
-\paragraph{Porovnání ES a DE}
+\newpage
+	\subsubsection{Scout chůze - nastavení experimentu}
+	\begin{table}[h]\centering
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Roboti:     & Scout-5 \\
+			Počet generací: & 1000\\
+			Počet iterací map & 1000\\
+			Velikost generace(DE) & 200\\
+			Počet jedinců(ES) & 10\\
+			Počet mutovaný potomků(ES)&20\\
+			Elitismus(ES)& Ano\\
+			Elitismus(DE)& Ne \\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+			Nastavení evolučních algoritmů}
+		\end{tabular}
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Hodnota nalezeného stromu &  10 \\
+			Ostatní hodnoty: & 0\\
+			Počet stromů: & 300\\
+			Počet už pokácených stromů & 100\\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení hodnocení fitness}
+		\end{tabular}
+	\caption{Scout chůze - nastavení experimentu}\label{tab04:ScoutWalk}
+	\end{table}
+	
+	\begin{figure}[t]\centering
+		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorWalkMem.png}
+		\caption{ Scout chůze - porovnání průměrné fitness ES a DE}
+		\label{obr04:WalkESvsDE}
+	\end{figure}
+	\redo{Opravit obrázky - rozsahy a popisy}
+	\begin{figure}[p]
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/DE/graph_of_CuttorWalk-mean.png}
+			\caption{DE}
+			\label{obr04:WalkDE}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodWalkES-mean.png}
+			\caption{ES}
+			\label{obr04:WalkES}
+		\end{subfigure}
+		\caption{Scout chůze - průběh fitness }
+		\label{obr04:Walk}
+	\end{figure}
+	\clearpage
   
-\begin{center}
-\par
-\subsubsection{Worker chůze}
-\begin{center}
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Roboti:     & Worker-4 \\
-		Počet generací: & 1000\\
-		Počet iterací map & 1000\\
-		Velikost generace(DE) & 200\\
-		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&20\\
-		Elitismus(ES)& Ano\\
-		Elitismus(DE)& Ne \\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení evolučních algoritmů}
-	\end{tabular}
+	\subsubsection{Worker chůze - nastavení experimentu}
+	\begin{table}[h]\centering
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Roboti:     & Worker-4 \\
+			Počet generací: & 1000\\
+			Počet iterací map & 1000\\
+			Velikost generace(DE) & 200\\
+			Počet jedinců(ES) & 10\\
+			Počet mutovaný potomků(ES)&20\\
+			Elitismus(ES)& Ano\\
+			Elitismus(DE)& Ne \\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení evolučních algoritmů}
+		\end{tabular}
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Hodnota nalezeného pokáceného stromu &  100 \\
+			Ostatní hodnoty: & 0\\
+			Počet stromů: & 200\\
+			Počet už pokácených stromů & 200\\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení hodnocení fitness}
+		\end{tabular}
+		\caption{Worker chůze - nastavení experimentu}
+		\label{tab04:WorkerWalk}
+	\end{table}
+
+	\begin{figure}[t]\centering
+		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerWalkMem.png}
+		\caption{Worker chůze - porovnání průměrné fitness ES a DE}
+		\label{obr04:WWalkESvsDE}
+	\end{figure}
+	\redo{Opravit rozsahy a rozlišení}
+	\begin{figure}[p]
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/DE/graph_of_WorkerWalkMem-mean.png}
+			\caption{DE}
+			\label{obr04:WWalkDE}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodWWalkES-mean.png}
+			\caption{ES}
+			\label{obr04:WWalkES}
+		\end{subfigure}
+		\caption{Worker chůze - průběh fitness v rámci generací}
+		\label{obr04:WWalk}
+	\end{figure}
+	\clearpage 
 	
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Hodnota nalezeného pokáceného stromu &  100 \\
-		Ostatní hodnoty: & 0\\
-		Počet stromů: & 200\\
-		Počet už pokácených stromů & 200\\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení hodnocení fitness}
-	\end{tabular}
-\end{center}
-\paragraph{Průběh fitness u ES} 
-\paragraph{Průběh fitness u DE}
-\paragraph{Porovnání ES a DE}
-
-\par 
-\subsubsection{Scout kácení}
-
-\begin{center}
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Roboti:     & Scout-5 \\
-		Počet generací: & 1500\\
-		Počet iterací map & 1000\\
-		Velikost generace(DE) & 200\\
-		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&20\\
-		Elitismus(ES)& Ano\\
-		Elitismus(DE)& Ne \\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení evolučních algoritmů}
-	\end{tabular}
 	
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Hodnota nalezeného stromu &  1000\\
-		Hodnota pokáceného stromu & 10000\\
-		Hodnota kolize & -1\\
-		Ostatní hodnoty: & 0\\
-		Počet stromů: & 400\\
-		Počet už pokácených stromů & 0\\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení hodnocení fitness}
-	\end{tabular}
-\end{center}
 
-\par 
-\subsubsection{Worker sbírání}
-\begin{center}
+	\subsubsection{Scout kácení - nastavení experimentu}
+		\begin{table}[h]\centering
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Roboti:     & Scout-5 \\
+			Počet generací: & 1500\\
+			Počet iterací map & 1000\\
+			Velikost generace(DE) & 200\\
+			Počet jedinců(ES) & 10\\
+			Počet mutovaný potomků(ES)&20\\
+			Elitismus(ES)& Ano\\
+			Elitismus(DE)& Ne \\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení evolučních algoritmů}
+		\end{tabular}
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Hodnota nalezeného stromu &  1000\\
+			Hodnota pokáceného stromu & 10000\\
+			Hodnota kolize & -1\\
+			Ostatní hodnoty: & 0\\
+			Počet stromů: & 400\\
+			Počet už pokácených stromů & 0\\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení hodnocení fitness}
+		\end{tabular}
+	\caption{Scout kácení - nastavení experimentu}
+	\end{table}
+
+		\begin{figure}[t]\centering
+			\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorCutMem.png}
+			\caption{Scout kácení - porovnání průměrné fitness ES a DE}
+			\label{obr04:CutESvsDE}
+		\end{figure}
+		\redo{Opravit obrázky}
+		\begin{figure}[p]
+			\centering
+			\begin{subfigure}{.5\textwidth}
+				\centering
+				\includegraphics[width=\linewidth]{../img/WoodMap/DE/graph_of_CuttorCut-mean.png}
+				\caption{DE}
+				\label{obr04:CutDE}
+			\end{subfigure}%
+			\begin{subfigure}{.5\textwidth}
+				\centering
+				\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodCutES-mean.png}
+				\caption{ES}
+				\label{obr04:CutES}
+			\end{subfigure}
+			\caption{Scout kácení - průběh fitness v rámci generací}
+			\label{obr04:Cut}
+		\end{figure}
+		\clearpage
+
+	\subsubsection{Worker sbírání - nastavení experimentu}
+	\begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		& \mc{} & \mc{}\\
@@ -290,117 +407,159 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
 			Nastavení hodnocení fitness}
 	\end{tabular}
-\end{center}
-\paragraph{Průběh fitness u ES} 
-\paragraph{Průběh fitness u DE}
-\paragraph{Porovnání ES a DE}
-
-
-\par 
-\par 
-\subsubsection{Worker ukládání doprostřed}
-\begin{center}
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Roboti:     & Worker-4 \\
-		Počet generací: & 2000\\
-		Počet iterací map & 2000\\
-		Velikost generace(DE) & 200\\
-		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&20\\
-		Elitismus(ES)& Ano\\
-		Elitismus(DE)& Ne \\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení evolučních algoritmů}
-	\end{tabular}
-	\par 
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Hodnota nalezeného pokáceného stromu &  100 \\
-		Hodnota uloženého dřeva & 1000\\
-		Hodnota dřeva v kontejneru & 100\\
-		Hodnota jiné entity v kontejneru & -100\\
-		Hodnota kolize & -1\\
-		Ostatní hodnoty: & 0\\
-		Počet stromů: & 200\\
-		Počet už pokácených stromů & 200\\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení hodnocení fitness}
-	\end{tabular}
-\end{center}
-
-
-
-\par 
-\paragraph{Průběh fitness u ES} 
-\paragraph{Průběh fitness u DE}
-\paragraph{Porovnání ES a DE}
-\subsubsection{Kooperace  hlavní úkol}
-\begin{center}
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Roboti:     & Scout-5, Worker-4 \\
-		Počet generací: & 4000\\
-		Počet iterací map & 2000\\
-		Velikost generace(DE) & 200\\
-		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&20\\
-		Elitismus(ES)& Ano\\
-		Elitismus(DE)& Ne \\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení evolučních algoritmů}
-	\end{tabular}
-	\par 
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		Hodnota nalezeného pokáceného stromu &  100 \\
-		Hodnota uloženého dřeva & 1000\\
-		Hodnota dřeva v kontejneru & 100\\
-		Hodnota jiné entity v kontejneru & -100\\
-		Hodnota kolize & -1\\
-		Ostatní hodnoty: & 0\\
-		Počet stromů: & 400\\
-		Počet už pokácených stromů & 0\\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení hodnocení fitness}
-	\end{tabular}
-\end{center}
-\par 
-\paragraph{Průběh fitness u ES} 
-\paragraph{Průběh fitness u DE}
-\paragraph{Porovnání ES a DE}
-\subsubsection{Nastavení parametrů}
-\begin{center}
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Parametr:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		F(DE):     & 0.8 \\
-		CR(DE):  & 0.5 \\
-		alpha(ES) & 0.05 \\
-		sigma(ES) & 0.1\\
-		\bottomrule
-		\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-			Nastavení evolučních algoritmů}
-	\end{tabular}
-	\par 
+	\caption{Worker sbírání - nastavení experimentu}
+	\end{table}
+	\begin{figure}[t]\centering       
+		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/PickUp.png}
+		\caption{ Worker sbírání - porovnání průměrné fitness ES a DE}
+		\label{obr04:PickupESvsDE}
+	\end{figure}
+	\redo{Opravit obrázky
+	}\begin{figure}[p]
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/DE/graph_of_WorkerPickUpMem-mean.png}
+			\caption{DE}
+			\label{obr04:PickupDE}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodPickupES-mean.png}
+			\caption{ES}
+			\label{obr04:PickupES}
+		\end{subfigure}
+		\caption{Worker sbírání - průběh fitness v rámci generací}
+		\label{obr04:Pickup}
+	\end{figure}
+	\clearpage
+	\subsubsection{Worker ukládání doprostřed  - nastavení experimentu}
+	\begin{table}[h]\centering   
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Roboti:     & Worker-4 \\
+			Počet generací: & 2000\\
+			Počet iterací map & 2000\\
+			Velikost generace(DE) & 200\\
+			Počet jedinců(ES) & 10\\
+			Počet mutovaný potomků(ES)&20\\
+			Elitismus(ES)& Ano\\
+			Elitismus(DE)& Ne \\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení evolučních algoritmů}
+		\end{tabular}
+		\par 
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Hodnota nalezeného pokáceného stromu &  100 \\
+			Hodnota uloženého dřeva & 1000\\
+			Hodnota dřeva v kontejneru & 100\\
+			Hodnota jiné entity v kontejneru & -100\\
+			Hodnota kolize & -1\\
+			Ostatní hodnoty: & 0\\
+			Počet stromů: & 200\\
+			Počet už pokácených stromů & 200\\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení hodnocení fitness}
+		\end{tabular}
+		\caption{Worker ukládání doprostřed  - nastavení experimentu}
+	\end{table}
+	\begin{figure}[t]\centering
+		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/Stock.png}
+		\caption{Worker ukládání doprostřed  - porovnání průměrné fitness ES a DE}
+		\label{obr04:StockESvsDE}
+	\end{figure}
+	\redo{Opravit obrázky
+	}\begin{figure}[p]
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/DE/graph_of_WorkerStockMem-mean.png}
+			\caption{DE}
+			\label{obr04:StockDE}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodStockES-mean.png}
+			\caption{ES}
+			\label{obr04:StockES}
+		\end{subfigure}
+		\caption{Worker ukládání doprostřed  - Průběh fitness v rámci generací}
+		\label{obr04:Stock}
+	\end{figure}
+	\clearpage
+	\subsubsection{Kooperace  hlavní úkol  - nastavení experimentu}
+	\begin{table}[h]\centering
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Roboti:     & Scout-5, Worker-4 \\
+			Počet generací: & 4000\\
+			Počet iterací map & 2000\\
+			Velikost generace(DE) & 200\\
+			Počet jedinců(ES) & 10\\
+			Počet mutovaný potomků(ES)&20\\
+			Elitismus(ES)& Ano\\
+			Elitismus(DE)& Ne \\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení evolučních algoritmů}
+		\end{tabular}
+		\par 
+		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+			\toprule
+			& \mc{} & \mc{}\\
+			\pulrad{\textbf{Vlastnost:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+			\midrule
+			Hodnota nalezeného pokáceného stromu &  100 \\
+			Hodnota uloženého dřeva & 1000\\
+			Hodnota dřeva v kontejneru & 100\\
+			Hodnota jiné entity v kontejneru & -100\\
+			Hodnota kolize & -1\\
+			Ostatní hodnoty: & 0\\
+			Počet stromů: & 400\\
+			Počet už pokácených stromů & 0\\
+			\bottomrule
+			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
+				Nastavení hodnocení fitness}
+			\caption{Kooperace  hlavní úkol  - nastavení experimentu}
+		\end{tabular}
+	\end{table}
+	\begin{figure}[t]\centering
+		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WoodCoop.png}
+		\caption{Kooperace  hlavní úkol  - porovnání průměrné fitness ES a DE}
+		\label{obr04:CoopESvsDE}
+	\end{figure}
+	\redo{Opravit obrázky
+	}\begin{figure}[p]
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/DE/graph_of_WoodCoopMem-mean.png}
+			\caption{DE}
+			\label{obr04:CoopDE}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodCoopES-mean.png}
+			\caption{ES}
+			\label{obr04:CoopES}
+		\end{subfigure}
+		\caption{Kooperace  hlavní úkol  - průběh fitness v rámci generací}
+		\label{obr04:Coop}
+	\end{figure}
+	\clearpage
 \subsection{Výsledky Experimentu}
+
 \redo{Předělat vyhodit první běh, použít jen poslední }
 
