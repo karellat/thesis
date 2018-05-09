@@ -15,21 +15,21 @@ Jako nejčastější výhody RS oproti jednomu robotovi se nejčastěji uváděj
     \end{enumerate}
 \par 
 Mimo RS existuje i řada jiných přístupů, které se inspirovaly životem hejn v přírodě. Občas jsou zaměňovány za RS, nejčastěji se jedná o multi-agentní systémy a senzorové sítě (sensor networks). V následující tabulce jsou popsány jejich nejklíčovější vlastnosti. \par
-\redo{Posunutá tabulka nahoře}
 \begin{center}
-    \begin{table} \resizebox{\textwidth}{!}{%
+    \begin{table}[h] \resizebox{\textwidth}{!}{%
     \begin{tabular}{l l l l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
             \toprule
-             & Robotická hejna &  Multi-robotické systémy & Senzorové sítě & Multi-agentní systémy \\
-            Velikost populace & Variabilní ve velkém rozsahu & Malá & Fixní & V malém rozsahu \\
-            Řízení & decentralizované a autonomní & centralizované & centralizované & centralizované \\
-            Odlišnosti & většinou homogenní & většinou heterogenní & homogenní & homogenní nebo heterogenní \\
-            Flexibilita & vysoká & nízká & nízká & střední \\
-            Škálovnatelnos & vysoká & nízká & střední & střední \\
-            Prostředí & neznámé & známé nebo neznámé & známé & známé\\
-            Pohyblivost & ano & ano & ne & vyjímečně\\
+             & \textbf{Robotická hejna} & \textbf{Multi-robotické systémy} & \textbf{Senzorové sítě} & \textbf{Multi-agentní systémy} \\
+            \textbf{Velikost populace }& Variabilní ve velkém rozsahu & Malá & Fixní & V malém rozsahu \\
+            \textbf{Řízení} & decentralizované a autonomní & centralizované & centralizované & centralizované \\
+            \textbf{Odlišnosti} & většinou homogenní & většinou heterogenní & homogenní & homogenní nebo heterogenní \\
+            \textbf{Flexibilita} & vysoká & nízká & nízká & střední \\
+            \textbf{Škálovnatelnos} & vysoká & nízká & střední & střední \\
+            \textbf{Prostředí} & neznámé & známé nebo neznámé & známé & známé\\
+            \textbf{Pohyblivost} & ano & ano & ne & vyjímečně\\
             \hline 
     \end{tabular}}
+	\caption{Porovnání systémů s více agenty}
     \end{table}
     \end{center}
     Také se liší svojí aplikací Robotická hejna se nejčastěji používají v vojenských, nebezpečných úkolech a také pro řešení ekologických katastrof. Multi-robotické systémy potkáváme v transportních, skenovacích úkolech, dále pro řízení robotických fotbalových hráčů. Oproti tomu nejčetnější využití senzorových sítí zasahuje do medicínské oblasti, ochrany životního prostředí. Multi-agentní systémy zase nejvíce zasahují do řízení síťových zdrojů a distribuovaného řízení. 
@@ -54,8 +54,8 @@ V práci "Evolving behaviour trees for Swarm robotics" \cite{jonesevolving} Alan
 \par
 Strom chování je strom, jehož listy interagují s prostředím, vnitřní vrcholy spojují tyto akce dohromady a tvoří rozhodovací a závislostní pravidla. Celý strom je vyhodnocován v pravidelných intervalech, v práci se značí jako \textit{tick}. Opírají se o článek \cite{shoulson2011parameterizing},kde bylo ukázáno, že SC může plnohodnotně reprezentovat konečné automaty, dokonce i když budeme používat pravděpodobností konečné automaty. Jako jedince z hejna zvolili Kilobot, které byl představen Rubensteinen v \cite{Kilobots}. Kilobot se pohybuje pomocí dvou vibračních motorů, komunikují přes infračervený kanál, v prostředí se orientují pomocí foto detektoru a signalizují pomocí LED diod s barevným spektrem. Následující části zjednodušují komunikaci s efektory robota a nad nimi optimalizováno SC. 
 \par
-\begin{center}
-    \begin{tabular}{l  l  l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+\begin{table}[h]\resizebox{\textwidth}{!}{%
+		\begin{tabular}{l l l l l @{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
         \toprule
         Efektor/Senzor & Read or Write & Popis \\
         \midrule
@@ -70,8 +70,9 @@ Strom chování je strom, jehož listy interagují s prostředím, vnitřní vrc
         $\delta vzdálenost_{potrava}$ & R & změna ve vzdálenosti k potravě \\
         $\delta vzdálenost_{hnízdo}$ & R & změna ve vzdálenosti k hnízdu \\ 
         \bottomrule
-    \end{tabular}
-\end{center}
+    \end{tabular}}dno
+	\caption{Parameterizing behavior trees, Motion in Games - podoba stromů}
+\end{table}
 \par
 Tyto akce pak odpovídají listům v SC, vnitřní vrcholy mohou být kompoziční: \textit{seqm}, \textit{selm}, \textit{probm} a tyto mohou mít 2 až 4 syny. Informace procházející mezi vrcholy mohou být následujícího druhu \textit{success}, \textit{failure}, \textit{running}. Zpracovávají informace následujícím způsobem posílají tik do každého syna dokud od nějakého nepřijde hodnota \textit{failure} nebo tik proběhne na všech synech. Pokud proběhne úspěšně tik u všech synů vrací \textit{success}, \textit{failure} jinak. Oproti tomu \textit{selm} vysílá tik, dokud mu nějaký syn nevrátí hodnotu \textit{success} nebo všichni synové provedli tik, pokud se nevrátí jediná hodnota \textit{success}, tak vrací \textit{failure}, v opačném případě \textit{success}. Od obou se liší \textit{probm}, ten s danou pravděpodobností vybere jednoho syna a vrátí jeho odpověď. Vrchol, který má alespoň jednoho syna se statusem \textit{running} vrací stejnou hodnotu. \par
 Vrcholy jen s jedním synem patří do jedné z následujících kategorií: \textit{repeat}, \textit{successd}, \textit{failured}. Vrchol \textit{repeat} vrací tik svým synům, s daným počtem pokusů, dokud nedostane hodnotu \textit{success}. Následující dva vrcholy vrací konstantní odpověď na tik dle svého jména, i přesto pošlou tik svému následníkovi. \par
@@ -96,7 +97,7 @@ Celá populace velikosti $n_{pop}$ je ohodnocena fitness, každý jedinec se hod
 Krom simulace 25 nezávislých běhů evoluce. Také byly otestovány algoritmy na reálných strojích, vytrénované chování bylo otestováno 20 běhy s rozdílnou startovací pozicí a ohodnoceni stejnou fitness. 
 \par 
 
-\begin{center}
+\begin{table}\resizebox{\textwidth}{!}{%
     \begin{tabular}{l  l  l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
         \toprule
         \textbf{Konkrétní nastavení parametrů} \\
@@ -113,8 +114,9 @@ Krom simulace 25 nezávislých běhů evoluce. Také byly otestovány algoritmy 
         $p_{mutn}$ & 0.5 & Pravděpodobnost výměny vrcholu \\
         $p_{mute}$ & 0.5 & Pravděpodobnost výměny konstanty \\
         \bottomrule
-    \end{tabular}
-\end{center}
+    \end{tabular}}
+	\caption{Parameterizing behavior trees, Motion in Games - nastavení parametrů}
+\end{table}
 \par
 Výsledky simulace byly více než uspokojivé v simulační části si hejno vedlo o trochu lépe 0.075 z maximální hodnoty 0.12(minimum 0) a co se týče reálného nasazení vygenerovaného chování 0.058. Což opravdu není velký rozdíl, když přihlédneme k tomu, že evoluce probíhala čistě na simulační rovině. Následující graf zachycuje výslednou fitness. 
 \par
