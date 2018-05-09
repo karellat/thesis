@@ -1,6 +1,5 @@
 %%% Kapitoly
 \chapter{Experimenty}
-\section{Úvod}
 Všechny práce zmíněné v úvodní kapitole, sice používají evoluční algoritmy k vytvoření řízení chování homogenního robotického hejna, tzn. s jedním druhem robotů. V následující kapitole podrobně popíši postup hledání optimální chování pro heterogenního hejna. Optimalizaci jsem navrhl a otestoval na třech rozličných scénářích. Hlavní motivací při tvorbě scénářů bylo vytvořit obtížnější úkoly než se obvykle používají jako například: shlukování, vyhýbání překážkám... Navrhnout je natolik komplexně, aby nebylo možné, že část hejna se nebude podílet na jeho plnění. Také jsem volil scénáře, aby se přiblížily situacím z reálného světa. Každému z nich jsem věnoval samostatnou kapitolu, která zahrnuje popis hlavního úkolu scénáře, seznam robotů i s jejich senzory a efektory, způsob hodnocení fitness,rozdělení do podúkolů s průběhem fitness u ES a DE, vizualizaci a rozbor chování nejlepšího jedince.  
 \subsubsection{Pracovní názvy scénářů:}
 \begin{enumerate}
@@ -20,29 +19,49 @@ Pro finální řešení jsem zvolil metodu, kterou nazývám metodou podúkolů.
 Každý robot má připojen paměťový slot, neboť roboti s nimi dosahovaly ve všech úkolech znatelně lepších výsledků a pomáhaly vytvářet složitější chování. 
 \section{Použité technologie}
 \subsection{Reprezentace Chování}
-Pro ovládání robotů jsem zvolil v poslední době velmi oblíbené neuronové sítě. Použil jsem jejich oblíbenou definici podle pánů Warren S. McCulloch a  Walter Pitts \citep{neuron}, kteří ji prezentovali už v roce 1943. 
+Pro ovládání robotů jsem zvolil v poslední době velmi oblíbené neuronové sítě. Použil jsem jejich definici podle \citep{neuron}. 
+\begin{definice}[Perceptron] Perceptron je funkce z $\mathbb{R}^n \rightarrow \mathbb{R}$, která je dáná následujícím předpisem: \par
+	\begin{center}
+		\large{\boldsymbol{$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$}}
+	\end{center}
 \begin{itemize}[]
 	\item $n$: velikost vstupu
-	\item $x_i$:  i-tý vstup neuronu
+	\item $x_i$:  i-tý vstup perceptronu
 	\item $w_i$:  váha i-tého vstupu
 	\item $\Theta$: práh, (váha s konstatním vstupem 1)
 	\item $S(x)$: přenosová funkce
-	\item $Y$: výstup neuronu 
+	\item $Y$: výstup perceptronu 
 \end{itemize}
 
-\begin{center}
-	\large{\boldsymbol{$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$}}
-\end{center}
-\improvement{Přidat obrázek funkce.}Jako aktivační funkce se mi nejvíce osvědčila často používaná funkce hyperbolického tangentu se změněným oborem hodnot pro konkrétní výstup. \par
-\unsure{To úplně nevím, zda je pravda}Jelikož v mé práci bylo prioritou nalézt funkční řešení jednotlivých scénářů a nikoliv optimalizaci pro co nejlepší výsledek.  Zvolil jsem jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázala jako dostatečné. Takže pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen neuron do kterého vstupuje vektor reálných čísel odpovídající každé hodnotě ze senzorů.  Pro ještě lepší řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektur, případně vyzkoušet vliv vícero vrstev. \unsure{Mohu to napsat sem? nebo do diskuze}
+
+\end{definice}
+\improvement{Mám sem přidat obrázek funkce? }Jako aktivační funkce se mi nejvíce osvědčila často používaná funkce hyperbolického tangentu se změněným oborem hodnot pro konkrétní výstup. \par
+\unsure{To úplně nevím, zda je pravda}Jelikož v mé práci bylo prioritou nalézt funkční řešení jednotlivých scénářů a nikoliv optimalizaci pro co nejlepší výsledek.  Zvolil jsem jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné. Takže pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen neuron do kterého vstupuje vektor reálných čísel odpovídající každé hodnotě ze senzorů.  Pro ještě lepší řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektur, případně vyzkoušet vliv vícero vrstev. \unsure{Mohu to napsat sem? nebo do diskuze}
 \subsection{Evoluční algoritmy}
-Neuronovou sítě si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel(, vah vstupů + práh \boldsymbol{$v =(x_0,x_1...x_n,\Theta)$}. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají Evoluční strategie a Diferenciální evoluce. I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu jsou popsány v přiložené dokumentaci. \redo{Přidat do docu}
-\par
+Neuronovou sítě si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel( vah vstupů + práh \boldsymbol{$v =(x_0,x_1...x_n,\Theta)$}. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají ES a DE, I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu jsou popsány v přiložené dokumentaci. \redo{Nezapomenout přidat do docu}
+ \par
+\begin{table}[h]\centering
+	\subsubsection{Nastavení parametrů}
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\pulrad{\textbf{Parametr:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
+		\midrule
+		F(DE):     & 0.8 \\
+		CR(DE):  & 0.5 \\
+		alpha(ES) & 0.05 \\
+		sigma(ES) & 0.1\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Nastavení parametrů u EA}
+\end{table}
+
 \section{WoodScene experiment}
 \subsection{Cíl Experimentu}
 Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru. Na náhodných pozicích jsou rozmístěny stromy. Scout roboti musí nejdříve strom nalézt a zpracovat, disponují totiž efektorem zpracovávající dřevo. Ovšem Scout roboti neuvezou žádné entity, proto Worker roboti mají za úkol zpracovaný strom naložit a odvézt do skládacího prostoru.
 \par
-V rámci bakalářské práce byla připraven program zajišťující jednoduchou vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena čtvercovými hranicemi, které se chovají jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva. Hnědé kolečka zastupují pokácené dřevo. V některých pod-úkolech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplněny červenou barvou, jejich sensory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. \par
+V rámci bakalářské práce byla připraven program zajišťující jednoduchou vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena čtvercovými hranicemi, které se chovají jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva. Hnědé kolečka zastupují pokácené dřevo. V některých ech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplněny červenou barvou, jejich senzory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. \par
 Pro potvrzení, že scénář není triviálně řešitelný. Bylo vygenerováno tisíc náhodných chování. Hodnoceny byly dle fitness funkce podúkolu kooperace popsaný níže. Nejlepší z nich můžete vidět těsně po inicializaci mapy \ref{obr04:WoodSceneRandomStart}. Výsledek krátce před 10 000 iterací je zachycen v obrázku \ref{obr04:WoodSceneRandomEnd}
 
 \begin{figure}[p]\centering
@@ -97,6 +116,7 @@ Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených 
 \end{tabular}
 \caption{Wood - Scout robot popis}
 \end{table}
+\clearpage
 \subsubsection{Worker robot}
 Worker robot se stará o transport objektů na mapě. Ke komunikaci využívá signálů s kódem 1. Sebrané objekty ukládá do kontejneru, kam se vejde 5 entit. Zvedání a pokládání probíhá skrze efektor Picker. 
 \par 
@@ -132,9 +152,10 @@ Worker robot se stará o transport objektů na mapě. Ke komunikaci využívá s
 \multicolumn{2}{l}{}
 \end{tabular}
 \caption{Wood - Worker robot popis }
-\end{table}[h]\centering
+\end{table}
+\clearpage
 \subsection{Vyhodnocování Fitness}
-Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace. I když se úspěšnost v pod-úkolech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
+Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace. I když se úspěšnost v ech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
 \begin{enumerate}
         \item kolize = počet pokusů o pohyb při kterém by došlo ke kolizi 
         \item nalezené stromy = stromy o které zavadil line senzor 
@@ -143,31 +164,16 @@ Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci
         \item uskladněné dřevo = dřevo, které dovezli na vyznačené místo 
 \end{enumerate}
 
-\subsection{Pod-úkoly} 
+\subsection{Podúkoly} 
 Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů postupně těžších a těžších cílů. Hlavně také, abych mohl porovnat oba evoluční algoritmy.  
 \begin{enumerate}
         \item vygenerování robotů = Na začátku je vygenerováno chování robotů naprosto náhodně. Pro každého robota, je vygenerována náhodná jednovrstvá neuronová síť. 
         \item učení chůze = Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali, co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí(záporným ohodnocením) a na nalezené stromy(kladným ohodnocením).
-        \item těžba stromů = Scout roboty, kteří se už obstojně po mapě pohybují, je třeba naučit kácet stromy. Proto dalším pod-úkol cílí ve fitness funkci na počet pokácených stromů. Nicméně stále také na počet stromů nalezených. 
+        \item těžba stromů = Scout roboty, kteří se už obstojně po mapě pohybují, je třeba naučit kácet stromy. Proto dalším  cílí ve fitness funkci na počet pokácených stromů. Nicméně stále také na počet stromů nalezených. 
         \item převoz dřeva = Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
         \item kooperace = V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
-\begin{table}[h]\centering
-	\subsubsection{Nastavení parametrů}
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\pulrad{\textbf{Parametr:}} & \mc{\pulrad{\textbf{Hodnota:}}}\\
-		\midrule
-		F(DE):     & 0.8 \\
-		CR(DE):  & 0.5 \\
-		alpha(ES) & 0.05 \\
-		sigma(ES) & 0.1\\
-		\bottomrule
-		\multicolumn{2}{l}{}
-	\end{tabular}
-	\caption{Nastavení parametrů u EA}
-\end{table}
+
 \newpage
 	\subsubsection{Scout chůze - nastavení experimentu}
 	\begin{table}[h]\centering
@@ -185,8 +191,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Elitismus(ES)& Ano\\
 			Elitismus(DE)& Ne \\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení evolučních algoritmů}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -198,8 +203,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Počet stromů: & 300\\
 			Počet už pokácených stromů & 100\\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení hodnocení fitness}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{Scout chůze - nastavení experimentu}\label{tab04:ScoutWalk}
 	\end{table}
@@ -245,8 +249,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Elitismus(ES)& Ano\\
 			Elitismus(DE)& Ne \\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení evolučních algoritmů}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -258,8 +261,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Počet stromů: & 200\\
 			Počet už pokácených stromů & 200\\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení hodnocení fitness}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{Worker chůze - nastavení experimentu}
 		\label{tab04:WorkerWalk}
@@ -308,8 +310,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Elitismus(ES)& Ano\\
 			Elitismus(DE)& Ne \\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení evolučních algoritmů}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -323,8 +324,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Počet stromů: & 400\\
 			Počet už pokácených stromů & 0\\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení hodnocení fitness}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{Scout kácení - nastavení experimentu}
 	\end{table}
@@ -370,8 +370,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Elitismus(ES)& Ano\\
 			Elitismus(DE)& Ne \\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení evolučních algoritmů}
+			\multicolumn{2}{l}{ }
 		\end{tabular}
 		\par 
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -388,8 +387,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Počet stromů: & 200\\
 			Počet už pokácených stromů & 200\\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení hodnocení fitness}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{Worker sbírání - nastavení experimentu}
 	\end{table}
@@ -433,8 +431,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Elitismus(ES)& Ano\\
 			Elitismus(DE)& Ne \\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení evolučních algoritmů}
+			\multicolumn{2}{l}{ }
 		\end{tabular}
 		\par 
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -451,8 +448,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Počet stromů: & 200\\
 			Počet už pokácených stromů & 200\\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení hodnocení fitness}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{Worker ukládání doprostřed  - nastavení experimentu}
 	\end{table}
@@ -496,8 +492,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Elitismus(ES)& Ano\\
 			Elitismus(DE)& Ne \\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení evolučních algoritmů}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 		\par 
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -514,8 +509,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 			Počet stromů: & 400\\
 			Počet už pokácených stromů & 0\\
 			\bottomrule
-			\multicolumn{2}{l}{\footnotesize \textit{Pozn:}
-				Nastavení hodnocení fitness}
+			\multicolumn{2}{l}{}
 		\end{tabular}
 			\caption{Kooperace  hlavní úkol  - nastavení experimentu}
 	\end{table}
