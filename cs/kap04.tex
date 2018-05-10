@@ -5,41 +5,36 @@ Všechny práce zmíněné v úvodní kapitole, sice používají evoluční alg
 \begin{enumerate}
 	\item Wood Scene - zpracování dřeva
 	\item Mineral Scene - přetvoření minerálů na palivo 
-	\item Competitive Scece - soubojový scénář
+	\item Competitive Scene - soubojový scénář
 \end{enumerate}
 \par
 Pro řešení problému jsem navrhl řadu postupů, proto v tomto odstavci zmíním ty nejvíce přímočaré a slibné, které se ovšem ukázaly  jako neúspěšné. V kapitolách zabývajícími se konkrétními scénáři už budu pouze popisovat jen konečné, úspěšné postupy.
  \par
+ \improvement{Přidat další podrobnosti o fitness}
 Nedostatečný se ukázal pokus provádět evoluci pro fitness hlavního úkolu scénáře. Většina hodnocení náhodných chování byl roven nule, proto EA nedostaly dostatek informací k vhodné exploraci a díky malé pravděpodobnosti vygenerování chování alespoň částečně řešící hlavní úkol nedocházelo ani k exploataci. Což mělo za důsledek neefektivní  DE a ES, takže ani jeden z EA nedošel k úspěšnému řešení. 
 \par
-Posun zaznamenala více obecná fitness i když sama o sobě také nebyla úspěšná. Do fitness jsem zahrnul i menší pozitivní znaky, které byly součástí hlavnímu úkolu. Například jsem záporně ohodnotil pokusy o pohyb končící kolizí, kladně počet nalezených entit či vhodných objektů v kontejnerech, aktuální stav paliva. Optimalizovaná chování opravdu zaznamenala posun. Ovšem oba EA obtížně hledaly cestu z lokálního optima a ve většině případů optimalizovali pouze jednoduché části úkolu. I přes přidávání složitějších matematických funkcí do fitness nebyly schopny dosáhnout uspokojivého řešení hlavního úkolu scénáře. 
+Posun zaznamenala více obecná fitness i když sama o sobě také nedosáhla do kategorie úspěšných postupů. Do fitness jsem zahrnul i menší pozitivní znaky, které byly součástí hlavnímu úkolu. Například jsem záporně ohodnotil pokusy o pohyb končící kolizí, kladně počet nalezených entit či vhodných objektů v kontejnerech, aktuální stav paliva. Optimalizovaná chování opravdu zaznamenala posun. Ovšem oba EA obtížně hledaly cestu z lokálního optima a ve většině případů optimalizovali pouze jednoduché části úkolu. I přes přidávání složitějších matematických funkcí do fitness nebyly schopny dosáhnout uspokojivého řešení hlavního úkolu scénáře. 
 \par 
-Pro finální řešení jsem zvolil metodu, kterou nazývám metodou podúkolů. U každého scénáře podrobně popíši její průběh a nastavení, zde pouze nastíním základní  myšlenku. Rozdělil jsem hlavní cíl na několik menších podúkolů(metaúkolů). Každému z nich vytvoříme fitness funkci odpovídající nutné části hlavního cíle. Fitness metaúkolu jsem navrhoval, tak aby necílila na již optimalizované úkony a v každém podúkolu jsem se vždy soustředil pouze na jeden jednoduchý úkon. Díky tomuto principu jsem dosáhl mnohem vyšší odolnosti proti uvíznutí v lokálním minimu. Explorace se tímto procesem také zlepšila, protože hlavní cíl závisí na podúkolech a pokud bylo chování rozmanité a úspěšné, přenesly se tyto vlastnosti i dále. Poté jsem generaci úspěšnou v průzkumu optimalizoval na sbírání materiálů pouze požadované barvy a takto jsem rozděloval až k finálnímu úkolu scénáře. 
+Pro finální řešení jsem zvolil metodu, kterou nazývám metodou podúkolů. U každého scénáře podrobně popíši její průběh a nastavení, zde pouze nastíním základní  myšlenku. Rozdělil jsem hlavní cíl na několik menších podúkolů (metaúkolů). Každému z nich vytvoříme fitness funkci odpovídající nutné části hlavního cíle. Fitness metaúkolu jsem navrhoval, tak aby necílila na již optimalizované úkony a v každém podúkolu jsem se vždy soustředil pouze na jeden jednoduchý úkon. Díky tomuto principu jsem dosáhl mnohem vyšší odolnosti proti uvíznutí v lokálním minimu. Explorace se tímto procesem také zlepšila, protože hlavní cíl závisí na podúkolech a pokud bylo chování rozmanité a úspěšné, přenesly se tyto vlastnosti i dále. Poté jsem generaci úspěšnou v průzkumu optimalizoval na sbírání materiálů pouze požadované barvy a takto jsem rozděloval až k finálnímu úkolu scénáře. 
 \par 
-Každý robot má připojen paměťový slot, neboť roboti s nimi dosahovaly ve všech úkolech znatelně lepších výsledků a pomáhaly vytvářet složitější chování. 
+Každý robot má připojen paměťový slot, neboť roboti s nimi dosahovali ve všech úkolech znatelně lepších výsledků a pomáhaly vytvářet složitější chování. 
 \section{Použité technologie}
 \subsection{Reprezentace Chování}
 Pro ovládání robotů jsem zvolil v poslední době velmi oblíbené neuronové sítě. Použil jsem jejich definici podle \citep{neuron}. 
-\begin{definice}[Perceptron] Perceptron je funkce z $\mathbb{R}^n \rightarrow \mathbb{R}$, která je dáná následujícím předpisem: \par
-	\begin{center}
-		\large{\boldsymbol{$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$}}
-	\end{center}
-\begin{itemize}[]
-	\item $n$: velikost vstupu
-	\item $x_i$:  i-tý vstup perceptronu
-	\item $w_i$:  váha i-tého vstupu
-	\item $\Theta$: práh, (váha s konstatním vstupem 1)
-	\item $S(x)$: přenosová funkce
-	\item $Y$: výstup perceptronu 
-\end{itemize}
-
-
+\begin{definice}[Perceptron] Perceptron je funkce z $\mathbb{R}^n \rightarrow \mathbb{R}$, která je dáná následujícím předpisem: 	$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$. \newline
+\newline
+Kde n =  velikost vstupu, $x_i$ = i-tý vstup perceptron,  $w_i$ =  váha i-tého vstupu, $\Theta$ = práh, (váha s konstatním vstupem 1), $S(x)$ = přenosová funkce, $Y$ = výstup perceptronu 
 \end{definice}
-\improvement{Mám sem přidat obrázek funkce? }Jako aktivační funkce se mi nejvíce osvědčila často používaná funkce hyperbolického tangentu se změněným oborem hodnot pro konkrétní výstup. \par
-\unsure{To úplně nevím, zda je pravda}Jelikož v mé práci bylo prioritou nalézt funkční řešení jednotlivých scénářů a nikoliv optimalizaci pro co nejlepší výsledek.  Zvolil jsem jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné. Takže pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen neuron do kterého vstupuje vektor reálných čísel odpovídající každé hodnotě ze senzorů.  Pro ještě lepší řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektur, případně vyzkoušet vliv vícero vrstev. \unsure{Mohu to napsat sem? nebo do diskuze}
+Jako aktivační funkce se mi nejvíce osvědčila často používaná funkce hyperbolického tangentu se změněným oborem hodnot pro konkrétní výstup. \par
+Zvolil jsem jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné pro řešení jednotlivých scénářů. Takže pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen neuron do kterého vstupuje vektor reálných čísel odpovídající každé hodnotě ze senzorů.  Pro dosažení lepších řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektury, případně vyzkoušet vliv vícero vrstev. \redo{Přidat do dokumentace}
+
+\redo{Přemístit a přidat knihu, aktivační funkce atd}
+\subsubsection{Neuronové sítě} Pro reprezentaci jedinců v oblasti robotiky, rozpoznávání obrazů a dalších oblastí umělé inteligence se v poslední době používají nejčastěji neuronové sítě. Neuronová síť se strukturou podobá neuronovým sítím v mozku. Základní sítě se skládají z jednotlivých neuronů. V informatickém světě se jmenují perceptrony. Perceptron je funkce $\mathbb{R}^n \rightarrow \mathbb{R}$ a definovaná $\sum_{i < n+1} w_{i} x_{i}$, kde pro $i < n$ $x_{i}$ je í-tý prvek vstupního vektoru, pro  $i=n$ je $x_{i}=1$. $w_{i}$ se označuje jako váha a většinou $w_{i} \in \mathbb{R}$. \par
+Jednovrstvou neuronovou sítí pak myslíme n perceptronů, tedy funkci $\mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$, kde $ítý$ prvek výstupního vektoru dostaneme aplikací $ité$ perceptronové funkce neuronové sítě. \par 
+Pokud dovolíme skládání perceptronů, vzniknou nám tzv. vícevrstvé neuronové sítě. Podmnožiny výstupů z první vrstvy neuronů neurčují přímo výstup, ale jsou opět zvoleny jako vstupní vektory pro další jednovrstvou neuronovou síť. \par
+Skrytá vrstva (hidden layer) je taková jednovrstvá neuronová síť, jejíž výstup je pouze vstupem jiné neuronové sítě. \par
 \subsection{Evoluční algoritmy}
-Neuronovou sítě si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel( vah vstupů + práh \boldsymbol{$v =(x_0,x_1...x_n,\Theta)$}. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají ES a DE, I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu jsou popsány v přiložené dokumentaci. \redo{Nezapomenout přidat do docu}
- \par
+Neuronovou sít si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel( vah vstupů + práh $v =(x_0,x_1...x_n,\Theta)$. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají ES a DE, I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu jsou popsány v přiložené dokumentaci. \redo{Nezapomenout přidat do docu}
 \begin{table}[h]\centering
 	\subsubsection{Nastavení parametrů}
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -56,12 +51,12 @@ Neuronovou sítě si lze představit jako množinu vektorů, kde jeden perceptro
 	\end{tabular}
 	\caption{Nastavení parametrů u EA}
 \end{table}
-
+\newpage
 \section{WoodScene experiment}
 \subsection{Cíl Experimentu}
-Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracované dřevo na předem vyznačené ploše. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru. Na náhodných pozicích jsou rozmístěny stromy. Scout roboti musí nejdříve strom nalézt a zpracovat, disponují totiž efektorem zpracovávající dřevo. Ovšem Scout roboti neuvezou žádné entity, proto Worker roboti mají za úkol zpracovaný strom naložit a odvézt do skládacího prostoru.
+Tento scénář je analogií pro kácení lesa, kdy se roboti snaží maximalizovat množství zpracovaného dřeva na předem vyznačené ploše. Plocha pro skládání dřeva je označena rádiovým signálem s hodnotou signálu 2. V experimentu se dohromady celkem vyskytuje 9 robotů dvou různých druhů. Roboti jsou na začátku simulace umístěni uprostřed mapy na skládacím prostoru. Na náhodných pozicích jsou rozmístěny stromy. Scout roboti musí nejdříve strom nalézt a zpracovat, disponují totiž efektorem zpracovávajícím dřevo. Ovšem Scout roboti neuvezou žádné entity, proto Worker roboti mají za úkol zpracovaný strom naložit a odvézt do skládacího prostoru.
 \par
-V rámci bakalářské práce byla připraven program zajišťující jednoduchou vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena čtvercovými hranicemi, které se chovají jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva. Hnědé kolečka zastupují pokácené dřevo. V některých ech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplněny červenou barvou, jejich senzory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. \par
+V rámci bakalářské práce byla připraven program zajišťující jednoduchou vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena obdélníkovou hranicí, která se chová jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva, roboti jej zaznamenají jako rádiový signál. Hnědá kolečka zastupují pokácené dřevo. V některých podúkolech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplněny červenou barvou, jejich senzory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. \par
 Pro potvrzení, že scénář není triviálně řešitelný. Bylo vygenerováno tisíc náhodných chování. Hodnoceny byly dle fitness funkce podúkolu kooperace popsaný níže. Nejlepší z nich můžete vidět těsně po inicializaci mapy \ref{obr04:WoodSceneRandomStart}. Výsledek krátce před 10 000 iterací je zachycen v obrázku \ref{obr04:WoodSceneRandomEnd}
 
 \begin{figure}[p]\centering
@@ -155,21 +150,24 @@ Worker robot se stará o transport objektů na mapě. Ke komunikaci využívá s
 \end{table}
 \clearpage
 \subsection{Vyhodnocování Fitness}
-Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace. I když se úspěšnost v ech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
+Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace. I když se úspěšnost v podúkolech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
 \begin{enumerate}
-        \item kolize = počet pokusů o pohyb při kterém by došlo ke kolizi 
         \item nalezené stromy = stromy o které zavadil line senzor 
         \item pokácené stromy = stromy, které refaktor změnil 
         \item sebrané dřevo = zpracované dřevo, které mají roboti uvnitř kontejnerů 
         \item uskladněné dřevo = dřevo, které dovezli na vyznačené místo 
+\end{enumerate}
+Trestáni za:
+\begin{enumerate}
+	\item kolize = počet pokusů o pohyb při kterém by došlo ke kolizi 
 \end{enumerate}
 
 \subsection{Podúkoly} 
 Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů postupně těžších a těžších cílů. Hlavně také, abych mohl porovnat oba evoluční algoritmy.  
 \begin{enumerate}
         \item vygenerování robotů = Na začátku je vygenerováno chování robotů naprosto náhodně. Pro každého robota, je vygenerována náhodná jednovrstvá neuronová síť. 
-        \item učení chůze = Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali, co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí(záporným ohodnocením) a na nalezené stromy(kladným ohodnocením).
-        \item těžba stromů = Scout roboty, kteří se už obstojně po mapě pohybují, je třeba naučit kácet stromy. Proto dalším  cílí ve fitness funkci na počet pokácených stromů. Nicméně stále také na počet stromů nalezených. 
+        \item učení chůze = Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali, co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí (záporným ohodnocením) a na nalezené stromy (kladným ohodnocením).
+        \item těžba stromů = Scout roboty, kteří se už obstojně po mapě pohybují, je třeba naučit kácet stromy. Proto dalším  cílem ve fitness funkci je počet pokácených stromů. Nicméně stále také na počet stromů nalezených. 
         \item převoz dřeva = Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
         \item kooperace = V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
@@ -541,9 +539,9 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 	\clearpage
 	
 	\subsection{Výsledky Experimentu}
-	Výsledkem posloupnosti všech podúkolů vzniklo poměrně velmi komplexní chování. Finální neuronové sítě ať u Worker robotů, či Scout robotů se zvládají vyhýbat překážkám. Scout roboti kácí stromy, které naleznou. Worker roboti nakládají zpracované dřevo, pokud na něj narazí, když zachytí signál úložiště, tak vyloží aktuální náklad. Některé chování byli také schopny předejít zaseknutí o nějaký shluk objektů, pokud byl  jejich pohyb vpřed neúspěšný, tak po několika pokusech vycouvali a vydali se cestou okolo kritického místa. U většiny se také objevilo použití rádiových signálů jako prostředku pro největší možné rozptýlení po mapě, jakmile zachytí cizí signál vydají se opačným směrem. Průběh fitness jednotlivých podúkolů je zachycena na předchozích grafech \ref{obr04:Walk} až \ref{obr04:StockES}. 
+	Výsledkem posloupnosti všech podúkolů vzniklo poměrně velmi komplexní chování. Finální neuronové sítě ať u Worker robotů, či Scout robotů se zvládají vyhýbat překážkám. Scout roboti kácí stromy, které naleznou. Worker roboti nakládají zpracované dřevo, pokud na něj narazí, když zachytí signál úložiště, tak vyloží aktuální náklad. Některá chování byla také schopna předejít zaseknutí o nějaký shluk objektů, pokud byl  jejich pohyb vpřed neúspěšný, tak po několika pokusech roboti vycouvali a vydali se cestou okolo kritického místa. U většiny se také objevilo použití rádiových signálů jako prostředku pro největší možné rozptýlení po mapě, jakmile zachytí cizí signál vydají se opačným směrem. Průběh fitness jednotlivých podúkolů je zachycena na předchozích grafech \ref{obr04:Walk} až \ref{obr04:StockES}. 
 	
-	Ač se jedná o nejlepší dosažené chování objevují se nějaké nedostatky. Worker robot se občas dostane do pozice z které není schopen vyjet, jedná se především o kolize s vícero entitami. Tento problém by mohlo vyřešit použití vícevrstvých sítí či evolučního algoritmu evolvovujícího i architekturu sítě. Skládání zpracovaného materiálu po obvodu skladiště není efektivní způsob, jak do něj naskládat maximální množství dřeva. V tomto případě jsem se snažil vylepšit tento nedostatek promítnutím vzdálenosti dřeva od středu skladiště do celkové fitness, ovšem bez znatelného zlepšení v chování. Nejspíše by bylo třeba použít rádiový senzor poskytující více informací o směru k zachycenému signálu. 
+	Ač se jedná o nejlepší dosažené chování objevují se nějaké nedostatky. Worker robot se občas dostane do pozice, ze které není schopen vyjet, jedná se především o kolize s vícero entitami. Tento problém by mohlo vyřešit použití vícevrstvých sítí či evolučního algoritmu evolvujícího i architekturu sítě. Skládání zpracovaného materiálu po obvodu skladiště není efektivní způsob, jak do něj naskládat maximální množství dřeva. V tomto případě jsem se snažil vylepšit tento nedostatek promítnutím vzdálenosti dřeva od středu skladiště do celkové fitness, ovšem bez znatelného zlepšení v chování. Nejspíše by bylo třeba použít rádiový senzor poskytující více informací o směru k zachycenému signálu. 
 	\newpage 
 	\begin{figure}[p]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/end.png}
@@ -592,7 +590,7 @@ Pro oba použité algoritmy jsem používal stejné úlohy pro naučení robotů
 	\redo{Nějak shrnout, úplně nevím, co  by to mělo obsahovat.}
 	\newpage
 
-
+\redo{Předělat na stejný formát jako předchozí kapitola}
 \section{Mineral Scene}
 Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní 
 nerostné suroviny pro běh.
