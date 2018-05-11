@@ -301,11 +301,14 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Worker chůze - průběh fitness v rámci generací}
 		\label{obr04:WWalk}
 	\end{figure}
+
+	\redo{Graf u ES je špatně,	předělat graf přepsat popisek}
 	\clearpage 
 	
 	
 	
 	\subsubsection{Scout kácení - nastavení experimentu}
+	Dalším úkolem pro Scout robota bylo nalezené stromy pokácet. Použil jsem tedy optimalizované neuronové sítě z experimentu Scout chůze a tentokrát přidal do fitness pozitivní body za pokácené stromy. Refaktor je o mnoho kratší než line sensory, proto pro kácení musí robot ke stromu přijet blíže. Abych ještě více vylepšil pohyb po mapě, tak každá kolize byla potrestána negativním bodem do fitness. Přesné nastavení obsahuje následující tabulka.
 	\begin{table}[h]\centering
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -345,7 +348,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Scout kácení - porovnání průměrné fitness ES a DE}
 		\label{obr04:CutESvsDE}
 	\end{figure}
-	\redo{Opravit obrázky}
+	Dále můžete vidět grafy popisující průběh fitness u DE, ES a porovnání jejich průměrné fitness. Z \ref{obr04:CutDE} můžeme vyčíst, že použité DE více cílí na exploataci a ES na exploraci. DE jsou díky tomu mnohem náchylnější k uvíznutí v lokálním optimu.  Fitness se v tomto případě skládá ze dvou složek, pro jedince bylo mnohem jednodušší stromy objevovat a náhodou nějaké pokácet. V prvních 650 generacích DE se tedy drží tento trend a pak se objeví jedinci, kteří cílí na kácení. Toto chování se rychle rozšířilo a fitness celé populace okolo 700. generace prudce vzrostla. Zatímco fitness v ES rostla postupně, ale nedosáhla tak vysoké úrovně jako DE. Nejlepší jedinci pokácí více než 60\% stromů. 
 	\begin{figure}[p]
 		\centering
 		\begin{subfigure}{.5\textwidth}
