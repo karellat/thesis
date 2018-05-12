@@ -369,6 +369,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	\clearpage
 	
 	\subsubsection{Worker sbírání - nastavení experimentu}
+	Worker v rámci zadání musí řešit více složitý úkol než Scout robot. Celý proces uložení se skládá nejdříve z nalezení dřeva, naložení, poté přesunu místa pro skladování a nakonec vyložení. Optimalizace fungovala lépe po rozdělení na část nakládání, kterou se zabývá tento experiment a na část vykládání, na kterou se podíváme později.  Ve fitness jsem se soustředil na správné entity v kontejneru a na jejich počet. Abych nezahodil dobré chování, které dokáže dřevo i ukládat, za uložení dřeva dostali roboti také pozitivní body. Níže můžete vidět tabulku s konkrétním nastavením. \par
 	\begin{table}[h]\centering
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -405,13 +406,14 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\end{tabular}
 		\caption{Worker sbírání - nastavení experimentu}
 	\end{table}
-	\begin{figure}[t]\centering       
+	V grafech \ref{obr04:Pickup}, \ref{obr04:PickupESvsDE} je vidět, že roboti dokázali maximálně naplnit kontejnery zpracovaným dřevem, v případě DE už po 250. generaci zvládala tento úkol celá populace. Chování optimalizované ES mají mnohem větší rozptyl díky vysoké exploraci, ale i její nejlepší jedinci zvládli maximální naplnění již kolem 250. generace. 
+		   \begin{figure}[t]\centering       
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerPickUpMem}
 		\caption{ Worker sbírání - porovnání průměrné fitness ES a DE}
 		\label{obr04:PickupESvsDE}
 	\end{figure}
-	\redo{Opravit obrázky
-	}\begin{figure}[p]
+
+	\begin{figure}[p]
 		\centering
 		\begin{subfigure}{.5\textwidth}
 			\centering
@@ -430,6 +432,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	\end{figure}
 	\clearpage
 	\subsubsection{Worker ukládání doprostřed  - nastavení experimentu}
+	Ukládání zpracovaného dřeva byl poslední experiment, který plnili Worker roboti samostatně. Zde jsem se soustředil na celý úděl Worker robota a využil už optimalizovaných neuronových sítí na sbírání zpracovaného dřeva z předchozího experimentu. Nejvyšší odměnu roboti získávali za uskladnění dřeva a minoritní odměny za vhodné chování dle předchozích fitness. Vlastním nastavení odpovídá tabulce \ref{tab04:WorkerStore}. \par
 	\begin{table}[h]\centering   
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -465,14 +468,15 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{Worker ukládání doprostřed  - nastavení experimentu}
+		\label{tab04:WorkerStore}
 	\end{table}
+   	Lokace skladovacího místa působila robotům velké obtíže, proto růst fitness (\ref{obr04:StockDE}, \ref{obr04:StockES}) byl mnohem mírnější než u předchozích experimentů. DE dokázala už optimalizované chování rychleji vylepšovat narozdíl od ES, která doplácí na velkou míru explorace viz. \ref{obr04:StockESvsDE}. Nejlepší jedinci jsou ovšem už schopni plnit obstojně hlavní úkol Worker robotů. Objevila se obtíž s efektivním urovnáním zpracovaného dřeva na skladovací místo. Pokoušel jsem se tento problém řešit, přidáním kladných bodů za menší vzdálenost mezi středem skladovacího místa a uloženým dřevem. Nesáhl jsem, však lepších výsledků než v tomto experimentu. 
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerStockMem}
 		\caption{Worker ukládání doprostřed  - porovnání průměrné fitness ES a DE}
 		\label{obr04:StockESvsDE}
 	\end{figure}
-	\redo{Opravit obrázky
-	}\begin{figure}[p]
+	\begin{figure}[p]
 		\centering
 		\begin{subfigure}{.5\textwidth}
 			\centering
@@ -491,6 +495,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	\end{figure}
 	\clearpage
 	\subsubsection{Kooperace  hlavní úkol  - nastavení experimentu}
+	V rámci posledního úkolu jsem složil už optimalizovaná chování dohromady, abych vytvořil heterogenní hejno řešící problém Wood Scene scénáře. Spojoval jsem náhodné chování pro Scout robota s náhodným u Worker robota, aby se našla nejlepší jejich kombinace, tak bylo nutné navýšit počet generací na 4000. Fitness funkce(\ref{tab04:Coop}) byla v tomto případě průnik posledních experimentů Worker ukládání doprostřed a Scout kácení. 
 	\begin{table}[h]\centering   
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -526,10 +531,11 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\multicolumn{2}{l}{}
 		\end{tabular}
 			\caption{Kooperace  hlavní úkol  - nastavení experimentu}
+			\label{tab04:Coop}
 	\end{table}
-	\redo{Opravit obrázky}
-	\clearpage
-	
+
+	Na \ref{obr04:Coop} lze pozorovat, že pro ES bylo velmi obtížné skládat už úspěšné chování do lepších celků a velmi osciluje \ref{obr04:CoopES}. ES uškodilo agresivní prohledávání prostoru a DE díky své architektuře vytěžilo z optimalizovaných chování maximum \ref{obr04:CoopDE}. Nejlepšímu jedinci se budeme věnovat podrobněji v další kapitole. 
+		\clearpage
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WoodCoopMem}
 		\caption{Kooperace  hlavní úkol  - porovnání průměrné fitness ES a DE}
@@ -555,22 +561,11 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	\clearpage
 	
 	\subsection{Výsledky Experimentu}
-	Výsledkem posloupnosti všech podúkolů vzniklo poměrně velmi komplexní chování. Finální neuronové sítě ať u Worker robotů, či Scout robotů se zvládají vyhýbat překážkám. Scout roboti kácí stromy, které naleznou. Worker roboti nakládají zpracované dřevo, pokud na něj narazí, když zachytí signál úložiště, tak vyloží aktuální náklad. Některá chování byla také schopna předejít zaseknutí o nějaký shluk objektů, pokud byl  jejich pohyb vpřed neúspěšný, tak po několika pokusech roboti vycouvali a vydali se cestou okolo kritického místa. U většiny se také objevilo použití rádiových signálů jako prostředku pro největší možné rozptýlení po mapě, jakmile zachytí cizí signál vydají se opačným směrem. Průběh fitness jednotlivých podúkolů je zachycena na předchozích grafech \ref{obr04:Walk} až \ref{obr04:StockES}. 
+	Výsledkem posloupnosti všech podúkolů vzniklo poměrně velmi komplexní chování. Finální neuronové sítě ať u Worker robotů, či Scout robotů se zvládají vyhýbat překážkám. Scout roboti kácí stromy, které naleznou. Worker roboti nakládají zpracované dřevo, pokud na něj narazí, když zachytí signál úložiště, tak vyloží aktuální náklad. Některá chování byla také schopna předejít zaseknutí o nějaký shluk objektů, pokud byl  jejich pohyb vpřed neúspěšný, tak po několika pokusech roboti vycouvali a vydali se cestou okolo kritického místa. U většiny se také objevilo použití rádiových signálů jako prostředku pro největší možné rozptýlení po mapě, jakmile zachytí cizí signál vydají se opačným směrem. Průběh fitness jednotlivých podúkolů je zachycena na předchozích grafech \ref{obr04:Walk} až \ref{obr04:StockES}. V tabulce \ref{tab04:WoodStat} můžete vyčíst průměrné počty nalezených stromů, uskladněného materiálu, apod ze 100 simulací mapy. 
 	
 	Ač se jedná o nejlepší dosažené chování objevují se nějaké nedostatky. Worker robot se občas dostane do pozice, ze které není schopen vyjet, jedná se především o kolize s vícero entitami. Tento problém by mohlo vyřešit použití vícevrstvých sítí či evolučního algoritmu evolvujícího i architekturu sítě. Skládání zpracovaného materiálu po obvodu skladiště není efektivní způsob, jak do něj naskládat maximální množství dřeva. V tomto případě jsem se snažil vylepšit tento nedostatek promítnutím vzdálenosti dřeva od středu skladiště do celkové fitness, ovšem bez znatelného zlepšení v chování. Nejspíše by bylo třeba použít rádiový senzor poskytující více informací o směru k zachycenému signálu. 
-	\newpage 
-	\begin{figure}[p]\centering
-		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/end.png}
-		\caption{Nejlepší jedinec - 10000 iterací}
-		\label{obr04:bestEnd}
-	\end{figure}
-	\begin{figure}[p]\centering
-		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/EndRandom.png}
-		\caption{Nejlepší jedinec - 10000 iterací}
-		\label{obr04:randomEnd}
-	\end{figure}
-	\clearpage
-	\begin{table}[h]\centering   
+	
+		\begin{table}[h]\centering   
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
 			& \mc{} & \mc{}\\
@@ -601,12 +596,26 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\multicolumn{2}{l}{}
 		\end{tabular}
 		\caption{WoodScene - průměrné výsledky nejlepšího chování pro 100 pokusů}
+		\label{tab04:WoodStat}
 	\end{table}
+	\newpage 
+	\begin{figure}[p]\centering
+		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/end.png}
+		\caption{Nejlepší jedinec - 10000 iterací}
+		\label{obr04:bestEnd}
+	\end{figure}
+	\begin{figure}[p]\centering
+		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/EndRandom.png}
+		\caption{Nejlepší jedinec - 10000 iterací}
+		\label{obr04:randomEnd}
+	\end{figure}
+	\clearpage
+
 	\paragraph{Shrnutí}
 	\redo{Nějak shrnout, úplně nevím, co  by to mělo obsahovat.}
 	\newpage
 
-\redo{Předělat na stejný formát jako předchozí kapitola}
+\redo{In progress NEKONTROLOVAT předělat na stejný formát jako předchozí kapitola}
 \section{Mineral Scene}
 Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní 
 nerostné suroviny pro běh.
