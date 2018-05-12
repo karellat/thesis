@@ -608,10 +608,14 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	\redo{Nějak shrnout, úplně nevím, co  by to mělo obsahovat.}
 	\newpage
 
-\redo{In progress NEKONTROLOVAT předělat na stejný formát jako předchozí kapitola}
-\section{Mineral Scene}
-Jedná se o scénář reprezentující sběr surovin pro výrobu paliva a jeho následné využití. Figurují zde 3 rozliční roboti, všichni potřebují pro pohyb  dané množství paliva. Úspěšnost daného hejna se měří množstvím paliva. Nejmenší robot(Mineral scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot prostřední velikosti(Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu(,suroviny na výrobu paliva,) označen ve frameworku jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. Tento scénář si bere jako inspiraci strategické hry a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní 
-nerostné suroviny pro běh.
 
+\section{Mineral Scene}
+Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti mají odlišné určení. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
+\par 
+V mém zjednodušeném scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot Refactor. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. \unsure{Je to hodně komplexní asi to zjednoduším}
+\par
+figurují 3 rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva.
+Přeměna probíhá pouze v kontejneru na vrchní pozici.   Nejmenší robot (Mineral Scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot střední velikosti (Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
+\redo{In progress NEKONTROLOVAT předělat na stejný formát jako předchozí kapitola}
 \section{Competitive Scene}
 Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
