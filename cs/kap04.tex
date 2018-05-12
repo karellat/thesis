@@ -249,6 +249,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	
 	\subsubsection{Worker chůze - nastavení experimentu}
 	Worker chůze aplikuje podobný postup jako v předchozím experimentu na Worker roboty. Jen jsem nehodnotil počet nalezených stromů, ale do každé mapy jsem umístil už zpracované stromy. Roboti tedy byli oceněni za nalezení právě tohoto dřeva. Opět fitness funkce nutí roboty, co nejvíce se rozprostřít po mapě a navíc ještě vyhýbat se nepokáceným stromům.
+	\par
 	 	\begin{table}[h]\centering
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -279,8 +280,8 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Worker chůze - nastavení experimentu}
 		\label{tab04:WorkerWalk}
 	\end{table}
-	
-	\begin{figure}[t]\centering
+		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu \ref{obr04:WWalkDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje graf \ref{obr04:WWalkES} od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům \ref{obr04:WWalk} i \ref{obr04:WWalkESvsDE}..
+		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerWalkMem}
 		\caption{Worker chůze - porovnání průměrné fitness ES a DE}
 		\label{obr04:WWalkESvsDE}
@@ -289,7 +290,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\centering
 		\begin{subfigure}{.5\textwidth}
 			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WCuttorWalkMem}
+			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WorkerWalkMem}
 			\caption{DE}
 			\label{obr04:WWalkDE}
 		\end{subfigure}%
@@ -302,8 +303,6 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Worker chůze - průběh fitness v rámci generací}
 		\label{obr04:WWalk}
 	\end{figure}
-
-	\redo{Graf u ES je špatně,	předělat graf přepsat popisek}
 	\clearpage 
 	
 	
@@ -603,19 +602,13 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\label{obr04:randomEnd}
 	\end{figure}
 	\clearpage
-
-	\paragraph{Shrnutí}
-	\redo{Nějak shrnout, úplně nevím, co  by to mělo obsahovat.}
-	\newpage
-
-
 \section{Mineral Scene}
 Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti mají odlišné určení. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
 \par 
 V mém zjednodušeném scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot Refactor. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. \unsure{Je to hodně komplexní asi to zjednoduším}
 \par
-figurují 3 rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva.
-Přeměna probíhá pouze v kontejneru na vrchní pozici.   Nejmenší robot (Mineral Scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou. Robot střední velikosti (Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
+V Mineral Scene figurují dohromady 3 rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot (Mineral Scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti (Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
 \redo{In progress NEKONTROLOVAT předělat na stejný formát jako předchozí kapitola}
 \section{Competitive Scene}
 Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
+\section{Shrnutí}
