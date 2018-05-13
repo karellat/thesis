@@ -1,5 +1,6 @@
 %%% Kapitoly
 \chapter{Experimenty}
+\label{chap:experimenty}
 Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy k vytvoření řízení chování homogenního robotického hejna, tzn. s jedním druhem robotů. V následující kapitole podrobně popíši postup hledání optimální chování pro heterogenního hejna. Optimalizaci jsem navrhl a otestoval na třech rozličných scénářích. 
 \par
 \subsubsection{Pracovní názvy scénářů:}
@@ -96,10 +97,10 @@ Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených 
 	\textbf{Scout Robot} \\
 	\midrule
         Tvar: & Kruh & \\
-        Poloměr: & 2.5 \\
+        Poloměr: & 2,5 \\
         Název: & WoodCutterM \\
         Velikost kontejneru: & 0\\
-        \hline
+        \midrule
         \textbf{Efektory} \\
         \midrule
         Motor: & Dvou kolečkový \\
@@ -110,7 +111,7 @@ Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených 
         Dosah refaktoru: & 10\\
         Počet paměťových slotů: & 10 \\
         Obsah slotu: & float\\
-        \hline 
+        \midrule 
         \textbf{Senzory} \\
         \midrule
         Počet line senzorů: &  3 \\
@@ -139,7 +140,7 @@ Worker robot se stará o manipulaci a následný transport objektů na mapě. Po
                 Poloměr: & 5\\
                 Název: & WoodWorkerM \\
                 Velikost kontejneru: & 5\\
-                \hline
+                \midrule
                 \textbf{Efektory} \\
                 \midrule
                 Motor: & Dvou kolečkový \\
@@ -149,7 +150,7 @@ Worker robot se stará o manipulaci a následný transport objektů na mapě. Po
                 Dosah pickeru: & 10\\
                 Počet paměťových slotů: &10 \\
                 Obsah slotu: & float\\
-                \hline 
+                \midrule 
                 \textbf{Senzory} \\
                 \midrule
                 Počet line senzorů: &  3\\
@@ -175,7 +176,7 @@ Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci
 \end{enumerate}
 Trestáni za:
 \begin{enumerate}
-	\item \textit{kolize} = počet pokusů o pohyb při kterém by došlo ke kolizi 
+	\item \textit{kolize} - počet pokusů o pohyb při kterém by došlo ke kolizi 
 	\item \textit{sebrané entity mimo dřevo} - počet entit v kontejnerech, které nejsou zpracované dřevo 
 \end{enumerate}
 
@@ -222,28 +223,11 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\end{tabular}
 		\caption{Scout chůze - nastavení experimentu}\label{tab04:ScoutWalk}
 	\end{table}
-    Výsledky experimentu ilustrují grafy na další stránce. Jednotlivé průběhy fitness na obrázcích \ref{obr04:WalkDE} a \ref{obr04:WalkES} ukazují střední hodnotu fitness a její rozptyl v závislosti na generaci, jedinci jsou kvůli přehlednosti sloučeni po 10 generacích. V obou případech docházelo k největšímu růstu do 200 generace (v grafech 20). Oba EA lze označit jako úspěšné, protože vygenerovaná chování objevila více než 50\% stromů na mapě, v případě DE dokonce více dvě třetiny. U ES jsem nepoužíval elitismus, proto křivka více osciluje než je tomu u DE.
+    Výsledky experimentu ilustrují grafy na další stránce. Jednotlivé průběhy fitness na obrázku \ref{obr04:WalkESvsDE} ukazují střední hodnotu fitness a její rozptyl v závislosti na generaci, jedinci jsou kvůli přehlednosti sloučeni po 10 generacích. V obou případech docházelo k největšímu růstu do 200 generace (v grafech 20). Oba EA lze označit jako úspěšné, protože vygenerovaná chování objevila více než 50\% stromů na mapě, v případě DE dokonce více dvě třetiny. U ES jsem nepoužíval elitismus, proto křivka více osciluje než je tomu u DE.
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorWalkMem}
 		\caption{ Scout chůze - porovnání průměrné fitness ES a DE}
 		\label{obr04:WalkESvsDE}
-	\end{figure}
-	\begin{figure}[p]
-		\centering
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WCuttorWalkMem}
-			\caption{DE}
-			\label{obr04:WalkDE}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodWalkES}
-			\caption{ES}
-			\label{obr04:WalkES}
-		\end{subfigure}
-		\caption{Scout chůze - průběh fitness }
-		\label{obr04:Walk}
 	\end{figure}
 	\clearpage
 	
@@ -280,28 +264,11 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Worker chůze - nastavení experimentu}
 		\label{tab04:WorkerWalk}
 	\end{table}
-		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu \ref{obr04:WWalkDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje graf \ref{obr04:WWalkES} od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům \ref{obr04:WWalk} i \ref{obr04:WWalkESvsDE}..
+		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu DE v obrázku \ref{obr04:WWalkESvsDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje křivka ES od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům \ref{obr04:WWalk} i \ref{obr04:WWalkESvsDE}..
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerWalkMem}
 		\caption{Worker chůze - porovnání průměrné fitness ES a DE}
 		\label{obr04:WWalkESvsDE}
-	\end{figure}
-	\begin{figure}[p]
-		\centering
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WorkerWalkMem}
-			\caption{DE}
-			\label{obr04:WWalkDE}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodWWalkES}
-			\caption{ES}
-			\label{obr04:WWalkES}
-		\end{subfigure}
-		\caption{Worker chůze - průběh fitness v rámci generací}
-		\label{obr04:WWalk}
 	\end{figure}
 	\clearpage 
 	
@@ -340,29 +307,11 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\end{tabular}
 		\caption{Scout kácení - nastavení experimentu}
 	\end{table}
-	
+	Dále můžete vidět grafy popisující průběh fitness u DE, ES a porovnání jejich průměrné fitness. Z \ref{obr04:CutESvsDE} můžeme vyčíst, že použité DE více cílí na exploataci a ES na exploraci. DE jsou díky tomu mnohem náchylnější k uvíznutí v lokálním optimu.  Fitness se v tomto případě skládá ze dvou složek, pro jedince bylo mnohem jednodušší stromy objevovat a náhodou nějaké pokácet. V prvních 650 generacích DE se tedy drží tento trend a pak se objeví jedinci, kteří cílí na kácení. Toto chování se rychle rozšířilo a fitness celé populace okolo 700. generace prudce vzrostla. Zatímco fitness v ES rostla postupně, ale nedosáhla tak vysoké úrovně jako DE. Nejlepší jedinci pokácí více než 60\% stromů. 
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorCutMem}
 		\caption{Scout kácení - porovnání průměrné fitness ES a DE}
 		\label{obr04:CutESvsDE}
-	\end{figure}
-	Dále můžete vidět grafy popisující průběh fitness u DE, ES a porovnání jejich průměrné fitness. Z \ref{obr04:CutDE} můžeme vyčíst, že použité DE více cílí na exploataci a ES na exploraci. DE jsou díky tomu mnohem náchylnější k uvíznutí v lokálním optimu.  Fitness se v tomto případě skládá ze dvou složek, pro jedince bylo mnohem jednodušší stromy objevovat a náhodou nějaké pokácet. V prvních 650 generacích DE se tedy drží tento trend a pak se objeví jedinci, kteří cílí na kácení. Toto chování se rychle rozšířilo a fitness celé populace okolo 700. generace prudce vzrostla. Zatímco fitness v ES rostla postupně, ale nedosáhla tak vysoké úrovně jako DE. Nejlepší jedinci pokácí více než 60\% stromů. 
-	\begin{figure}[p]
-		\centering
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WCuttorCutMem}
-			\caption{DE}
-			\label{obr04:CutDE}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodCutES}
-			\caption{ES}
-			\label{obr04:CutES}
-		\end{subfigure}
-		\caption{Scout kácení - průběh fitness v rámci generací}
-		\label{obr04:Cut}
 	\end{figure}
 	\clearpage
 	
@@ -402,29 +351,11 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\end{tabular}
 		\caption{Worker sbírání - nastavení experimentu}
 	\end{table}
-	V grafech \ref{obr04:Pickup}, \ref{obr04:PickupESvsDE} je vidět, že roboti dokázali maximálně naplnit kontejnery zpracovaným dřevem, v případě DE už po 250. generaci zvládala tento úkol celá populace. Chování optimalizované ES mají mnohem větší rozptyl díky vysoké exploraci, ale i její nejlepší jedinci zvládli maximální naplnění již kolem 250. generace. 
+	V grafech na \ref{obr04:PickupESvsDE} je vidět, že roboti dokázali maximálně naplnit kontejnery zpracovaným dřevem, v případě DE už po 250. generaci zvládala tento úkol celá populace. Chování optimalizované ES mají mnohem větší rozptyl díky vysoké exploraci, ale i její nejlepší jedinci zvládli maximální naplnění již kolem 250. generace. 
 		   \begin{figure}[t]\centering       
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerPickUpMem}
 		\caption{ Worker sbírání - porovnání průměrné fitness ES a DE}
 		\label{obr04:PickupESvsDE}
-	\end{figure}
-
-	\begin{figure}[p]
-		\centering
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WorkerPickUpMem}
-			\caption{DE}
-			\label{obr04:PickupDE}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodPickupES}
-			\caption{ES}
-			\label{obr04:PickupES}
-		\end{subfigure}
-		\caption{Worker sbírání - průběh fitness v rámci generací}
-		\label{obr04:Pickup}
 	\end{figure}
 	\clearpage
 	\subsubsection{Worker ukládání doprostřed  - nastavení experimentu}
@@ -464,29 +395,14 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Worker ukládání doprostřed  - nastavení experimentu}
 		\label{tab04:WorkerStore}
 	\end{table}
-   	Lokace skladovacího místa působila robotům velké obtíže, proto růst fitness (\ref{obr04:StockDE}, \ref{obr04:StockES}) byl mnohem mírnější než u předchozích experimentů. DE dokázala už optimalizované chování rychleji vylepšovat narozdíl od ES, která doplácí na velkou míru explorace viz. \ref{obr04:StockESvsDE}. Nejlepší jedinci jsou ovšem už schopni plnit obstojně hlavní úkol Worker robotů. Objevila se obtíž s efektivním urovnáním zpracovaného dřeva na skladovací místo. Pokoušel jsem se tento problém řešit, přidáním kladných bodů za menší vzdálenost mezi středem skladovacího místa a uloženým dřevem. Nesáhl jsem, však lepších výsledků než v tomto experimentu. 
+   	Lokace skladovacího místa působila robotům velké obtíže, proto růst fitness byl mnohem mírnější než u předchozích experimentů. DE dokázala už optimalizované chování rychleji vylepšovat narozdíl od ES, která doplácí na velkou míru explorace viz. \ref{obr04:StockESvsDE}. Nejlepší jedinci jsou ovšem už schopni plnit obstojně hlavní úkol Worker robotů. Objevila se obtíž s efektivním urovnáním zpracovaného dřeva na skladovací místo. Pokoušel jsem se tento problém řešit, přidáním kladných bodů za menší vzdálenost mezi středem skladovacího místa a uloženým dřevem. Nesáhl jsem, však lepších výsledků než v tomto experimentu. 
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerStockMem}
 		\caption{Worker ukládání doprostřed  - porovnání průměrné fitness ES a DE}
 		\label{obr04:StockESvsDE}
 	\end{figure}
-	\begin{figure}[p]
-		\centering
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WorkerStockMem}
-			\caption{DE}
-			\label{obr04:StockDE}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodStockES}
-			\caption{ES}
-			\label{obr04:StockES}
-		\end{subfigure}
-		\caption{Worker ukládání doprostřed  - Průběh fitness v rámci generací}
-		\label{obr04:Stock}
-	\end{figure}
+
+
 	\clearpage
 	\subsubsection{Kooperace  hlavní úkol  - nastavení experimentu}
 	V rámci posledního úkolu jsem složil už optimalizovaná chování dohromady, abych vytvořil heterogenní hejno řešící problém Wood Scene scénáře. Spojoval jsem náhodné chování pro Scout robota s náhodným u Worker robota, aby se našla nejlepší jejich kombinace, tak bylo nutné navýšit počet generací na 4000. Fitness funkce(\ref{tab04:Coop}) byla v tomto případě průnik posledních experimentů Worker ukládání doprostřed a Scout kácení. 
@@ -526,29 +442,12 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\label{tab04:Coop}
 	\end{table}
 
-	Na \ref{obr04:Coop} lze pozorovat, že pro ES bylo velmi obtížné skládat už úspěšné chování do lepších celků a velmi osciluje \ref{obr04:CoopES}. ES uškodilo agresivní prohledávání prostoru a DE díky své architektuře vytěžilo z optimalizovaných chování maximum \ref{obr04:CoopDE}. Nejlepšímu jedinci se budeme věnovat podrobněji v další kapitole. 
+	Na \ref{obr04:CoopESvsDE} lze pozorovat, že pro ES bylo velmi obtížné skládat už úspěšné chování do lepších celků a velmi osciluje. ES uškodilo agresivní prohledávání prostoru a DE díky své architektuře vytěžilo z optimalizovaných chování maximum. Nejlepšímu jedinci se budeme věnovat podrobněji v další kapitole. 
 		\clearpage
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WoodCoopMem}
 		\caption{Kooperace  hlavní úkol  - porovnání průměrné fitness ES a DE}
 		\label{obr04:CoopESvsDE}
-	\end{figure}
-	\begin{figure}[p]
-		\centering
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/DE/WoodCoopMem}
-			\caption{DE}
-			\label{obr04:CoopDE}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[width=\linewidth]{../img/WoodMap/ES/WoodCoopES}
-			\caption{ES}
-			\label{obr04:CoopES}
-		\end{subfigure}
-		\caption{Kooperace  hlavní úkol  - průběh fitness v rámci generací}
-		\label{obr04:Coop}
 	\end{figure}
 	\clearpage
 	
@@ -608,7 +507,169 @@ Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*
 V mém zjednodušeném scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot Refactor. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. \unsure{Je to hodně komplexní asi to zjednoduším}
 \par
 V Mineral Scene figurují dohromady 3 rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot (Mineral Scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti (Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
-\redo{In progress NEKONTROLOVAT předělat na stejný formát jako předchozí kapitola}
+\redo{Upravit dle dosáhnuté formy}
+\clearpage
+
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Příklad Mineral Scene mapy: start náhodného chování}
+	\label{obr04:MineralSceneRandomStart}
+\end{figure}
+\clearpage 
+\subsection{Roboti}
+V Mineral Scene scénáři se vyskytuje 12 robotů. V hejnu se vyskytují 3 různé druhy robotů: Scout roboti, Worker roboti, Refaktor roboti. V implementaci jsou odlišeni od předchozího experimentu prefixem Mineral. Jejich ovládání stejně jako v předchozím experimentu probíhá pomocí neuronových sítí. Jedinec má opět podobu vektoru vah jednotlivých neuronových sítí a hodnoceno je komplet celé hejno. Popišme jednotlivé roboty.
+\redo{Pokud možno přidat spalování paliva}
+\subsubsection{Scout robot}
+Jak název napovídá Scout robot prozkoumává mapu. Oproti Wood Scene nemá žádnou další funkci. Ze všech robotů se pohybuje nejrychleji a díky malé velikosti dokáže projíždět i užšími prostory. Informace o prostředí získává pomocí úsečkových senzorů a velkého kruhového senzoru, který poskytuje počet jednotlivých druhů entit v celém okruhu. Pro komunikaci se zbytkem používá rádiový signál s kódem 0. 
+\par  
+
+\begin{table}[h]\centering
+	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Scout Robot} \\
+		\midrule
+		Tvar: & Kruh\\
+		Poloměr: & 2.5\\
+		Namespace: & MineralRobots\\
+		Název: & ScoutRobotMem \\
+		Velikost kontejneru: & 0\\
+		\midrule
+		\textbf{Efektory} \\
+		\midrule
+		Motor: & Dvou kolečkový \\
+		Maximální rychlost: & 3 \\
+		Kód rádiového signálu: & 0\\
+		Poloměr signálu: & 200\\
+		Počet paměťových slotů: &10 \\
+		Obsah slotu: & float\\
+		\midrule
+		\textbf{Senzory} \\
+		\midrule
+		Počet line senzorů: &  3\\
+		Délka line senzorů: & 70\\
+		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Počet fuel senzorů: &  3\\
+		Délka fuel senzorů: & 70\\
+		Orientace f. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Poloměr rádiového přijímače: & 100 \\
+		Počet touch senzorů: & 3 \\  
+		Lokátorový senzor\\ 
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Scene - Scout robot popis }
+	\label{tab04:MineralScout}
+\end{table}
+\clearpage
+\subsubsection{Worker Robot}
+Mineral Worker roboti zastupují úlohu transportu minerálů. Pohybují se rychleji než Refaktor roboti, ale zase pomaleji než Scout roboti. Uloží do svého kontejneru až 5 minerálů. Pro komunikaci využívají rádiového signálu s kódem 1. Samozřejmě má k dispozici Picker pro nákládání a vykládání entit z kontejneru.
+\begin{table}[h]\centering
+	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Worker Robot} \\
+		\midrule
+		Tvar: & Kruh\\
+		Poloměr: & 5 \\
+		Namespace: & MineralRobots\\
+		Název: & WorkerRobotMem \\
+		Velikost kontejneru: & 5\\
+		\midrule
+		\textbf{Efektory} \\
+		\midrule
+		Motor: & Dvou kolečkový \\
+		Maximální rychlost: & 1,5 \\
+		Kód rádiového signálu: & 1\\
+		Poloměr signálu: & 200\\
+		Dosah pickeru: & 10\\
+		Počet paměťových slotů: &10 \\
+		Obsah slotu: & float\\
+		\midrule 
+		\textbf{Senzory} \\
+		\midrule
+		Počet line senzorů: &  3\\
+		Délka line senzorů: & 50\\
+		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Počet fuel senzorů: &  3\\
+		Délka fuel senzorů: & 50\\
+		Orientace f. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Poloměr rádiového přijímače: & 100 \\
+		Počet touch senzorů: & 3 \\  
+		Lokátorový senzor\\ 
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Scene - Worker robot popis }
+	\label{tab04:MineralWorker}
+\end{table}
+\clearpage
+\subsubsection{Refaktor robot}
+Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na jednotku paliva. Pro přeměnu musí být minerál připraven na vrcholu kontejneru a po procesu přeměny se místo minerálu objeví palivo. Refaktor robot je však oproti ostatním robotů značně neohrabaný, zvláště kvůli jeho velikosti, jeho poloměr odpovídá dvěma Worker robotům (resp. čtyřem Scout robotům). Pohybuje se z nich také nejpomaleji. Jeho rádiové signály nesou kód 2. Nakladače (vykladače) má do všech čtyrech světových směrů. 
+\par  
+\begin{table}[h]\centering
+	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Refaktor Robot} \\
+		\midrule
+		Tvar: & Kruh\\
+		Poloměr: & 10 \\
+		Namespace: & MineralRobots\\
+		Název: & RefactorRobotMem \\
+		Velikost kontejneru: & 5\\
+		\midrule
+		\textbf{Efektory} \\
+		\midrule
+		Motor: & Dvou kolečkový \\
+		Maximální rychlost: & 1,5 \\
+		Kód rádiového signálu: & 1\\
+		Poloměr signálu: & 200\\
+		Počet pickerů & 4\\
+		Orientace pickerů & po\ 90^\circ\\ 
+		Dosah pickerů: & 20\\
+		Počet paměťových slotů: &10 \\
+		Obsah slotu: & float\\
+		Refaktor: & Minerál \Rightarrow Palivo \\
+		Dosah refaktoru:  & kontejner \\
+		Kapacita refaktoru: & 1\\ 
+		\midrule 
+		\textbf{Senzory} \\
+		\midrule
+		Počet line senzorů: &  3\\
+		Délka line senzorů: & 70\\
+		Orientace l. senzorů: & 0^\circ, 35^\circ, -35^\circ\\
+		Počet fuel senzorů: &  3\\
+		Délka fuel senzorů: & 70\\
+		Orientace f. senzorů: & 0^\circ, 35^\circ, -35^\circ\\
+		Poloměr rádiového přijímače: & 100 \\
+		Počet touch senzorů: & 3 \\  
+		Lokátorový senzor\\ 
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Scene - Refaktor robot popis }
+	\label{tab04:MineralRefactor}
+\end{table}
+\clearpage
+\subsection{Vyhodnocování Fitness}
+Fitness funkce pro Mineral Scene scénář jsem, po dobrých zkušenostech z předchozího experimentu, použil vážený součet následujících charakteristik mapy po konci simulace. Tento součet je specifický pro každý podúkol zvlášť. Kvůli komplexnosti toho úkolu a velikosti hejna v jednotlivých podúkolech nevystupují roboti vždy v plném počtu, ale nejdříve se optimalizuje chování pro pár jedinců od každého druhu. Pozitivní hodnocení roboti získávali za: 
+\begin{itemize}
+	\item \textit{objevené minerály} - minerály o které zavadil line senzor
+	\item \textit{uložené minerýly} - minerály nacházející se v kontejnerech robotů 
+	\item \textit{přeměněné palivo} - palivo nacházející se na mapě či v kontejnerech robotů
+	\item \textit{palivo v nádržích} - palivo uvnitř nádrží jednotlivých robotů
+	\item \textit{odložené minerály} - minerály na pomocném prostoru označeným rádiovým signálem
+\end{itemize}
+A negativní pouze za: 
+\begin{itemize}
+	\item \textit{kolize} - počet pokusů o pohyb který by vedl ke kolizi
+\end{itemize}
+\subsection{Podúkoly}
+Tentokrát jsem chtěl nechat více volnou ruku na EA, aby nalezly nejlepší možné chování a nevést přesně specificky, co mají dané druhy robotů dělat krok od kroku. Proto jsem mimo první experimenty zajišťující pohyb navrhoval více obecné fitness funkce. Opět pro ES i DE používám stejné fitness funkce, abych mohl porovnat jejich výsledky. 
+\redo{Rozepsat}
+
+Dále budou následovat konkrétní metaúkoly. U každého metaúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhu ES a DE, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  y osa zobrazuje hodnotu fitness, x osa odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. Velikost populace u ES i u DE byla vykompenzována stejně jako v případě Wood Scene experimentu. 
+\clearpage
+
+\clearpage
 \section{Competitive Scene}
 Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
 \section{Shrnutí}

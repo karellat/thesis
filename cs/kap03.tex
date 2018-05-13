@@ -21,12 +21,24 @@ Pokud si chceme prohlédnout některé z chování vizuálně, spustíme program
 
 \section*{Optimalizace}
 Simulace mapy patří mezi časově nejvíce náročnou část. Pro její zrychlení jsem použil paralelního programování, jeho přístup se liší podle EA. Za použití profileru jsem nalezl, že nejvíce času simulace zabralo počítání jednotlivých průsečíků pro senzory, efektory a entity samotné. Pro optimalizaci počtu průsečíků jsem implementoval vlastní datovou strukturu \textit{SpatialHash}. 
-\par
-Rozdělení ES na části, které jsou paralelně zpracované, je vcelku přirozené, protože každý jedinec používá pro tvoru potomka mutace odvozeného z sebe samotné. Tím pádem můžeme od sebe oddělit jednotlivé jedince a nemusí sdílet žádnou paměť. U DE bylo rozdělení poněkud složitější, protože v rámci běhu vybírá náhodně z celé populace. Rozhodl jsem se, že oddělím simulace mapy, která probíhá pro nově vzniklého potomka a na její základě se hodnotí jeho fitness. Takže pro každého člena původní populace vznikne nezávislý proces, který vybere z aktuální populace 3 jedince ( pouze čtení) a pak nově vzniklého jedince vloží do thread safe datové struktury (list z knihovny System.Collections.Concurrent). Po dokončení všech procesů se přejde k další generaci. \unsure{Nějaké větší detaily, CPU, stejný seed pro všechno, ale nemůžu ovlivnit pořádí volání random number} Použití paralelního zpracovaní znemožňuje přesné zopakování experimentů, zkoušel jsem experimenty pouštět na rozličných strojích a výsledky řádově odpovídají.  
 \par 
 SpatialHash rozděluje mapu na sít malých čtverečků. Každá entita (mimo roboty) je uvedena ve všech čtverečcích do kterých zasahuje. Pro počítání kolizí dostane potenciálně kolidující těleso od SpatialHash množinu obsahující všechny entity zasahujících do stejných čtverečků jako potenciálně kolidující těleso. Jedinou vyjímku tvoří roboti, neboť se často přesouvají po mapě a ve SpatialHash by neustále měnili pozici. Operace spojené s častým pohybem byly více náročné než počítat průsečíky se všemi roboty, takže roboti jsou uloženi v klasickém listu.
+\par
+Rozdělení ES na části, které jsou paralelně zpracované, je vcelku přirozené, protože každý jedinec používá pro tvoru potomka mutace odvozeného z sebe samotné. Tím pádem můžeme od sebe oddělit jednotlivé jedince a nemusí sdílet žádnou paměť. U DE bylo rozdělení poněkud složitější, protože v rámci běhu vybírá náhodně z celé populace. Rozhodl jsem se, že oddělím simulace mapy, která probíhá pro nově vzniklého potomka a na její základě se hodnotí jeho fitness. Takže pro každého člena původní populace vznikne nezávislý proces, který vybere z aktuální populace 3 jedince ( pouze čtení) a pak nově vzniklého jedince vloží do thread safe datové struktury (list z knihovny System.Collections.Concurrent). Po dokončení všech procesů se přejde k další generaci. \unsure{Nějaké větší detaily, CPU, stejný seed pro všechno, ale nemůžu ovlivnit pořádí volání random number} Použití paralelního zpracovaní znemožňuje přesné zopakování experimentů, zkoušel jsem experimenty pouštět na rozličných strojích a výsledky řádově odpovídají.  
 \section*{Použití}
-Pro jednotlivé objekty na mapě jsem vytvořil obecný objektový návrh, který umožňuje jednoduché přidání vlastních objektů. Případně používat pouze simulaci na mapě pro jiné účely než optimalizaci chování robotů. Návrh nových evolučních algoritmů. \unsure{Jak moc má todle má být podrobný?} 
-
-\redo{Ještě něco přidat?} 
-\redo{Nějaký obrázky? }
+Pro jednotlivé objekty na mapě jsem vytvořil obecný objektový návrh, který umožňuje jednoduché přidání vlastních objektů. Případně používat pouze simulaci na mapě pro jiné účely než optimalizaci chování robotů. Návrh nových evolučních algoritmů.
+\par
+Celá simulace probíhá v rámci instance třídy Map, ve které se nacházejí všechny objekty figurující v simulaci. Jedná se, jak o překážky, materiály určené ke zpracování, roboti atd. Přesný strom dědičnosti je uveden v dokumentaci. Roboti používaní v experimentech v kapitole \ref{chap:experimenty} mají podobnou základní stavbu. Její hlavní části ilustruje obrázek \ref{obr03:robotModel}, červeně je označeno tělo robota, modrý kruh je rádiový přijímač, černé úsečky představují vzdálenostní senzory, šedivě stínované obdélníky zobrazují kolečka (ve vizuálním programu se nezobrazují).
+\par 
+Všichni mnou používaní roboti jsou poháněni dvou kolovým motorem. Pro interakci se svět jim slouží efektory (mění prostředí) a senzory (snímají prostředí), v obou případech mají buď podobu úsečky nebo kruhu.
+\par
+ Mezi modelové úsečkové senzory patří vzdálenostní senzory, který vrací typ a vzdálenost k objektu kolidující se senzorem, typicky mají roboti 3 tyto senzory vpředu. Jako zástupce kruhovitých senzorů můžeme považovat rádiový přijímač, který vrací robotovi ve vektoru intenzitu signálů, které proťaly jeho kruhovou reprezentaci.
+ \par 
+ Efektory pracují na podobném principy jen místo čtení hodnot z prostředí očekávají vstupní hodnoty s nastavením. Například efektor zpracovávající stromy na dřevo má podobu úsečkového efektoru, pro zpracování musí kolidovat s entitou stromu a na vstupu musí dostat povel pro aktivaci. 
+ \redo{Ještě něco přidat?} 
+ \par
+ \begin{figure}[h]\centering
+	\includegraphics[scale=0.5]{../img/RobotModel}
+	\caption{Ilustrativní obrázek obecného robota}
+	\label{obr03:robotModel}
+\end{figure}
