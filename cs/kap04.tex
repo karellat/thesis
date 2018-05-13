@@ -264,7 +264,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\caption{Worker chůze - nastavení experimentu}
 		\label{tab04:WorkerWalk}
 	\end{table}
-		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu DE v obrázku \ref{obr04:WWalkESvsDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje křivka ES od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům \ref{obr04:WWalk} i \ref{obr04:WWalkESvsDE}..
+		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu DE v obrázku \ref{obr04:WWalkESvsDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje křivka ES od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům v \ref{obr04:WWalkESvsDE}..
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerWalkMem}
 		\caption{Worker chůze - porovnání průměrné fitness ES a DE}
@@ -650,7 +650,7 @@ Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na
 \end{table}
 \clearpage
 \subsection{Vyhodnocování Fitness}
-Fitness funkce pro Mineral Scene scénář jsem, po dobrých zkušenostech z předchozího experimentu, použil vážený součet následujících charakteristik mapy po konci simulace. Tento součet je specifický pro každý podúkol zvlášť. Kvůli komplexnosti toho úkolu a velikosti hejna v jednotlivých podúkolech nevystupují roboti vždy v plném počtu, ale nejdříve se optimalizuje chování pro pár jedinců od každého druhu. Pozitivní hodnocení roboti získávali za: 
+Fitness funkce pro Mineral Scene scénář jsem, po dobrých zkušenostech z předchozího experimentu, použil vážený součet následujících charakteristik mapy po konci simulace. Tento součet je specifický pro každý podúkol zvlášť. Kvůli komplexnosti toho úkolu a velikosti hejna v jednotlivých podúkolech nevystupují roboti vždy v plném počtu, ale nejdříve se optimalizuje chování pro pár jedinců od každého druhu. I tak bylo potřeba zmenšit velikost populace pro rozumnou dobu času běhu. Pozitivní hodnocení roboti získávali za: 
 \begin{itemize}
 	\item \textit{objevené minerály} - minerály o které zavadil line senzor
 	\item \textit{uložené minerály} - minerály nacházející se v kontejnerech robotů 
@@ -668,21 +668,20 @@ Tentokrát jsem chtěl nechat více volnou ruku na EA, aby nalezly nejlepší mo
 
 Dále budou následovat konkrétní metaúkoly. U každého metaúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhu ES a DE, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  y osa zobrazuje hodnotu fitness, x osa odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. Velikost populace u ES i u DE byla vykompenzována stejně jako v případě Wood Scene experimentu. 
 \clearpage
-	\subsubsection{Vzor popisu podúkolu}
-Popis myšlenky podúkolu
+
+\subsubsection{Scout chůze - nastavení experimentu}
+Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Opět jsem roboty oddělil, aby optimalizace neupřednostňovala ty rychlejší. Náhodně vygenerované neuronové sítě pro řízení Scout robotů. Poté jsou optimalizovány pomocí fitness, která oceňuje chování podle počtu objevených minerálů.
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Scout-5, Worker-4 \\
-		Počet generací: & 4000\\
-		Počet iterací map & 2000\\
-		Velikost generace(DE) & 200\\
+		Roboti: & Scout-5 \\
+		Počet generací: & 1000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 100\\
 		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&20\\
-		Elitismus(ES)& Ano\\
-		Elitismus(DE)& Ne \\
+		Počet mutovaný potomků(ES)&10\\
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
@@ -691,31 +690,436 @@ Popis myšlenky podúkolu
 		\toprule
 		\textbf{Fitness funkce}\\
 		\midrule
-		Hodnota nalezeného pokáceného stromu &  100 \\
-		Hodnota uloženého dřeva & 1000\\
-		Hodnota dřeva v kontejneru & 100\\
-		Hodnota jiné entity v kontejneru & -100\\
-		Hodnota kolize & -1\\
+		Hodnota nalezeného minerálu &  100 \\
 		Ostatní hodnoty: & 0\\
-		Počet stromů: & 400\\
-		Počet už pokácených stromů & 0\\
+		Počet minerálů: & 400\\
+		Počet překážek & 100\\
+		Počet paliva & 100\\
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Vzor - nastavení experimentu}
-	\label{tab04:Vzor}
+	\caption{Scout chůze - nastavení experimentu}
+	\label{tab04:MineralScoutWalk}
 \end{table}
-
-Výsledky experimentu
+\redo{Přidat porovnání a výsledky ES}
 \clearpage
 \begin{figure}[t]\centering
-	\includegraphics[width=\columnwidth]{../img/todo}
-	\caption{Porovnání vzor}
-	\label{obr04:Vzor}
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralScoutWalk}
+	\caption{Mineral Scout chůze - porovnání průběhu fitness ES a DE}
+	\label{obr04:MineralScoutWalk}
 \end{figure}
 \clearpage
 
+\subsubsection{Worker chůze - nastavení experimentu}
+I pro Worker robota bylo potřeba optimalizovat chůzí v mapě. Stejně jako Scout robot byli odměňovány za nalezené Minerály. 
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Worker-4 \\
+		Počet generací: & 1000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 100\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&10\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Hodnota nalezeného minerálu &  100 \\
+		Ostatní hodnoty: & 0\\
+		Počet minerálů: & 300\\
+		Počet překážek & 100\\
+		Počet paliva & 100\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Worker chůze - nastavení experimentu}
+	\label{tab04:MineralWorkerWalk}
+\end{table}
+\redo{Přidat porovnání a výsledky ES}
+\clearpage
+\begin{figure}[t]\centering
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerWalk}
+	\caption{Mineral Worker chůze - porovnání průběhu fitness ES a DE}
+	\label{obr04:MineralWorkerWalk}
+\end{figure}
+\clearpage
+
+\subsubsection{Worker sbírání - nastavení experimentu}
+
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Worker-2 \\
+		Počet generací: & 3000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 100\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&10\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Pomocný rádiový signál: & Ano\\
+		Hodnota nalezeného minerálu &  1\\
+		Hodnota minerálu v pomoc. signálu & 1010\\ 
+		Hodnota uložených minerálů & 1000\\
+		Ostatní hodnoty: & 0\\
+		Počet minerálů: & 400\\
+		Počet překážek & 100\\
+		Počet paliva & 100\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Worker sbírání - nastavení experimentu}
+	\label{tab04:MineralWorkerPickUp}
+\end{table}
+\redo{Přidat porovnání a výsledky ES}
+\clearpage
+\begin{figure}[t]\centering
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerPickup}
+	\caption{Mineral Worker sbírání - porovnání průběhu fitness ES a DE}
+	\label{obr04:MineralWorkerPickUp}
+\end{figure}
+\clearpage
+
+\subsubsection{Worker skládání - nastavení experimentu}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Worker-4\\
+		Počet generací: & 6000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 100\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&10\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Pomocný rádiový signál: & Ano\\
+		Hodnota nalezeného minerálu &  1\\
+		Hodnota minerálu v pomoc. signálu & 1000\\ 
+		Hodnota uložených minerálů & 10\\
+		Ostatní hodnoty: & 0\\
+		Počet minerálů: & 400\\
+		Počet překážek & 100\\
+		Počet paliva & 100\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Worker skládání - nastavení experimentu}
+	\label{tab04:MineralWorkerStore}
+\end{table}
+\redo{Přidat porovnání a výsledky ES}
+\clearpage
+\begin{figure}[t]\centering
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerPickup}
+	\caption{Mineral Worker skládání - porovnání průběhu fitness ES a DE}
+	\label{obr04:MineralWorkerStore}
+\end{figure}
+\clearpage
+\subsubsection{Refaktor chůze - nastavení experimentu}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Refaktor-3\\
+		Počet generací: & 1000\\
+		Počet iterací map & 1500\\
+		Velikost generace(DE) & 100\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&10\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Hodnota nalezeného minerálu &  1\\
+		Ostatní hodnoty: & 0\\
+		Počet minerálů: & 500\\
+		Počet překážek & 100\\
+		Počet paliva & 100\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Refaktor chůze - nastavení experimentu}
+	\label{tab04:MineralRefaktorWalk}
+\end{table}
+\redo{Přidat porovnání a výsledky ES}
+\clearpage
+\begin{figure}[t]\centering
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralRefaktorWalk}
+	\caption{Mineral Refaktor chůze - porovnání průběhu fitness ES a DE}
+	\label{obr04:MineralRefaktorWalk}
+\end{figure}
+\redo{Přidat další}
+\clearpage
+
+\subsection{Výsledky Experimentu}
+\redo{TODO}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\textbf{Inicializační nastavení:}  \\
+		\midrule
+		Výška & 800\\ 
+		Šířka & 1200\\
+		Počet iterací & 10000\\
+		Počet stromů & 400\\
+		Počet Scout robotů & 5\\
+		Počet Worker robotů & 4\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{WoodScene - nastavení mapy pro testovací experiment}
+\end{table}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\textbf{Výsledky} \\
+		\bottomrule
+		Zpracované dřevo zanechané v mapě & 225.22\\
+		Stromy v mapě & 156.22\\
+		Z toho nalezené & 52.84\\
+		Dřevo v kontejnerech & 18.48\\
+		Uskladněné dřevo & 17.56\\
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{WoodScene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
+	\label{tab04:MineralStat}
+\end{table}
+\newpage 
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Nejlepší jedinec - 10000 iterací simulace}
+	\label{obr04:MineralBestEnd}
+\end{figure}
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Náhodný jedinec - 10000 iterací simulace}
+	\label{obr04:MineralRandom end}
+\end{figure}
+\clearpage
 \clearpage
 \section{Competitive Scene}
 Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
+
+\redo{Upravit dle dosáhnuté formy}
+\clearpage
+
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Příklad Competitive Scene mapy: start náhodného chování}
+	\label{obr04:CompetitiveSceneRandomStart}
+\end{figure}
+\clearpage 
+
+\subsection{Roboti}
+
+\redo{Obecný popis robotů}
+\subsubsection{Fighter Scout robot}
+\par  
+\begin{table}[h]\centering
+	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fighter Scout Robot} \\
+		\midrule
+		Tvar: & Kruh\\
+		Poloměr: & 2,5\\
+		Namespace: & CompetitiveRobots\\
+		Název: & FighterScoutRobotMem \\
+		Velikost kontejneru: & 0\\
+		\midrule
+		\textbf{Efektory} \\
+		\midrule
+		Motor: & Dvou kolečkový \\
+		Maximální rychlost: & 3 \\
+		Kód rádiového signálu: & 0,1,2\\
+		Poloměr signálu: & 200\\
+		Počet paměťových slotů: &10 \\
+		Obsah slotu: & float\\
+		Počet zbraní: & 3\\
+		Dosah zbraní: & 10\\
+		Orientace zbraní: &  0^\circ, 45^\circ, -45^\circ\\
+		Útok zbraní: & 100\\
+		\midrule
+		\textbf{Senzory} \\
+		\midrule
+		Počet line senzorů: &  3\\
+		Délka line senzorů: & 70\\
+		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Poloměr rádiového přijímače: & 100 \\
+		Poloměr type senzoru: & 50\\
+		Počet touch senzorů: & 3 \\  
+		Lokátorový senzor\\ 
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Competitive Scene - Fighter Scout robot popis }
+	\label{tab04:CompetiveScout}
+\end{table}
+\clearpage
+\subsubsection{Fighter robot}
+\par  
+\begin{table}[h]\centering
+	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fighter Scout Robot} \\
+		\midrule
+		Tvar: & Kruh\\
+		Poloměr: & 5\\
+		Namespace: & CompetitiveRobots\\
+		Název: & FighterRobotMem \\
+		Velikost kontejneru: & 0\\
+		\midrule
+		\textbf{Efektory} \\
+		\midrule
+		Motor: & Dvou kolečkový \\
+		Maximální rychlost: & 1,5 \\
+		Kód rádiového signálu: & 0,1,2\\
+		Poloměr signálu: & 200\\
+		Počet paměťových slotů: &10 \\
+		Obsah slotu: & float\\
+		Počet zbraní: & 4\\
+		Orientace zbraní: &  0^\circ, 45^\circ, -45^\circ, 180^\circ\\
+		Útok zbraní: & 500\\
+		\midrule
+		\textbf{Senzory} \\
+		\midrule
+		Počet line senzorů: &  3\\
+		Délka line senzorů: & 70\\
+		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Poloměr rádiového přijímače: & 100 \\
+		Poloměr type senzoru: & 50\\
+		Počet touch senzorů: & 3 \\  
+		Lokátorový senzor\\ 
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Competitive Scene - Fighter robot popis }
+	\label{tab04:CompetitiveScene}
+\end{table}
+\clearpage
+\subsection{Vyhodnocování Fitness}
+\begin{enumerate}
+	\item \textit{nalezené stromy} - stromy o které zavadil line senzor 
+	\item \textit{pokácené stromy} - stromy, které refaktor změnil 
+	\item \textit{sebrané dřevo} - zpracované dřevo, které mají roboti uvnitř kontejnerů 
+	\item \textit{uskladněné dřevo} - dřevo, které dovezli na vyznačené místo 
+\end{enumerate}
+Trestáni za:
+\begin{enumerate}
+	\item \textit{kolize} - počet pokusů o pohyb při kterém by došlo ke kolizi 
+	\item \textit{sebrané entity mimo dřevo} - počet entit v kontejnerech, které nejsou zpracované dřevo 
+\end{enumerate}
+
+\subsection{Podúkoly} 
+\clearpage
+
+\subsubsection{Scout chůze - nastavení experimentu}
+
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Scout-5 \\
+		Počet generací: & 1000\\
+		Počet iterací map & 1000\\
+		Velikost generace(DE) & 100\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&10\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Hodnota nalezeného minerálu &  100 \\
+		Ostatní hodnoty: & 0\\
+		Počet minerálů: & 400\\
+		Počet překážek & 100\\
+		Počet paliva & 100\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Scout chůze - nastavení experimentu}
+	\label{tab04:CompetitiveWalk}
+\end{table}
+\redo{TODO}
+\clearpage
+\subsection{Výsledky Experimentu}
+\redo{TODO}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\textbf{Inicializační nastavení:}  \\
+		\midrule
+		Výška & 800\\ 
+		Šířka & 1200\\
+		Počet iterací & 10000\\
+		Počet stromů & 400\\
+		Počet Scout robotů & 5\\
+		Počet Worker robotů & 4\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{WoodScene - nastavení mapy pro testovací experiment}
+\end{table}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\textbf{Výsledky} \\
+		\bottomrule
+		Zpracované dřevo zanechané v mapě & 225.22\\
+		Stromy v mapě & 156.22\\
+		Z toho nalezené & 52.84\\
+		Dřevo v kontejnerech & 18.48\\
+		Uskladněné dřevo & 17.56\\
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{WoodScene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
+	\label{tab04:CompetitiveStat}
+\end{table}
+\newpage
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Nejlepší jedinec - 10000 iterací simulace}
+	\label{obr04:CompetitiveBestEnd}
+\end{figure}
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Náhodný jedinec - 10000 iterací simulace}
+	\label{obr04:CompetitiveRandom end}
+\end{figure}
+\clearpage
 \section{Shrnutí}
