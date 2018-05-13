@@ -13,7 +13,7 @@ Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy
 Hlavní motivací při tvorbě scénářů bylo vytvořit obtížnější úkoly než se obvykle používají jako například: shlukování, vyhýbání překážkám, atp. Navrhnout je natolik komplexně, aby nebylo možné, že část hejna se nebude podílet na jeho plnění. Také jsem volil scénáře, aby se přiblížily situacím z reálného světa. Každému z nich jsem věnoval samostatnou kapitolu, která zahrnuje popis hlavního úkolu scénáře, seznam robotů i s jejich senzory a efektory, způsob hodnocení fitness,rozdělení do podúkolů s průběhem fitness u ES a DE, vizualizaci a rozbor chování nejlepšího jedince.  
 \par
 Pro řešení problému jsem navrhl řadu postupů, proto v tomto odstavci zmíním ty nejvíce přímočaré a slibné, které se ovšem ukázaly  jako neúspěšné. V kapitolách zabývajícími se konkrétními scénáři už budu pouze popisovat jen konečné, úspěšné postupy.
- \par
+\par
 Nedostatečný se ukázal pokus provádět evoluci pro fitness hlavního úkolu scénáře. Konkrétně pro Wood Scene počet natěženého a uskladněného dřeva, pro Mineral Scene objem vytvořeného paliva, pro kompetitivní scénář zbylé body zdraví a udělené poškozený. Většina hodnocení náhodných chování byla rovna nule, proto EA nedostaly dostatek informací k vhodné exploraci a díky malé pravděpodobnosti vygenerování chování alespoň částečně řešící hlavní úkol nedocházelo ani k exploataci. Což mělo za důsledek neefektivní  DE a ES, takže ani jeden z EA nedošel k úspěšnému řešení. 
 \par
 Posun zaznamenala více obecná fitness i když sama o sobě také nedosáhla do kategorie úspěšných postupů. Do fitness jsem zahrnul i menší pozitivní znaky, které byly součástí hlavnímu úkolu. Například jsem záporně ohodnotil pokusy o pohyb končící kolizí, kladně počet nalezených entit či vhodných objektů v kontejnerech, aktuální stav paliva. Optimalizovaná chování opravdu zaznamenala posun. Ovšem oba EA obtížně hledaly cestu z lokálního optima a ve většině případů optimalizovali pouze jednoduché části úkolu. I přes přidávání složitějších matematických funkcí do fitness nebyly schopny dosáhnout uspokojivého řešení hlavního úkolu scénáře.  
@@ -653,7 +653,7 @@ Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na
 Fitness funkce pro Mineral Scene scénář jsem, po dobrých zkušenostech z předchozího experimentu, použil vážený součet následujících charakteristik mapy po konci simulace. Tento součet je specifický pro každý podúkol zvlášť. Kvůli komplexnosti toho úkolu a velikosti hejna v jednotlivých podúkolech nevystupují roboti vždy v plném počtu, ale nejdříve se optimalizuje chování pro pár jedinců od každého druhu. Pozitivní hodnocení roboti získávali za: 
 \begin{itemize}
 	\item \textit{objevené minerály} - minerály o které zavadil line senzor
-	\item \textit{uložené minerýly} - minerály nacházející se v kontejnerech robotů 
+	\item \textit{uložené minerály} - minerály nacházející se v kontejnerech robotů 
 	\item \textit{přeměněné palivo} - palivo nacházející se na mapě či v kontejnerech robotů
 	\item \textit{palivo v nádržích} - palivo uvnitř nádrží jednotlivých robotů
 	\item \textit{odložené minerály} - minerály na pomocném prostoru označeným rádiovým signálem
@@ -667,6 +667,52 @@ Tentokrát jsem chtěl nechat více volnou ruku na EA, aby nalezly nejlepší mo
 \redo{Rozepsat}
 
 Dále budou následovat konkrétní metaúkoly. U každého metaúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhu ES a DE, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  y osa zobrazuje hodnotu fitness, x osa odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. Velikost populace u ES i u DE byla vykompenzována stejně jako v případě Wood Scene experimentu. 
+\clearpage
+	\subsubsection{Vzor popisu podúkolu}
+Popis myšlenky podúkolu
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Scout-5, Worker-4 \\
+		Počet generací: & 4000\\
+		Počet iterací map & 2000\\
+		Velikost generace(DE) & 200\\
+		Počet jedinců(ES) & 10\\
+		Počet mutovaný potomků(ES)&20\\
+		Elitismus(ES)& Ano\\
+		Elitismus(DE)& Ne \\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Hodnota nalezeného pokáceného stromu &  100 \\
+		Hodnota uloženého dřeva & 1000\\
+		Hodnota dřeva v kontejneru & 100\\
+		Hodnota jiné entity v kontejneru & -100\\
+		Hodnota kolize & -1\\
+		Ostatní hodnoty: & 0\\
+		Počet stromů: & 400\\
+		Počet už pokácených stromů & 0\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Vzor - nastavení experimentu}
+	\label{tab04:Vzor}
+\end{table}
+
+Výsledky experimentu
+\clearpage
+\begin{figure}[t]\centering
+	\includegraphics[width=\columnwidth]{../img/todo}
+	\caption{Porovnání vzor}
+	\label{obr04:Vzor}
+\end{figure}
 \clearpage
 
 \clearpage
