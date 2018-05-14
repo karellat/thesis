@@ -877,7 +877,8 @@ Už v 200 generaci dokážou Refaktor robot odhalí jednu pětinu minerálů, ja
 \clearpage
 
 \subsubsection{Refaktor Worker kooperace - nastavení experimentu}
-Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Workera robota. Zamýšlel 
+Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Workera robota. Zamýšlel jsem, že Worker roboti seberou minerály a budou je přibližovat k Refaktor robotovi, který je bude přetvářet na palivo. Tomuto účelu jsem přizpůsobil ohodnocení fitness, jedinci jsou nejvíce oceněni za přeměněné palivo vložené do mapy či už v nádrži. Další podrobnosti v tabulce \ref{obr04:MineralRefactorWorkerCoop} 
+\par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -887,8 +888,6 @@ Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Wo
 		Počet generací: & 2000\\
 		Počet iterací map & 1500\\
 		Velikost generace(DE) & 100\\
-		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&10\\
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
@@ -910,51 +909,17 @@ Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Wo
 	\caption{Mineral Refaktor Worker kooperace - nastavení experimentu}
 	\label{tab04:MineralRefactorWorkerCoop}
 \end{table}
-\redo{Přidat porovnání a výsledky ES}
+Ač se podle grafu \ref{obr04:MineralRefactorWorkerCoop}, že optimalizaci obou robotů proběhla úspěšně. Ale po vizuální kontrole jsem zjistil, že se zlepšoval pouze Refaktor robot. EA však v rámci nejlepších chování nezapojila Worker robota.
 \clearpage
-\begin{figure}[t]\centering
-	\includegraphics[width=\columnwidth]{../img/todo}
-	\caption{Mineral Refaktor Worker kooperace - porovnání průběhu fitness ES a DE}
+\begin{figure}[p]\centering
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerRefaktorCoop}
+	\caption{Mineral Refaktor Worker kooperace -  průběh fitness DE}
 	\label{obr04:MineralRefactorWorkerCoop}
 \end{figure}
-\redo{Přidat další}
 \clearpage
 
 \subsection{Výsledky Experimentu}
 \redo{TODO}
-\begin{table}[h]\centering   
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\textbf{Inicializační nastavení:}  \\
-		\midrule
-		Výška & 800\\ 
-		Šířka & 1200\\
-		Počet iterací & 10000\\
-		Počet stromů & 400\\
-		Počet Scout robotů & 5\\
-		Počet Worker robotů & 4\\
-		\bottomrule
-		\multicolumn{2}{l}{}
-	\end{tabular}
-	\caption{WoodScene - nastavení mapy pro testovací experiment}
-\end{table}
-\begin{table}[h]\centering   
-	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
-		\toprule
-		& \mc{} & \mc{}\\
-		\textbf{Výsledky} \\
-		\bottomrule
-		Zpracované dřevo zanechané v mapě & 225.22\\
-		Stromy v mapě & 156.22\\
-		Z toho nalezené & 52.84\\
-		Dřevo v kontejnerech & 18.48\\
-		Uskladněné dřevo & 17.56\\
-		\multicolumn{2}{l}{}
-	\end{tabular}
-	\caption{WoodScene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
-	\label{tab04:MineralStat}
-\end{table}
 \newpage 
 \begin{figure}[p]\centering
 	\includegraphics[width=\columnwidth]{../img/todo}
@@ -1094,8 +1059,6 @@ Trestáni za:
 		Počet generací: & 1000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
-		Počet jedinců(ES) & 10\\
-		Počet mutovaný potomků(ES)&10\\
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
