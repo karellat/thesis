@@ -502,25 +502,26 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 	\end{figure}
 	\clearpage
 \section{Mineral Scene}
-Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti mají odlišné určení. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
+Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti, kteří mají různé cíle. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
 \par 
-V mém zjednodušeném scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot Refactor. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. \unsure{Je to hodně komplexní asi to zjednoduším}
+V Mineral Scene scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot \textit{Refactor}. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. \unsure{Je to hodně komplexní asi to zjednoduším}
 \par
-V Mineral Scene figurují dohromady 3 rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot (Mineral Scout) disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti (Mineral Worker) se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
+V Mineral Scene figurují dohromady tři rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot \textit{Mineral Scout} disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti \textit{Mineral Worker} se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
 \par
-Jedná se o složitější cíl než v předchozím scénáři. V mapě se vyskytují navíc překážky a celkový počet entit na mapě je vyšší. Zatímco ve Wood Scene je místo pevně místo přesunu surovin pěkně dané, zde se musí transportní roboti hledat Refaktor roboty. Tento scénář jsem navrhl hlavně k nalezení limitou mnou navržené metody. 
+Jedná se o složitější cíl než v předchozím scénáři. V mapě se vyskytují navíc překážky a celkový počet entit na mapě je vyšší. Zatímco ve Wood Scene je místo pevně místo přesunu surovin pěkně dané, zde se musí transportní roboti hledat Refaktor roboty.
 \par 
+Více detailů u obrázků \ref{obr04:MineralSceneRandomStart}.
+\newpage
 Na obrázku \ref{obr04:MineralSceneRandomStart} je vyobrazena vizualizace daného scénáře. Roboti jsou vybarveni červenou barvou a jednotlivé druhý od sebe lze snadno rozeznat podle velikosti (nejmenší Scout robot, poté Worker robot a největší Refaktor robot), Zelené kroužky představují minerály, pokud je minerál objevený hejnem obarví se žlutě. Šedivou barvou jsou vyvedeny překážky a palivo černou.
-\clearpage
 
-\begin{figure}[p]\centering
+\begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralRandom.png}
-	\caption{Příklad Mineral Scene mapy: start náhodného chování}
+	\caption{Příklad Mineral Scene mapy: konfigurace po startu s  náhodným chováním}
 	\label{obr04:MineralSceneRandomStart}
 \end{figure}
 \clearpage 
 \subsection{Roboti}
-V Mineral Scene scénáři se vyskytuje 12 robotů. V hejnu se vyskytují 3 různé druhy robotů: Scout roboti, Worker roboti, Refaktor roboti. V implementaci jsou odlišeni od předchozího experimentu prefixem Mineral. Jejich ovládání stejně jako v předchozím experimentu probíhá pomocí neuronových sítí. Jedinec má opět podobu vektoru vah jednotlivých neuronových sítí a hodnoceno je komplet celé hejno. Každý robot má nádrž na palivo a každá iterace mapy ho stojí jednu jednotka paliva. Popišme jednotlivé roboty.
+V Mineral Scene scénáři se vyskytuje 12 robotů. V hejnu se vyskytují 3 různé druhy robotů: Scout robot, Worker robot, Refaktor robot. V implementaci jsou odlišeni od předchozího experimentu prefixem Mineral. Jejich ovládání stejně jako v předchozím experimentu probíhá pomocí neuronových sítí. Jedinec má opět podobu vektoru vah jednotlivých neuronových sítí a hodnoceno je celé hejno. Každý robot má nádrž na palivo a každá iterace mapy ho stojí jednu jednotka paliva. Nyní popíšeme jednotlivé roboty.
 \subsubsection{Scout robot}
 Jak název napovídá Scout robot prozkoumává mapu. Oproti Wood Scene nemá žádnou další funkci. Ze všech robotů se pohybuje nejrychleji a díky malé velikosti dokáže projíždět i užšími prostory. Informace o prostředí získává pomocí úsečkových senzorů a velkého kruhového senzoru, který poskytuje počet jednotlivých druhů entit v celém okruhu. Pro komunikaci se zbytkem používá rádiový signál s kódem 0. 
 \par  
@@ -549,22 +550,22 @@ Jak název napovídá Scout robot prozkoumává mapu. Oproti Wood Scene nemá ž
 		\midrule
 		Počet line senzorů: &  3\\
 		Délka line senzorů: & 70\\
-		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Orientace l. senzorů: & 0^\circ,\pm 45^\circ\\
 		Počet fuel senzorů: &  3\\
 		Délka fuel senzorů: & 70\\
-		Orientace f. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Orientace f. senzorů: & 0^\circ, \pm 45^\circ\\
 		Poloměr rádiového přijímače: & 100 \\
 		Počet touch senzorů: & 3 \\  
 		Lokátorový senzor\\ 
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Mineral Scene - Scout robot popis }
+	\caption{Mineral Scene - Scout robot specifikace }
 	\label{tab04:MineralScout}
 \end{table}
 \clearpage
 \subsubsection{Worker Robot}
-Mineral Worker roboti zastupují úlohu transportu minerálů. Pohybují se rychleji než Refaktor roboti, ale zase pomaleji než Scout roboti. Uloží do svého kontejneru až 5 minerálů. Pro komunikaci využívají rádiového signálu s kódem 1. Samozřejmě má k dispozici Picker pro nákládání a vykládání entit z kontejneru.
+Mineral Worker roboti zastupují úlohu transportu minerálů. Pohybují se rychleji než Refaktor roboti, ale zase pomaleji než Scout roboti. Uloží do svého kontejneru až 5 minerálů. Pro komunikaci využívají rádiového signálu s kódem 1. Má k dispozici Picker pro nákládání a vykládání entit z kontejneru.
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
 		\toprule
@@ -590,22 +591,22 @@ Mineral Worker roboti zastupují úlohu transportu minerálů. Pohybují se rych
 		\midrule
 		Počet line senzorů: &  3\\
 		Délka line senzorů: & 50\\
-		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Orientace l. senzorů: & 0^\circ, \pm45^\circ\\
 		Počet fuel senzorů: &  3\\
 		Délka fuel senzorů: & 50\\
-		Orientace f. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Orientace f. senzorů: & 0^\circ, \pm45^\circ\\
 		Poloměr rádiového přijímače: & 100 \\
 		Počet touch senzorů: & 3 \\  
 		Lokátorový senzor\\ 
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Mineral Scene - Worker robot popis }
+	\caption{Mineral Scene - Worker robot specifikace }
 	\label{tab04:MineralWorker}
 \end{table}
 \clearpage
 \subsubsection{Refaktor robot}
-Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na jednotku paliva. Pro přeměnu musí být minerál připraven na vrcholu kontejneru a po procesu přeměny se místo minerálu objeví palivo. Refaktor robot je však oproti ostatním robotů značně neohrabaný, zvláště kvůli jeho velikosti, jeho poloměr odpovídá dvěma Worker robotům (resp. čtyřem Scout robotům). Pohybuje se z nich také nejpomaleji. Jeho rádiové signály nesou kód 2. Nakladače (vykladače) má do všech čtyrech světových směrů. 
+Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na jednotku paliva. Pro přeměnu musí být minerál připraven na vrcholu kontejneru a po procesu přeměny se místo minerálu objeví palivo. Refaktor robot je však oproti ostatním robotů značně neohrabaný, zvláště kvůli jeho velikosti. Poloměr Refaktor robota odpovídá dvěma Worker robotům (resp. čtyřem Scout robotům). Pohybuje se z nich také nejpomaleji. Jeho rádiové signály nesou kód 2. Nakladače (vykladače) má do všech čtyrech světových směrů. 
 \par  
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
@@ -625,7 +626,7 @@ Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na
 		Kód rádiového signálu: & 2\\
 		Poloměr signálu: & 200\\
 		Počet pickerů & 4\\
-		Orientace pickerů & po\ 90^\circ\\ 
+		Orientace pickerů & 0^\circ, 90^\circ, 180^\circ,270^\circ\\ 
 		Dosah pickerů: & 20\\
 		Počet paměťových slotů: &10 \\
 		Obsah slotu: & float\\
@@ -637,17 +638,17 @@ Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na
 		\midrule
 		Počet line senzorů: &  3\\
 		Délka line senzorů: & 70\\
-		Orientace l. senzorů: & 0^\circ, 35^\circ, -35^\circ\\
+		Orientace l. senzorů: & 0^\circ, \pm 35^\circ\\
 		Počet fuel senzorů: &  3\\
 		Délka fuel senzorů: & 70\\
-		Orientace f. senzorů: & 0^\circ, 35^\circ, -35^\circ\\
+		Orientace f. senzorů: & 0^\circ, \pm 35^\circ\\
 		Poloměr rádiového přijímače: & 100 \\
 		Počet touch senzorů: & 3 \\  
 		Lokátorový senzor\\ 
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Mineral Scene - Refaktor robot popis }
+	\caption{Mineral Scene - Refaktor robot specifikace }
 	\label{tab04:MineralRefactor}
 \end{table}
 \clearpage
@@ -665,11 +666,11 @@ A negativní pouze za:
 	\item \textit{kolize} - počet pokusů o pohyb který by vedl ke kolizi
 \end{itemize}
 \subsection{Podúkoly}
-Podle výsledků předchozího experimentu jsem se tentokrát výhradně soustředil na DE, které vycházelo v celkovém důsledku jako lepší. \unsure{Nevím, zda to stihnu} 
+Podle výsledků předchozího experimentu jsem se tentokrát výhradně soustředil na DE, které vycházelo v celkovém důsledku jako lepší.
 \par 
 Opět jsem vygeneroval první neuronové sítě náhodně i další kroky jsou podobné jako v předchozím případě, nejdříve jsem navrhl fitness funkce pro učení chůze, vyhýbání, sbírání objektů a jejich skládání. Dále jsem však nebyla zřejmá posloupnost jednotlivých úkonů, proto fitness funkce odpovídá už výslednému cíli, množství vytvořeného paliva a sebraným minerálů.
 \par 
-Dále budou následovat konkrétní metaúkoly. U každého metaúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhem fitness, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  y osa zobrazuje hodnotu fitness, x osa odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. 
+Od následující stránky se budu soustředit na jednotlivé podúkoly. U každého metaúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhem fitness, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  y osa zobrazuje hodnotu fitness, x osa odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. 
 \clearpage
 
 \subsubsection{Scout chůze - nastavení experimentu}
@@ -679,7 +680,7 @@ Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Op
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Scout-5 \\
+		Roboti a jejich počet: & Scout-5 \\
 		Počet generací: & 1000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
@@ -693,6 +694,9 @@ Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Op
 		\midrule
 		Hodnota nalezeného minerálu &  100 \\
 		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
@@ -709,17 +713,18 @@ Z grafu \ref{obr04:MineralScoutWalk} lze vyčíst, že ani větší množství e
 	\caption{Mineral Scout chůze -  průběh fitness DE}
 	\label{obr04:MineralScoutWalk}
 \end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
 
 \subsubsection{Worker chůze - nastavení experimentu}
-I pro Worker robota bylo potřeba optimalizovat chůzí v mapě. Stejně jako Scout robot byli odměňovány za nalezené Minerály. 
+I pro Worker robota bylo potřeba optimalizovat chůzi v mapě. Stejně jako u Scout robotů byli Worker roboti odměňovány za nalezené Minerály. 
 \par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Worker-4 \\
+		Roboti a jejich počet: & Worker-4 \\
 		Počet generací: & 1000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
@@ -733,6 +738,9 @@ I pro Worker robota bylo potřeba optimalizovat chůzí v mapě. Stejně jako Sc
 		\midrule
 		Hodnota nalezeného minerálu &  100 \\
 		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
 		Počet minerálů: & 300\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
@@ -742,13 +750,14 @@ I pro Worker robota bylo potřeba optimalizovat chůzí v mapě. Stejně jako Sc
 	\caption{Mineral Worker chůze - nastavení experimentu}
 	\label{tab04:MineralWorkerWalk}
 \end{table}
-Nejlepší chování u Worker robota dokáže objevit více než čtvrtinu minerálů, jak ukazuje obrázek \ref{obr04:MineralWorkerWalk} Což je také uspokojivý výsledek, přihlédneme-li k tomu, že Scout robot má poloviční rychlost a velikost než Worker robota, navíc má kratší line senzory. 
+Nejlepší chování u Worker robota dokáže objevit více než čtvrtinu minerálů, jak ukazuje obrázek \ref{obr04:MineralWorkerWalk} Což je také uspokojivý výsledek, přihlédneme-li k tomu, že Scout robot má poloviční rychlost a velikost než Worker robota. Navíc díky delším senzorům objevuje Scout robot objekty na větší vzdálenosti. 
 \clearpage
 \begin{figure}[t]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerWalk}
 	\caption{Mineral Worker chůze -  průběh fitness DE}
 	\label{obr04:MineralWorkerWalk}
 \end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
 
 \subsubsection{Worker sbírání - nastavení experimentu}
@@ -759,7 +768,7 @@ Stejně jako ve Wood Scene bylo klíčové sbírání už zpracováného dřeva,
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Worker-2 \\
+		Roboti a jejich počet: & Worker-2\\
 		Počet generací: & 3000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
@@ -776,6 +785,9 @@ Stejně jako ve Wood Scene bylo klíčové sbírání už zpracováného dřeva,
 		Hodnota minerálu v pomoc. signálu & 1010\\ 
 		Hodnota uložených minerálů & 1000\\
 		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
@@ -786,11 +798,13 @@ Stejně jako ve Wood Scene bylo klíčové sbírání už zpracováného dřeva,
 	\label{tab04:MineralWorkerPickUp}
 \end{table}
 Roboti v prvních 500 generacích zaplní své kontejnery minerály, což může pozorovat na  grafu \ref{obr04:MineralWorkerPickUp}. Dále dokonce dováželi roboti do středu několik minerálů. 
+\clearpage
 \begin{figure}[t]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerPickup}
 	\caption{Mineral Worker sbírání - průběh fitness}
 	\label{obr04:MineralWorkerPickUp}
 \end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
 
 \subsubsection{Worker skládání - nastavení experimentu}
@@ -801,7 +815,7 @@ V dalším metaúkolu jsem se soustředil výhradně na skládání minerálů d
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Worker-4\\
+		Roboti a jejich počet: & Worker-4\\
 		Počet generací: & 6000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
@@ -818,6 +832,9 @@ V dalším metaúkolu jsem se soustředil výhradně na skládání minerálů d
 		Hodnota minerálu v pomoc. signálu & 1000\\ 
 		Hodnota uložených minerálů & 10\\
 		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
@@ -834,6 +851,7 @@ Výsledek tohoto podúkolu odpovídá Wood Scene - sbírání, roboti dokázali 
 	\caption{Mineral Worker skládání -  průběh fitness DE}
 	\label{obr04:MineralWorkerStore}
 \end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
 
 \subsubsection{Refaktor chůze - nastavení experimentu}
@@ -844,7 +862,7 @@ Poslední metaúkol zabývající chůzí byl pro Refaktor robota i v jeho pří
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Refaktor-3\\
+		Roboti a jejich počet: & Refaktor-3\\
 		Počet generací: & 1000\\
 		Počet iterací map & 1500\\
 		Velikost generace(DE) & 100\\
@@ -858,6 +876,9 @@ Poslední metaúkol zabývající chůzí byl pro Refaktor robota i v jeho pří
 		\midrule
 		Hodnota nalezeného minerálu &  1\\
 		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
 		Počet minerálů: & 500\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
@@ -868,12 +889,13 @@ Poslední metaúkol zabývající chůzí byl pro Refaktor robota i v jeho pří
 	\label{tab04:MineralRefaktorWalk}
 \end{table}
 Už v 200 generaci dokážou Refaktor robot odhalí jednu pětinu minerálů, jak je vidět v průběhu grafu na \ref{obr04:MineralRefaktorWalk}. Ač podle fitness se zdá, že roboti prohledávají mapu a vyhýbají se překážkám. Po krátkém zkoumání jejich chování jsem zjistil, že používají nakladače a přehazují překážky za sebe.
-
+\clearpage
 \begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralRefaktorWalk}
 	\caption{Mineral Refaktor chůze - průběh fitness u DE}
 	\label{obr04:MineralRefaktorWalk}
 \end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
 
 \subsubsection{Refaktor Worker kooperace - nastavení experimentu}
@@ -884,7 +906,8 @@ Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Wo
 		\toprule
 		\textbf{Nastavení mapy a EA}\\
 		\midrule
-		Roboti: & Refaktor-1, Worker-2\\
+		Roboti: & Refaktor, Worker\\
+		Počty robotů: & R-1, W-2 \\
 		Počet generací: & 2000\\
 		Počet iterací map & 1500\\
 		Velikost generace(DE) & 100\\
@@ -900,6 +923,9 @@ Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Wo
 		Hodnota přeměného paliva & 1000\\ 
 		Hodnota paliva v nádržích & 1000\\
 		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 0\\
@@ -911,34 +937,117 @@ Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Wo
 \end{table}
 Ač se podle grafu \ref{obr04:MineralRefactorWorkerCoop}, že optimalizaci obou robotů proběhla úspěšně. Ale po vizuální kontrole jsem zjistil, že se zlepšoval pouze Refaktor robot. EA však v rámci nejlepších chování nezapojila Worker robota.
 \clearpage
-\begin{figure}[p]\centering
+\begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerRefaktorCoop}
 	\caption{Mineral Refaktor Worker kooperace -  průběh fitness DE}
 	\label{obr04:MineralRefactorWorkerCoop}
 \end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
-
+\subsubsection{ Hlavní úkol kooperace - nastavení experimentu}
+V rámci finálního podúkolu byla fitness nastavena, aby odpovídala hlavnímu cíli scénáře.  Oceňuje roboty pouze za přetvořené palivo a palivo v nádržích. V tomto podúkolu už figurují všechny druhy robotů. Další podrobnosti jsou zaneseny v tabulce \ref{tab04:MineralFullCoop}. 
+\par
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Nastavení mapy a EA}\\
+		\midrule
+		Roboti: & Refaktor, Worker, Scout\\
+		Počty robotů: & R-2,\ W-3,\	 S-4 \\
+		Počet generací: & 2000\\
+		Počet iterací map & 1500\\
+		Velikost generace(DE) & 100\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\par 
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		\textbf{Fitness funkce}\\
+		\midrule
+		Hodnota přeměného paliva & 1000\\ 
+		Hodnota paliva v nádržích & 1000\\
+		Ostatní hodnoty: & 0\\
+		\toprule
+		\textbf{Objekty na mapě}\\
+		\midrule
+		Počet minerálů: & 400\\
+		Počet překážek & 100\\
+		Počet paliva & 0\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Refaktor Worker kooperace - nastavení experimentu}
+	\label{tab04:MineralFullCoop}
+\end{table}
+Křivka opět ukazuje  vzrůst fitness, hodnota se ustaluje kolem $4.1 \cdot10^7$ . Při přeměně minerálu vznikne 100 jednotek paliva. Roboti dostaly na začátku simulace více paliva než potřebovali na běh, tohoto paliva jim zbylo 8 500 jednotek (ve fitness $0.85\cdot 10^7$ ). Takže výsledná fitness tohoto experimentu odpovídá přibližně 300 zpracovaným minerálů. Nejlepšímu chování se budeme věnovat v rámci výsledků experimentů \ref{subsec:MineralResult}.
+\clearpage
+\begin{figure}[h]\centering
+	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralFullCoop}
+	\caption{Mineral Refaktor Worker kooperace -  průběh fitness DE}
+	\label{obr04:MineralFullCoop}
+\end{figure}
+Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. Fitness je vydělena $10^7$, aby popisky nezabíraly příliš mnoho místa. 
+\clearpage
 \subsection{Výsledky Experimentu}
-\redo{TODO}
-\newpage 
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/todo}
-	\caption{Nejlepší jedinec - 10000 iterací simulace}
-	\label{obr04:MineralBestEnd}
-\end{figure}
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/todo}
-	\caption{Náhodný jedinec - 10000 iterací simulace}
-	\label{obr04:MineralRandom end}
-\end{figure}
-\clearpage
+\label{subsec:MineralResult}
+Ač předchozí graf fitness \ref{obr04:MineralFullCoop} vypadal velmi optimisticky, výsledky \ref{tab04:MineralStat} z vícero běhů na různých mapách jim neodpovídají . 
+\par 
+Po dlouhém pozorování optimalizovaných jedinců jsem dospěl k závěru, že optimalizace probíhá ovšem u takto složitých úkolů se soustředila pouze na Refaktor robota.  A to z jednoduchého důvodu, protože sám o sobě dokázal nejvíce ovlivňovat fitness funkci pro optimalizaci byl tutíž nejvhodnější volbou. Dále jelikož úkony spojené s hlavním cílem scénářem byly velmi složité, tak se chování optimalizovalo v závislosti na aktuálně vygenerované mapě. Každému experimentu odpovídá jedna náhodně generovaná mapa kvůli jednoznačnosti ohodnocení fitness. Nicméně v jednodušších podúkolech dokázala DE vyevolvovat univerzální a úspěšné jedince.
+\par 
+V tomto případě ani nepřikládám obrázek s koncem běhu tohoto chování, neboť je velmi podobný tomu z  náhodného běhu. Všechny chování nejlepší generace si lze prohlédnout v programu na přiloženém CD. 
+ \unsure{Nemám uloženou mapu na které byl optimalizován, což je asi problém.}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\textbf{Inicializační nastavení:}  \\
+		\midrule
+		Výška: & 800\\ 
+		Šířka: & 1200\\
+		Počet iterací: & 1500\\
+		Počet minerálů: & 400\\
+		Počet překážek: & 50 \\
+		Počet Scout robotů: & 4\\
+		Počet Worker robotů: & 3\\
+		Počet Refaktor robotů: & 2\\
+		Inicializační palivo: & 1500\\
+		Spotřeba paliva robotů: & 1/kolo\\
+		\bottomrule
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Scene - nastavení mapy pro testovací experiment}
+\end{table}
+\begin{table}[h]\centering   
+	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
+		\toprule
+		& \mc{} & \mc{}\\
+		\textbf{Výsledky} \\
+		\bottomrule
+		Překážky v mapě & 49.98\\
+		Objevené překážky & 2.51\\
+		Minerálů v mapě & 393.7\\
+		Z toho nalezených & 17.25\\
+		Palivo v kontejnerech & 0.02\\ 
+		Zbylé palivo v nádržích & 59\\ 
+		Kolize & 9\\
+		\multicolumn{2}{l}{}
+	\end{tabular}
+	\caption{Mineral Scene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
+	\label{tab04:MineralStat}
+\end{table}
 \clearpage
 \section{Competitive Scene}
-Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figurují jeden malý průzkumný robot(Competitive Scout) a jeden vetší bojový robot(Competitive Fighter). Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. Competitive Scout se pohybuje značně rychleji než Competitive Fighter, ale uděluje menší poškození. Což lze opět vztáhnout na chování rozdílných skupin nepřátel např. ve strategických hrách, kde se jejich chování adaptuje, co nejlépe na dané prostředí. 
-
-\redo{Upravit dle dosáhnuté formy}
+Poslední ze scénářů se týká soutěžení dvou týmů (hejn), kteří se snaží to druhé zničit. Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. 
+ \par
+ V mém Competitive Scene scénáři proti sobě stojí dvě hejna, která čítají dohromady 9 robotů. Mimo roboty v mapě jsou také náhodně rozmístěny překážky, který se musí roboti vyhýbat. Týmy začínají v první a poslední čtvrtině mapy, kde startují na náhodné pozici. 
+ \par 
+Hejno se skládá ze dvou druhů robotů. Roli průzkumníka zastává \textit{Scout robot}, který je malý a rychlý. I Scout robot může způsobovat poškození, ovšem pouze jednu pětinu oproti druhému robotovi, pro kterého používám v rámci tohoto scénáře název \textit{Fighter robot}. Fighter robot se pohybuje méně obratně, jelikož je dvakrát větší a pomalejší. 
+\par
+V tomto scénáři maji všichni roboti k dispozici rádiové signály s kódy nula až 4, tudíž je čistě na optimalizaci, jak je využije. Competitive Scene obsahuje základní rojové scénáře jako je komunikace, vyhybání překážkám, hledání v mapě, apod. Tentokrát budou mít roboti obtížnější hledání cílů, protože budou pohyblivé a také jim mohou způsobit poškození. 
+\par 
+Popis jednotlivých entit v mapě se nachází u obrázku \ref{obr04:CompetitiveSceneRandomStart}
 \clearpage
-
 \begin{figure}[p]\centering
 	\includegraphics[width=\columnwidth]{../img/todo}
 	\caption{Příklad Competitive Scene mapy: start náhodného chování}
@@ -947,10 +1056,13 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 \clearpage 
 
 \subsection{Roboti}
-
-\redo{Obecný popis robotů}
+Jak už jsem zmínil, ve Competitive Scene scénáři se objevují dva druhy robotů. V každém týmu se objevují 4 Scout roboty a 5 robotů typu Fighter. Pro účely správného vyhodnocování fitness zůstává po celou dobu běhu experiment nepřátelský tým řízený stejným chováním. Typicky je na začátku pro nepřátelským vygenerováno náhodné chování. Podoba jedinců opět odpovídá předchozím experimentům i v kontextu nepřátelských robotů. V implementaci má aktuálně optimalizovaný tým označení tým 1 a protivník tým 2. 
+Teď se podíváme na jednotlivé roboty.
 \subsubsection{Fighter Scout robot}
-\par  
+Roli lehkého útočníka ve scénáři zastává Scout robot. Jedná se o malého a obratného robota. Dokáže způsobit poškození za 100 bodů zdraví. K poškození slouží úsečkový efektor (v rámci implementace pojmenovaný \textit{Weapon}).  Efektory Weapon fungují na stejném principu jako ostatní úsečkové efektory, pro udělení poškození musí kolidovat s jiným robotem. V rámci tohoto experimentu je možné udílet poškození i robotům z vlastního týmu.  Jeho podrobnou specifikaci poskytuje tabulka \ref{tab04:CompetiveScout}
+\subsubsection{Fighter robot}
+Fighter robot je navržen jako těžký bitevník. Oproti Scout robotovi je větší a pomalejší. Nejmarkantnější rozdíl tvoří body zdraví a síla útoku. Fighter robot způsobuje pětkrát vyšší poškození a disponuje trojnásobkem bodů zdraví.  Navíc může útočit na jednou až čtyřmi zbraněmi najednou, zatímco Scout robot pouze třemi. I on může útočit do vlastních řad. 
+Jeho konkrétní specifikaci lze nalézt v tabulce \ref{tab04:CompetitiveFighter}.
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
 		\toprule
@@ -958,9 +1070,9 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 		\midrule
 		Tvar: & Kruh\\
 		Poloměr: & 2,5\\
+		Body zdraví: &500\\
 		Namespace: & CompetitiveRobots\\
 		Název: & FighterScoutRobotMem \\
-		Velikost kontejneru: & 0\\
 		\midrule
 		\textbf{Efektory} \\
 		\midrule
@@ -972,14 +1084,14 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 		Obsah slotu: & float\\
 		Počet zbraní: & 3\\
 		Dosah zbraní: & 10\\
-		Orientace zbraní: &  0^\circ, 45^\circ, -45^\circ\\
+		Orientace zbraní: &  0^\circ, \pm 45^\circ\\
 		Útok zbraní: & 100\\
 		\midrule
 		\textbf{Senzory} \\
 		\midrule
 		Počet line senzorů: &  3\\
 		Délka line senzorů: & 70\\
-		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Orientace l. senzorů: & 0^\circ, \pm45^\circ\\
 		Poloměr rádiového přijímače: & 100 \\
 		Poloměr type senzoru: & 50\\
 		Počet touch senzorů: & 3 \\  
@@ -987,11 +1099,11 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Competitive Scene - Fighter Scout robot popis }
+	\caption{Competitive Scene - Fighter Scout robot specifikace }
 	\label{tab04:CompetiveScout}
 \end{table}
 \clearpage
-\subsubsection{Fighter robot}
+
 \par  
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
@@ -1002,7 +1114,7 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 		Poloměr: & 5\\
 		Namespace: & CompetitiveRobots\\
 		Název: & FighterRobotMem \\
-		Velikost kontejneru: & 0\\
+		Body zdraví: & 1500\\
 		\midrule
 		\textbf{Efektory} \\
 		\midrule
@@ -1013,14 +1125,14 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 		Počet paměťových slotů: &10 \\
 		Obsah slotu: & float\\
 		Počet zbraní: & 4\\
-		Orientace zbraní: &  0^\circ, 45^\circ, -45^\circ, 180^\circ\\
+		Orientace zbraní: &  0^\circ, \pm 45^\circ, 180^\circ\\
 		Útok zbraní: & 500\\
 		\midrule
 		\textbf{Senzory} \\
 		\midrule
 		Počet line senzorů: &  3\\
 		Délka line senzorů: & 70\\
-		Orientace l. senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+		Orientace l. senzorů: & 0^\circ,\pm45^\circ\\
 		Poloměr rádiového přijímače: & 100 \\
 		Poloměr type senzoru: & 50\\
 		Počet touch senzorů: & 3 \\  
@@ -1028,24 +1140,27 @@ Poslední ze scénářů se týká soutěže dvou týmů(hejn) ve kterých figur
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Competitive Scene - Fighter robot popis }
-	\label{tab04:CompetitiveScene}
+	\caption{Competitive Scene - Fighter robot specifikace }
+	\label{tab04:CompetitiveFighter}
 \end{table}
 \clearpage
 \subsection{Vyhodnocování Fitness}
+Hlavní cíl Competitive Scene scénáře se skládá z mnoha úkonů. Proto jsem ho stejně jako v předchozích scénářích rozdělil na menší metaúkoly. Tradičně jsem začal s učením pohybu a vyhybáním se překážkám. Poté jsem pokračoval přes uchování, co nejvíce životních bodů, až po způsobení maximálního poškození protivníka. Fitness funkce má podobu váženého součtu stejně jako u Wood Scene a Mineral Scene. A používal jsem k optimalizaci pouze DE. 
+\par 
+Na konci simulace mapy jsou roboti oceněni za:  
 \begin{enumerate}
-	\item \textit{nalezené stromy} - stromy o které zavadil line senzor 
-	\item \textit{pokácené stromy} - stromy, které refaktor změnil 
-	\item \textit{sebrané dřevo} - zpracované dřevo, které mají roboti uvnitř kontejnerů 
-	\item \textit{uskladněné dřevo} - dřevo, které dovezli na vyznačené místo 
+	\item \textit{nalezené překážky} - překážky o které zavadil line sensor
+	\item \textit{zabité roboty} - mrtvé roboty nepřátelského týmu
+	\item \textit{udělený útok} - útok udělený nepřátelským robotům 
+	\item \textit{zbývající životy} - životy zbývající aktuálním robotům
 \end{enumerate}
 Trestáni za:
 \begin{enumerate}
 	\item \textit{kolize} - počet pokusů o pohyb při kterém by došlo ke kolizi 
-	\item \textit{sebrané entity mimo dřevo} - počet entit v kontejnerech, které nejsou zpracované dřevo 
 \end{enumerate}
 
-\subsection{Podúkoly} 
+\subsection{Podúkoly}
+V prvních podúkolech opět tradičně figurují roboti odděleně. Jejich princip je shodný, protože roboti mají velmi podobné funkce. 
 \clearpage
 
 \subsubsection{Scout chůze - nastavení experimentu}

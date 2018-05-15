@@ -1,0 +1,16 @@
+MineralExperimentMT
+AmountOfMineral:400
+AmountOfObstacle:50
+AmountOfFreeFuel:0
+ValueOfDiscoveredMineral:0
+ValueOfStockedMineral:1
+ConstEnviromentalSignal:False
+ValueOfMineralInMiddle:0
+ValueOfRefactoredFuel:1000
+ValueOfRemainingFuel:1000
+PopulationSize:100
+NumberOfGenerations:3000
+MapIteration:1500
+Name:MineralWorkerRefactor2Coop
+WorkingDir:MineralWorkerRefactor2Coop
+Models:MineralRobots.WorkerRobotMem(1500)-3;MineralRobots.RefactorRobotMem(1500)-2;MineralRobots.ScoutRobotMem(10000)-4
