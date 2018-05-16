@@ -1,7 +1,7 @@
 %%% Kapitoly
 \chapter{Experimenty}
 \label{chap:experimenty}
-Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy k vytvoření řízení chování homogenního robotického hejna, tzn. s jedním druhem robotů. V následující kapitole podrobně popíši postup hledání optimální chování pro heterogenního hejna. Optimalizaci jsem navrhl a otestoval na třech rozličných scénářích. 
+Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy k vytvoření řízení chování homogenního robotického hejna, tzn. s jedním druhem robotů. V následující kapitole podrobně popíši postup hledání optimální chování pro heterogenního hejna. Optimalizaci jsem navrhl a otestoval na třech rozličných scénářích. V rámci scénářů budu používat DE jako zkratku za diferenciální evoluci a ES pro evoluční strategie
 \par
 \subsubsection{Pracovní názvy scénářů:}
 \begin{enumerate}
@@ -17,7 +17,7 @@ Pro řešení problému jsem navrhl řadu postupů, proto v tomto odstavci zmín
 Nedostatečný se ukázal pokus provádět evoluci pro fitness hlavního úkolu scénáře. Konkrétně pro Wood Scene počet natěženého a uskladněného dřeva, pro Mineral Scene objem vytvořeného paliva, pro kompetitivní scénář zbylé body zdraví a udělené poškozený. Většina hodnocení náhodných chování byla rovna nule, proto EA nedostaly dostatek informací k vhodné exploraci a díky malé pravděpodobnosti vygenerování chování alespoň částečně řešící hlavní úkol nedocházelo ani k exploataci. Což mělo za důsledek neefektivní  DE a ES, takže ani jeden z EA nedošel k úspěšnému řešení. 
 \par
 Posun zaznamenala více obecná fitness i když sama o sobě také nedosáhla do kategorie úspěšných postupů. Do fitness jsem zahrnul i menší pozitivní znaky, které byly součástí hlavnímu úkolu. Například jsem záporně ohodnotil pokusy o pohyb končící kolizí, kladně počet nalezených entit či vhodných objektů v kontejnerech, aktuální stav paliva. Optimalizovaná chování opravdu zaznamenala posun. Ovšem oba EA obtížně hledaly cestu z lokálního optima a ve většině případů optimalizovali pouze jednoduché části úkolu. I přes přidávání složitějších matematických funkcí do fitness nebyly schopny dosáhnout uspokojivého řešení hlavního úkolu scénáře.  
-\subsubsection*{Nějak pojmenovat}
+\subsubsection*{Použitá metoda}
 Pro finální řešení jsem zvolil metodu, kterou nazývám metodou podúkolů. U každého scénáře podrobně popíši její průběh a nastavení, zde pouze nastíním základní  myšlenku. Rozdělil jsem hlavní cíl na několik menších podúkolů (metaúkolů). Každému z nich vytvoříme fitness funkci odpovídající nutné části hlavního cíle. Fitness metaúkolu jsem navrhoval, tak aby necílila na již optimalizované úkony a v každém podúkolu jsem se vždy soustředil pouze na jeden jednoduchý úkon. Díky tomuto principu jsem dosáhl mnohem vyšší odolnosti proti uvíznutí v lokálním minimu. Explorace se tímto procesem také zlepšila, protože hlavní cíl závisí na podúkolech a pokud bylo chování rozmanité a úspěšné, přenesly se tyto vlastnosti i dále. Poté jsem generaci úspěšnou v průzkumu optimalizoval na sbírání materiálů pouze požadované barvy a takto jsem rozděloval až k finálnímu úkolu scénáře. 
 \par 
 Každý robot má připojen paměťový slot, neboť roboti s nimi dosahovali ve všech úkolech znatelně lepších výsledků a pomáhaly vytvářet složitější chování. 
@@ -27,23 +27,23 @@ Tuto kapitolu věnuji klíčovým technologiím, jenž jsem použil pro modelov�
 Pro reprezentaci jedinců v oblasti robotiky, rozpoznávání obrazů a dalších oblastí umělé inteligence se v poslední době používají nejčastěji neuronové sítě. Neuronová síť se strukturou podobá neuronovým sítím v mozku. Základní sítě se skládají z jednotlivých neuronů, které se v kontextu informatického světa nazývají \textit{perceptrony}. Samostatný perceptron je sám o sobě také neuronovou sítí, ale většinou se propojují do složitějších struktur. Perceptron lze definovat podle \citep{neuron} následovně.
 \begin{definice}[Perceptron] Perceptron je funkce z $\mathbb{R}^n \rightarrow \mathbb{R}$, která je dáná následujícím předpisem: 	$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$, kde pro $i \leq n$ $x_{i}$ je $ítý$ prvek vstupního vektoru, $w_{i}$ se označuje jako váha a většinou $w_{i} $ se bere z $\mathbb{R}$.  $\Theta$ se nazývá práh (bias) a slouží jako váha s konstantním vstupem 1.  $S(X)$ je aktivační funkce: $\mathbb{R} \rightarrow \mathbb{R}$ a $Y$ se obvykle označuje jako výstup perceptronu.
 \end{definice}
+Aktivační nebo také přenosová funkce má za úkol transformovat výstup neuronu, aby výstupní hodnota odpovídala výstupním hodnotám. Mezi nejjednodušší přenosové funkce patří binární funkce, kdy očekáváme od neuronu výstup typu ano, ne. Používají se i více složité funkce.
+\par
 \textit{Jednovrstvou neuronovou sítí} pak myslíme n perceptronů, tedy funkci $\mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$, kde $ítou$ složku výstupního vektoru dostaneme aplikací funkce odpovídající $ítému$ perceptronu na vstupní vektor.
-\improvement{Přidat část o aktivačních funkcích}
 \par
 Pokud zapojíme z výstupu jednoho perceptronu na vstup jiného, vznikne \textit{vícevrstvá neuronová sít}. Což znamená, že podmnožiny výstupů z první vrstvy neuronů neurčují přímo výstup, ale jsou opět zvoleny jako vstupní vektory pro další jednovrstvou neuronovou síť. Tímto postupem můžeme vytvářet velmi komplexní struktury.
 \par
 Skrytá vrstva (hidden layer) je taková jednovrstvá neuronová síť, jejíž výstup(resp. vstup) je pouze vstupem(resp. výstup) jiných perceptronů.
 \par
-\improvement{přeformulovat??}
 Pro mé účely se jsem testoval řadu různých variant neuronových sítí, ale nejvíce se mi osvědčilo následující nastavení, které poskytovalo uspokojivé výsledky a rozumné časové nároky. 
 \par 
-Jako aktivační funkce jednotlivých perceptronů se mi nejvíce osvědčila často používaná funkce hyperbolického tangentu se změněným oborem hodnot pro konkrétní výstup.
+Jako aktivační funkce jednotlivých perceptronů se mi nejvíce osvědčila často používaná se změněným oborem hodnot pro konkrétní výstup.
 \par
-V rámci testovaní jsem zvolil jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné pro uspokojivé řešení jednotlivých scénářů. Jejich architektura je následující. Pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen perceptron do kterého vstupuje vektor reálných čísel odpovídající vektoru všech hodnot přečtených ze senzorů.  Pro dosažení lepších řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektury.Případně vyzkoušet vliv vícero vrstev. \improvement{Přidat do diskuze}
+V rámci testovaní jsem zvolil jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné pro uspokojivé pro řešení prvních úkolů. Jejich architektura je následující. Pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen perceptron do kterého vstupuje vektor reálných čísel odpovídající vektoru všech hodnot přečtených ze senzorů.  Pro dosažení lepších řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektury.Případně vyzkoušet vliv vícero vrstev. 
 \subsection*{Evoluční algoritmy}
 Neuronovou sít si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel (vah vstupů + práh $v =(x_0,x_1...x_n,\Theta)$. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají ES a DE, I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy důkladně popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu si je lze prohlédnout v přiložené dokumentaci a kódu. 
 \par
-V rámci testovaní jsem vyzkoušel mnoho různých nastavení parametrů EA. V tabulce \ref{tab04:nastaveníEA} jsou uvedeny nakonec použité parametry, které dosahovali v experimentech největších úspěchů. \improvement{Popsat co jednotlivé parametry dělají??}Jedná se o tradičně používané parametry, osvědčené v řadě optimalizačních problémů. 
+V rámci testovaní jsem vyzkoušel mnoho různých nastavení parametrů EA. V tabulce \ref{tab04:nastaveníEA} jsou uvedeny nakonec použité parametry, které dosahovali v experimentech největších úspěchů. Jejich vliv popisuji v první kapitole. Jedná se o tradičně používané parametry, osvědčené v řadě optimalizačních problémů. 
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -63,7 +63,7 @@ V rámci testovaní jsem vyzkoušel mnoho různých nastavení parametrů EA. V 
 	\label{tab04:nastaveníEA}
 \end{table}
 \newpage
-\section{Wood Scene experiment}
+\section{Wood Scene}
 Vzorem Wood Scene scénáře byla těžba dřeva, představme si dřevorubce s motorovou pilou a silné dělníky nakládající zpracované stromy do transportérů a svážející materiál na společnou hromadu. Roboti odpovídají těmto lidským rolím, samozřejmě je jejich činnost značně zjednodušena. V obou případech je cílem maximalizovat počet zpracovaného dřeva na daném místě, což vyžaduje od obou druhů agentů spolupráci. \par
 Robotické hejno se ve Wood Scene snaží natěžit a převést, co největší množství dřeva na místo označené rádiovým signálem. Rádiové senzory poskytují robotům sílu signálu a vysílaný kód. Pro místo určené na kupení dřeva je určen unikátní kód 2 a je umístěn doprostřed mapy. Žádný jiný rádiový vysílač vysílající signály s kódem 2 se na mapě nenachází.  
 \par
@@ -116,7 +116,7 @@ Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených 
         \midrule
         Počet line senzorů: &  3 \\
         Délka line senzorů: & 50\\
-        Orientace line senzorů: & 0^\circ, 45^\circ, -45^\circ \\
+        Orientace line senzorů: & 0^\circ, \pm45^\circ \\
         Poloměr type senzoru: & 50\\
         Poloměr rádiového přijímače: &  100 \\
         Počet touch senzorů: & 8 \\  
@@ -124,7 +124,7 @@ Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených 
 	\bottomrule
 	\multicolumn{2}{l}{}
 \end{tabular}
-\caption{Wood Scene - Scout robot popis}
+\caption{Wood Scene - Scout robot specifikace}
 \label{tab04:Scout}
 \end{table}
 \clearpage
@@ -155,14 +155,14 @@ Worker robot se stará o manipulaci a následný transport objektů na mapě. Po
                 \midrule
                 Počet line senzorů: &  3\\
                 Délka line senzorů: & 30\\
-                Orientace line senzorů: & 0^\circ, 45^\circ, -45^\circ\\
+                Orientace line senzorů: & 0^\circ, \pm 45^\circ\\
                 Poloměr rádiového přijímače: & 100 \\
                 Počet touch senzorů: & 8 \\  
                 Lokátorový senzor\\ 
 	\bottomrule
 \multicolumn{2}{l}{}
 \end{tabular}
-\caption{Wood Scene - Worker robot popis }
+\caption{Wood Scene - Worker robot specifikace }
 \label{tab04:Worker}
 \end{table}
 \clearpage
@@ -189,7 +189,7 @@ Rozdělil jsem hlavní cíl na následující podúkoly. Jejich obtížnost post
         \item převoz dřeva - Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
         \item kooperace - V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
-U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}myšlenku, tabulku s přesným nastavením a poté graf s průběhem fitness jednotlivých EA plus jejich vzájemné porovnání. ES v rámci mutačních operátorů vytváří několik zmutovaných jedinců a na základě jejich fitness utváří potomka. Vyhodnocování fitness je časově nejnáročnější výpočet, protože se musí probíhat na mapě celá simulace. Aby časy běhu DE a ES byly srovnatelné, odpovídá velikost populace u DE, velikosti populace krát počet mutovaných jedinců u ES. Při porovnání EA zobrazuji průměrné hodnoty fitness jedinců v rámci daného podúkolu. 
+U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté graf s průběhem fitness jednotlivých EA plus jejich vzájemné porovnání. ES v rámci mutačních operátorů vytváří několik zmutovaných jedinců a na základě jejich fitness utváří potomka. Vyhodnocování fitness je časově nejnáročnější výpočet, protože se musí probíhat na mapě celá simulace. Aby časy běhu DE a ES byly srovnatelné, odpovídá velikost populace u DE, velikosti populace krát počet mutovaných jedinců u ES. Při porovnání EA zobrazuji průměrné hodnoty fitness jedinců v rámci daného podúkolu. 
 \newpage
 	\subsubsection{Scout chůze - nastavení experimentu}
 	Nejdříve jsem se zaměřil na schopnost pohybu jednotlivých robotů po mapě. Oddělil jsem oba druhy od sebe, protože díky rychlejšímu pohybu Scout robotů EA optimalizovalo pouze jejich pohyb. Roboti byli oceněni za nalezené stromy, tato fitness je nutila rozprostřít se po mapě. Následuje tabulka s nastavením fitness a EA.
@@ -221,12 +221,12 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{Scout chůze - nastavení experimentu}\label{tab04:ScoutWalk}
+		\caption{Wood Scout chůze - nastavení experimentu}\label{tab04:ScoutWalk}
 	\end{table}
     Výsledky experimentu ilustrují grafy na další stránce. Jednotlivé průběhy fitness na obrázku \ref{obr04:WalkESvsDE} ukazují střední hodnotu fitness a její rozptyl v závislosti na generaci, jedinci jsou kvůli přehlednosti sloučeni po 10 generacích. V obou případech docházelo k největšímu růstu do 200 generace (v grafech 20). Oba EA lze označit jako úspěšné, protože vygenerovaná chování objevila více než 50\% stromů na mapě, v případě DE dokonce více dvě třetiny. U ES jsem nepoužíval elitismus, proto křivka více osciluje než je tomu u DE.
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorWalkMem}
-		\caption{ Scout chůze - porovnání průměrné fitness ES a DE}
+		\caption{ Wood Scout chůze - porovnání průměrné fitness ES a DE}
 		\label{obr04:WalkESvsDE}
 	\end{figure}
 	\clearpage
@@ -261,13 +261,13 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{Worker chůze - nastavení experimentu}
+		\caption{Wood Worker chůze - nastavení experimentu}
 		\label{tab04:WorkerWalk}
 	\end{table}
 		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu DE v obrázku \ref{obr04:WWalkESvsDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje křivka ES od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům v \ref{obr04:WWalkESvsDE}..
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerWalkMem}
-		\caption{Worker chůze - porovnání průměrné fitness ES a DE}
+		\caption{Wood Worker chůze - porovnání průměrné fitness ES a DE}
 		\label{obr04:WWalkESvsDE}
 	\end{figure}
 	\clearpage 
@@ -305,12 +305,12 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{Scout kácení - nastavení experimentu}
+		\caption{Wood Scout kácení - nastavení experimentu}
 	\end{table}
 	Dále můžete vidět grafy popisující průběh fitness u DE, ES a porovnání jejich průměrné fitness. Z \ref{obr04:CutESvsDE} můžeme vyčíst, že použité DE více cílí na exploataci a ES na exploraci. DE jsou díky tomu mnohem náchylnější k uvíznutí v lokálním optimu.  Fitness se v tomto případě skládá ze dvou složek, pro jedince bylo mnohem jednodušší stromy objevovat a náhodou nějaké pokácet. V prvních 650 generacích DE se tedy drží tento trend a pak se objeví jedinci, kteří cílí na kácení. Toto chování se rychle rozšířilo a fitness celé populace okolo 700. generace prudce vzrostla. Zatímco fitness v ES rostla postupně, ale nedosáhla tak vysoké úrovně jako DE. Nejlepší jedinci pokácí více než 60\% stromů. 
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorCutMem}
-		\caption{Scout kácení - porovnání průměrné fitness ES a DE}
+		\caption{Wood Scout kácení - porovnání průměrné fitness ES a DE}
 		\label{obr04:CutESvsDE}
 	\end{figure}
 	\clearpage
@@ -349,12 +349,12 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{Worker sbírání - nastavení experimentu}
+		\caption{Wood Worker sbírání - nastavení experimentu}
 	\end{table}
 	V grafech na \ref{obr04:PickupESvsDE} je vidět, že roboti dokázali maximálně naplnit kontejnery zpracovaným dřevem, v případě DE už po 250. generaci zvládala tento úkol celá populace. Chování optimalizované ES mají mnohem větší rozptyl díky vysoké exploraci, ale i její nejlepší jedinci zvládli maximální naplnění již kolem 250. generace. 
 		   \begin{figure}[t]\centering       
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerPickUpMem}
-		\caption{ Worker sbírání - porovnání průměrné fitness ES a DE}
+		\caption{Wood Worker sbírání - porovnání průměrné fitness ES a DE}
 		\label{obr04:PickupESvsDE}
 	\end{figure}
 	\clearpage
@@ -392,13 +392,13 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{Worker ukládání doprostřed  - nastavení experimentu}
+		\caption{Wood Worker ukládání doprostřed  - nastavení experimentu}
 		\label{tab04:WorkerStore}
 	\end{table}
    	Lokace skladovacího místa působila robotům velké obtíže, proto růst fitness byl mnohem mírnější než u předchozích experimentů. DE dokázala už optimalizované chování rychleji vylepšovat narozdíl od ES, která doplácí na velkou míru explorace viz. \ref{obr04:StockESvsDE}. Nejlepší jedinci jsou ovšem už schopni plnit obstojně hlavní úkol Worker robotů. Objevila se obtíž s efektivním urovnáním zpracovaného dřeva na skladovací místo. Pokoušel jsem se tento problém řešit, přidáním kladných bodů za menší vzdálenost mezi středem skladovacího místa a uloženým dřevem. Nesáhl jsem, však lepších výsledků než v tomto experimentu. 
 	\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerStockMem}
-		\caption{Worker ukládání doprostřed  - porovnání průměrné fitness ES a DE}
+		\caption{Wood Worker ukládání doprostřed  - porovnání průměrné fitness ES a DE}
 		\label{obr04:StockESvsDE}
 	\end{figure}
 
@@ -438,7 +438,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-			\caption{Kooperace  hlavní úkol  - nastavení experimentu}
+			\caption{Wood hlavní úkol  - nastavení experimentu}
 			\label{tab04:Coop}
 	\end{table}
 
@@ -446,7 +446,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 		\clearpage
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WoodCoopMem}
-		\caption{Kooperace  hlavní úkol  - porovnání průměrné fitness ES a DE}
+		\caption{Wood hlavní úkol  - porovnání průměrné fitness ES a DE}
 		\label{obr04:CoopESvsDE}
 	\end{figure}
 	\clearpage
@@ -471,7 +471,7 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			\bottomrule
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{WoodScene - nastavení mapy pro testovací experiment}
+		\caption{Wood Scene - nastavení mapy pro testovací experiment}
 	\end{table}
 	\begin{table}[h]\centering   
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -486,25 +486,25 @@ U každého experimentu uvedu \unsure{nebylo by lepší slovo než myšlenku}my�
 			Uskladněné dřevo & 17.56\\
 			\multicolumn{2}{l}{}
 		\end{tabular}
-		\caption{WoodScene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
+		\caption{Wood Scene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
 		\label{tab04:WoodStat}
 	\end{table}
 	\newpage 
 	\begin{figure}[p]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/end.png}
-		\caption{Nejlepší jedinec - 10000 iterací simulace}
+		\caption{Wood nejlepší jedinec - 10000 iterací simulace}
 		\label{obr04:bestEnd}
 	\end{figure}
 	\begin{figure}[p]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/EndRandom.png}
-		\caption{Náhodný jedinec - 10000 iterací simulace}
+		\caption{Wood náhodný jedinec - 10000 iterací simulace}
 		\label{obr04:randomEnd}
 	\end{figure}
 	\clearpage
 \section{Mineral Scene}
 Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti, kteří mají různé cíle. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
 \par 
-V Mineral Scene scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot \textit{Refactor}. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. \unsure{Je to hodně komplexní asi to zjednoduším}
+V Mineral Scene scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot \textit{Refactor}. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. 
 \par
 V Mineral Scene figurují dohromady tři rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot \textit{Mineral Scout} disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti \textit{Mineral Worker} se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
 \par
@@ -703,7 +703,7 @@ Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Op
 		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
-	\caption{Scout chůze - nastavení experimentu}
+	\caption{Mineral Scout chůze - nastavení experimentu}
 	\label{tab04:MineralScoutWalk}
 \end{table}
 Z grafu \ref{obr04:MineralScoutWalk} lze vyčíst, že ani větší množství entit v mapě nevadilo pro optimalizaci slušného chování pro vyhýbání se překážkám a prohledávání mapy. Nejlepší chování dokáže odhalit okolo 75\% minerálů na mapě.
@@ -993,10 +993,11 @@ Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vy
 \label{subsec:MineralResult}
 Ač předchozí graf fitness \ref{obr04:MineralFullCoop} vypadal velmi optimisticky, výsledky \ref{tab04:MineralStat} z vícero běhů na různých mapách jim neodpovídají . 
 \par 
-Po dlouhém pozorování optimalizovaných jedinců jsem dospěl k závěru, že optimalizace probíhá ovšem u takto složitých úkolů se soustředila pouze na Refaktor robota.  A to z jednoduchého důvodu, protože sám o sobě dokázal nejvíce ovlivňovat fitness funkci pro optimalizaci byl tutíž nejvhodnější volbou. Dále jelikož úkony spojené s hlavním cílem scénářem byly velmi složité, tak se chování optimalizovalo v závislosti na aktuálně vygenerované mapě. Každému experimentu odpovídá jedna náhodně generovaná mapa kvůli jednoznačnosti ohodnocení fitness. Nicméně v jednodušších podúkolech dokázala DE vyevolvovat univerzální a úspěšné jedince.
+Po dlouhém pozorování optimalizovaných jedinců jsem dospěl k závěru, že optimalizace probíhá ovšem u takto složitých úkolů se soustředila pouze na Refaktor robota.  A to z jednoduchého důvodu, protože sám o sobě dokázal nejvíce ovlivňovat fitness funkci pro optimalizaci byl tutíž nejvhodnější volbou. Dále jelikož úkony spojené s hlavním cílem scénářem byly velmi složité, tak se chování optimalizovalo v závislosti na aktuálně vygenerované mapě. Každému experimentu odpovídá jedna náhodně generovaná mapa kvůli jednoznačnosti ohodnocení fitness. Nicméně v jednodušších podúkolech dokázala DE vyevolvovat univerzální a úspěšné jedince. V další optimalizaci je na obtíž, že Refaktor robot zvládá všechny úkony sám a díky tomu by bylo potřeba navrhnout fitness reflektující tento hlavní problém, tak aby nutila ostatní roboty k činnosti. Například v rámci vah velkou hodnotou penalizovat malý pohyb menších robotů, případně hodnotit jen minerály objevené menšími roboty.
 \par 
-V tomto případě ani nepřikládám obrázek s koncem běhu tohoto chování, neboť je velmi podobný tomu z  náhodného běhu. Všechny chování nejlepší generace si lze prohlédnout v programu na přiloženém CD. 
- \unsure{Nemám uloženou mapu na které byl optimalizován, což je asi problém.}
+V tomto případě ani nepřikládám obrázek s koncem běhu tohoto chování, neboť je velmi podobný tomu z  náhodného běhu. Všechny chování nejlepší generace si lze prohlédnout v programu na přiloženém CD.
+\clearpage
+Pro otestování chování jsem použil mapu s nastavením podle tabulky \ref{tab04:MineralStat}. Jedná se opět o 100 různých běhů a v tabulce je možné vidět průměrné hodnoty charakteristik výsledku.
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1048,8 +1049,9 @@ V tomto scénáři maji všichni roboti k dispozici rádiové signály s kódy n
 \par 
 Popis jednotlivých entit v mapě se nachází u obrázku \ref{obr04:CompetitiveSceneRandomStart}
 \clearpage
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/todo}
+Na obrázku se nachází dvě devíti členná hejna. Jednotlivé týmy jsou od sebe odděleny barvou, modrá barva odpovídá týmu dvě a červená týmu jedna. Opět na mapě můžeme vidět rádiové signály, jedná se o kruhy s průhlednou barvou, jednotlivé kódy jsou barevně odlišeny. Šedivá kolečka pak znázorňují stejně jako v předchozím scénáři překážky.  
+\begin{figure}[h]\centering
+	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/CompetitiveStart.png}
 	\caption{Příklad Competitive Scene mapy: start náhodného chování}
 	\label{obr04:CompetitiveSceneRandomStart}
 \end{figure}
@@ -1145,7 +1147,7 @@ Jeho konkrétní specifikaci lze nalézt v tabulce \ref{tab04:CompetitiveFighter
 \end{table}
 \clearpage
 \subsection*{Vyhodnocování Fitness}
-Hlavní cíl Competitive Scene scénáře se skládá z mnoha úkonů. Proto jsem ho stejně jako v předchozích scénářích rozdělil na menší metaúkoly. Tradičně jsem začal s učením pohybu a vyhybáním se překážkám. Poté jsem pokračoval přes uchování, co nejvíce životních bodů, až po způsobení maximálního poškození protivníka. Fitness funkce má podobu váženého součtu stejně jako u Wood Scene a Mineral Scene. \unsure{Todle by asi chtělo více specifikovat}A používal jsem k optimalizaci pouze DE, která se ukázala jako účinná metoda optimalizace chování. 
+Hlavní cíl Competitive Scene scénáře se skládá z mnoha úkonů. Proto jsem ho stejně jako v předchozích scénářích rozdělil na menší metaúkoly. Tradičně jsem začal s učením pohybu a vyhybáním se překážkám. Poté jsem pokračoval přes uchování, co nejvíce životních bodů, až po způsobení maximálního poškození protivníka. Fitness funkce má podobu váženého součtu stejně jako u Wood Scene a Mineral Scene. A používal jsem k optimalizaci pouze DE, která se ukázala v prvním scénáři jako účinnější metoda optimalizace chování. 
 \par 
 Na konci simulace mapy jsou roboti oceněni za:  
 \begin{enumerate}
@@ -1495,7 +1497,17 @@ Tento problém by měl být vyřešen úpravou fitness, kdy i v rámci poslední
 \newpage
 
 \section{Shrnutí}
-DE společně s metodou podúkolů dokázala efektivně optimalizovat chování heterogenního hejna při řešení typických úloh pro robotický swarm. Jedná se především o pohyb v mapě, kde se roboti vyhýbají ostatním objektů i dalším členům hejna. Dále byli roboti schopni rozptýlení se po mapě. Hledání a sbírání objektů pro ně také nepředstavovalo problém. V případě pevného rozdělení rolí a úkonů v rámci hejna byla evolvovaná chování schopna vykonávat i  mnohem komplexnější úkoly zahrnující vzájemnou komunikaci, jako je například kácení stromů a jejich následné uskladnění. 
+DE společně s metodou podúkolů dokázala efektivně optimalizovat chování heterogenního hejna při řešení typických úloh pro robotický swarm. 
+\par 
+Jedná se především o pohyb v mapě, kde se roboti vyhýbají ostatním objektů i dalším členům hejna. Dále byli roboti schopni se rozptýlit po mapě. Hledání a sbírání objektů pro ně také nepředstavovalo problém. Pokud bylo hejno vedeno ke konkrétním úkonům jako tomu bylo v případě Wood Scene, byla evolvovaná chování schopna vykonávat i mnohem komplexnější úkoly zahrnující vzájemnou komunikaci, jako je například kácení stromů a jejich následné uskladnění. \par 
+Konkrétně ve Wood Scene scénáři, kde figurují dva druhy robotů z nichž jeden může provádět pouze transport a druhý pouze zpracování objektů. Dokázali nejlepší jedinci najít požadované objekty na mapě, provést jejich zpracovaní, následně v rámci komunikace předat informaci o jejich nalezení, po přijetí informace o objektech připravených k transportu je naložit a odvést na místo určení.   
 \par
- Pro toto použíTato domněnka byla potvrzena dalšími pěti testovací běhy. 
+DE se pro tyto účely ukázali jako vhodnější optimalizační nástroj, v rámci prvního experimentu proběhl několik testovacích běhů potvrzující tuto domněnku.\unsure{Budou asi jenom 3 a nevím, jestli komplet stejné jako u Wood Scene, windows na VM se restartoval po update}. 
 \par
+V dalších dvou experimentech byli představeny limity zmíněného řešení. V těchto experimentech hejno mělo řešit obtížnější úlohy a v rámci podúkolů se optimalizovali více obecné cíle. Pro jejich jednoduché části jako například pohyb opět fungovala DE velmi dobře, ovšem poté se objevili problém u obecně zadaných podúkolů. 
+\par 
+V Mineral Scene se nezdařilo zabránit evoluci, aby optimalizovalo pouze jednoho ze členů, který dokáže plnit veškeré úkony hlavní cíle scénáře. U Competitive Scene scénáře se bohužel nepodařilo v posledním podúkolu eliminovat nepřátelské chování k členům vlastního hejna. Pro evoluční algoritmus bylo jednodušší optimalizovat obecně nepřátelské chování i přesto, že ve fitness funkci bylo hejno odměňováno pouze za útok do nepřátel. 
+\par 
+V případech obou méně úspěšných scénářů by pravděpodobně by bylo možné zabránit nežádoucímu chování, kdybychom jej jako negativní složku zahrnuli do fitness funkce a použili složitější architekturu neuronové sítě. Kvůli časové náročnosti simulací mapy nebyli tyto pokusy provedeny. 
+\par
+V konečném důsledku se DE v kombinaci s konkrétními metaúkoly osvědčila jako vhodný optimalizační metoda chování heterogenního hejna. Nejlépe však funguje pokud jej programátor vede přímým směrem. 

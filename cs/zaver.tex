@@ -1,2 +1,17 @@
 \chapter*{Závěr}
 \addcontentsline{toc}{chapter}{Závěr}
+V rámci této práce byl implementován kompletní 2D simulátor umožňující simulovat chování robotických hejn, simulátor umožňuje hejnu, abys se skládalo z rozličných jedinců. Tento simulátor také obsahuje metody EA, konkrétně DE a ES jako prostředky pro optimalizaci řízení robotických hejn. Pro vizualizaci těchto chování vznikl program umožňující prohlížení už optimalizovaných chování. Simulace byla také optimalizována a bylo použito paralelního zpracování. 
+\par
+Za pomocí těchto programů byla otestováno evolucí generované ovládání heterogenních hejn v rámci tří rozličných scénářů. Úkoly v těchto scénářích byly tvořeny z tradičních problémů robotických hejn jako je shlukování, pohyb v prostředí, rozptylování, apod. Dohromady tvořily scénáře komplexní problémy s netriviálním řešením. 
+\par
+Během prvního experimentu byly porovnány dva evoluční algoritmy pro optimalizaci neuronových sítí pro řízení heterogenních  swarmů, konkrétně se jednalo o DE a ES. V rámci toho experimentu bylo provedeno několik testovacích běhů pro zmíněné srovnání. DE se ukázala jako lepší varianta pro optimalizaci heterogenního robotického hejna. 
+\par 
+V dalších dvou experimentech se bylo potvrzeno, že tuto metoda lze použít jako vhodný nástroj pro optimalizaci jednoduchých chování hejna. Ovšem objevili se i limity spojené s obtížnými úkony, kde DE nepracovala uspokojivě. Bylo navrženo řešení těchto nedostatků, ovšem z časových důvodů nebylo vyzkoušeno. 
+
+\subsection*{Možná rozšíření}
+Tato práce poskytuje řadu zajímavých možností k rozšíření ať už se jedná o řešení nevyzkoušených metod na neúspěšných scénářích či porovnání s jinými metodami.\par
+V rámci nedostatků scénářů Mineral Scene a Competitive Scene by bylo žádoucí vyzkoušet evoluční algoritmy, které umí generovat složitější neuronové sítě. Jedná se především o algoritmy odvozené z NEAT rodiny. Otestovat je na těchto obtížných scénářích.
+\par
+Pro porovnání úspěšnosti evolučního algoritmu s jinýmu učícími algoritmy by bylo vhodné otestovat DE a ES s tradičním \textit{backpropagation} algoritmem pro neuronové sítě. 
+\par
+V neposlední řadě by zajímavou cestu tvořilo přenesení vyvinutých chování na fyzické robot. Což by ale vyžadovalo velké úpravy na simulátoru, protože simulátor značně zjednodušuje akce v prostředí. Navíc by bylo třeba přidat šumy prostředí neboť senzory jsou nimi v reálném světě značně zkresleny. 
