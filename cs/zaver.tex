@@ -4,14 +4,16 @@ V rámci této práce byl implementován kompletní 2D simulátor umožňující
 \par
 Za pomocí těchto programů byla otestováno evolucí generované ovládání heterogenních hejn v rámci tří rozličných scénářů. Úkoly v těchto scénářích byly tvořeny z tradičních problémů robotických hejn jako je shlukování, pohyb v prostředí, rozptylování, apod. Dohromady tvořily scénáře komplexní problémy s netriviálním řešením. 
 \par
-Během prvního experimentu byly porovnány dva evoluční algoritmy pro optimalizaci neuronových sítí pro řízení heterogenních  swarmů, konkrétně se jednalo o DE a ES. V rámci toho experimentu bylo provedeno několik testovacích běhů pro zmíněné srovnání. DE se ukázala jako lepší varianta pro optimalizaci heterogenního robotického hejna. 
+Během prvního experimentu byly porovnány dva evoluční algoritmy pro optimalizaci neuronových sítí pro řízení heterogenních  swarmů. Zdá se, že DE jsou lepším optimalizačním nástrojem oproti ES. Pro potvrzení této domněnky by ale bylo potřeba provést více experimentů.
 \par 
-V dalších dvou experimentech se bylo potvrzeno, že tuto metodu lze použít jako vhodný nástroj pro optimalizaci jednoduchých chování hejna. Ovšem objevily se i limity spojené s obtížnými úkony, kde DE nepracovala uspokojivě. Bylo navrženo řešení těchto nedostatků, ovšem z časových důvodů nebylo vyzkoušeno. 
+V dalších dvou experimentech bylo potvrzeno, že tuto metodu lze použít jako vhodný nástroj pro optimalizaci jednoduchých chování hejna. Ovšem objevily se i limity spojené s obtížnými úkony, kde DE nepracovala uspokojivě. Bylo navrženo řešení těchto nedostatků, ovšem z časových důvodů nebylo vyzkoušeno. 
 
 \subsection*{Možná rozšíření}
-Tato práce poskytuje řadu zajímavých možností k rozšíření ať už se jedná o řešení nevyzkoušených metod na neúspěšných scénářích či porovnání s jinými metodami.\par
-V rámci nedostatků scénářů Mineral Scene a Competitive Scene by bylo žádoucí vyzkoušet evoluční algoritmy, které umí generovat složitější neuronové sítě. Jedná se především o algoritmy odvozené z NEAT rodiny. Otestovat je na těchto obtížných scénářích.
+Tato práce poskytuje řadu zajímavých možností k rozšíření ať už se jedná o řešení nevyzkoušených metod na neúspěšných scénářích či porovnání s jinými metodami.
 \par
-Pro porovnání úspěšnosti evolučního algoritmu s jinýmu učícími algoritmy by bylo vhodné otestovat DE a ES s tradičním \textit{backpropagation} algoritmem pro neuronové sítě. 
+Jako vhodné rozšíření se nabízí potvrzení porovnání DE a ES dostatečným množstvím opakování, k čemuž bude potřeba velká výpočetní síla a počet strojů.
+\par
+V rámci nedostatků scénářů Mineral Scene a Competitive Scene by bylo žádoucí vyzkoušet evoluční algoritmy, které umí generovat složitější neuronové sítě. Jedná se především o algoritmy odvozené z NEAT rodiny. Otestovat je na těchto obtížných scénářích.
+
 \par
 V neposlední řadě by zajímavou cestu tvořilo přenesení vyvinutých chování na fyzické roboty. Což by ale vyžadovalo velké úpravy na simulátoru, protože simulátor značně zjednodušuje akce v prostředí. Navíc by bylo třeba přidat šumy prostředí neboť senzory jsou jimi v reálném světě značně zkresleny. 
