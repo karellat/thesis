@@ -1,7 +1,7 @@
 %%% Kapitoly
 \chapter{Experimenty}
 \label{chap:experimenty}
-Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy k vytvoření řízení chování homogenního robotického hejna, tzn. s jedním druhem robotů. V následující kapitole podrobně popíši postup hledání optimální chování pro heterogenního hejna. Optimalizaci jsem navrhl a otestoval na třech rozličných scénářích. V rámci scénářů budu používat DE jako zkratku za diferenciální evoluci a ES pro evoluční strategie
+Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy k vytvoření řízení chování homogenního robotického hejna, tzn. s jedním druhem robotů. V následující kapitole podrobně popíši postup hledání optimálního chování pro heterogenního hejna. Optimalizaci jsem navrhl a otestoval na třech rozličných scénářích. V rámci scénářů budu používat DE jako zkratku za diferenciální evoluci a ES pro evoluční strategie
 \par
 \subsubsection{Pracovní názvy scénářů:}
 \begin{enumerate}
@@ -10,26 +10,26 @@ Všechny práce zmíněné v úvodní kapitole používají evoluční algoritmy
 	\item Competitive Scene - soubojový scénář
 \end{enumerate}
 
-Hlavní motivací při tvorbě scénářů bylo vytvořit obtížnější úkoly než se obvykle používají jako například: shlukování, vyhýbání překážkám, atp. Navrhnout je natolik komplexně, aby nebylo možné, že část hejna se nebude podílet na jeho plnění. Také jsem volil scénáře, aby se přiblížily situacím z reálného světa. Každému z nich jsem věnoval samostatnou kapitolu, která zahrnuje popis hlavního úkolu scénáře, seznam robotů i s jejich senzory a efektory, způsob hodnocení fitness,rozdělení do podúkolů s průběhem fitness u ES a DE, vizualizaci a rozbor chování nejlepšího jedince.  
+Hlavní motivací při tvorbě scénářů bylo vytvořit obtížnější úkoly než se obvykle používají jako například: shlukování, vyhýbání překážkám, atp. Navrhnout je natolik komplexně, aby nebylo možné, že část hejna se nebude podílet na jeho plnění. Také jsem volil scénáře, aby se přiblížily situacím z reálného světa. Každému z nich jsem věnoval samostatnou kapitolu, která zahrnuje popis hlavního úkolu scénáře, seznam robotů i s jejich senzory a efektory, způsob hodnocení fitness, rozdělení do podúkolů s průběhem fitness u ES a DE, vizualizaci a rozbor chování nejlepšího jedince.  
 \par
 Pro řešení problému jsem navrhl řadu postupů, proto v tomto odstavci zmíním ty nejvíce přímočaré a slibné, které se ovšem ukázaly  jako neúspěšné. V kapitolách zabývajícími se konkrétními scénáři už budu pouze popisovat jen konečné, úspěšné postupy.
 \par
-Nedostatečný se ukázal pokus provádět evoluci pro fitness hlavního úkolu scénáře. Konkrétně pro Wood Scene počet natěženého a uskladněného dřeva, pro Mineral Scene objem vytvořeného paliva, pro kompetitivní scénář zbylé body zdraví a udělené poškozený. Většina hodnocení náhodných chování byla rovna nule, proto EA nedostaly dostatek informací k vhodné exploraci a díky malé pravděpodobnosti vygenerování chování alespoň částečně řešící hlavní úkol nedocházelo ani k exploataci. Což mělo za důsledek neefektivní  DE a ES, takže ani jeden z EA nedošel k úspěšnému řešení. 
+Nedostatečný se ukázal pokus provádět evoluci pro fitness hlavního úkolu scénáře. Konkrétně pro Wood Scene počet natěženého a uskladněného dřeva, pro Mineral Scene objem vytvořeného paliva, pro kompetitivní scénář zbylé body zdraví a udělené poškození. Většina hodnocení náhodných chování byla rovna nule, proto EA nedostaly dostatek informací k vhodné exploraci a díky malé pravděpodobnosti vygenerování chování alespoň částečně řešící hlavní úkol nedocházelo ani k exploataci. Což mělo za důsledek neefektivní  DE a ES, takže ani jeden z EA nedošel k úspěšnému řešení. 
 \par
-Posun zaznamenala více obecná fitness i když sama o sobě také nedosáhla do kategorie úspěšných postupů. Do fitness jsem zahrnul i menší pozitivní znaky, které byly součástí hlavnímu úkolu. Například jsem záporně ohodnotil pokusy o pohyb končící kolizí, kladně počet nalezených entit či vhodných objektů v kontejnerech, aktuální stav paliva. Optimalizovaná chování opravdu zaznamenala posun. Ovšem oba EA obtížně hledaly cestu z lokálního optima a ve většině případů optimalizovali pouze jednoduché části úkolu. I přes přidávání složitějších matematických funkcí do fitness nebyly schopny dosáhnout uspokojivého řešení hlavního úkolu scénáře.  
+Posun zaznamenala více obecná fitness i když sama o sobě také nedosáhla do kategorie úspěšných postupů. Do fitness jsem zahrnul i menší pozitivní znaky, které byly součástí hlavnímu úkolu. Například jsem záporně ohodnotil pokusy o pohyb končící kolizí, kladně počet nalezených entit či vhodných objektů v kontejnerech, aktuální stav paliva. Optimalizovaná chování opravdu zaznamenala posun. Ovšem oba EA obtížně hledaly cestu z lokálního optima a ve většině případů optimalizovaly pouze jednoduché části úkolu. I přes přidávání složitějších matematických funkcí do fitness nebyly schopny dosáhnout uspokojivého řešení hlavního úkolu scénáře.  
 \subsubsection*{Použitá metoda}
 Pro finální řešení jsem zvolil metodu, kterou nazývám metodou podúkolů. U každého scénáře podrobně popíši její průběh a nastavení, zde pouze nastíním základní  myšlenku. Rozdělil jsem hlavní cíl na několik menších podúkolů (metaúkolů). Každému z nich vytvoříme fitness funkci odpovídající nutné části hlavního cíle. Fitness metaúkolu jsem navrhoval, tak aby necílila na již optimalizované úkony a v každém podúkolu jsem se vždy soustředil pouze na jeden jednoduchý úkon. Díky tomuto principu jsem dosáhl mnohem vyšší odolnosti proti uvíznutí v lokálním minimu. Explorace se tímto procesem také zlepšila, protože hlavní cíl závisí na podúkolech a pokud bylo chování rozmanité a úspěšné, přenesly se tyto vlastnosti i dále. Poté jsem generaci úspěšnou v průzkumu optimalizoval na sbírání materiálů pouze požadované barvy a takto jsem rozděloval až k finálnímu úkolu scénáře. 
 \par 
-Každý robot má připojen paměťový slot, neboť roboti s nimi dosahovali ve všech úkolech znatelně lepších výsledků a pomáhaly vytvářet složitější chování. 
+
 \section{Použité technologie}
 Tuto kapitolu věnuji klíčovým technologiím, jenž jsem použil pro modelování řešeného problému a optimalizaci náhodných chování. Pro ovládání robotů jsem zvolil v poslední době velmi oblíbené \textit{neuronové sítě}, které se často používají v kombinaci s EA. Jednomu jedinci odpovídá jedna neuronová síť ovládající všechny části robota. Tyto neuronové sítě si lze představit jako vektor reálných čísel, což je vhodná reprezentace genotypu pro EA. 
 \subsection*{Reprezentace Chování - neuronové sítě}
 Pro reprezentaci jedinců v oblasti robotiky, rozpoznávání obrazů a dalších oblastí umělé inteligence se v poslední době používají nejčastěji neuronové sítě. Neuronová síť se strukturou podobá neuronovým sítím v mozku. Základní sítě se skládají z jednotlivých neuronů, které se v kontextu informatického světa nazývají \textit{perceptrony}. Samostatný perceptron je sám o sobě také neuronovou sítí, ale většinou se propojují do složitějších struktur. Perceptron lze definovat podle \citep{neuron} následovně.
-\begin{definice}[Perceptron] Perceptron je funkce z $\mathbb{R}^n \rightarrow \mathbb{R}$, která je dáná následujícím předpisem: 	$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$, kde pro $i \leq n$ $x_{i}$ je $ítý$ prvek vstupního vektoru, $w_{i}$ se označuje jako váha a většinou $w_{i} $ se bere z $\mathbb{R}$.  $\Theta$ se nazývá práh (bias) a slouží jako váha s konstantním vstupem 1.  $S(X)$ je aktivační funkce: $\mathbb{R} \rightarrow \mathbb{R}$ a $Y$ se obvykle označuje jako výstup perceptronu.
+\begin{definice}[Perceptron] Perceptron je funkce z $\mathbb{R}^n \rightarrow \mathbb{R}$, která je dáná následujícím předpisem: 	$Y = S(\Theta + \sum_{i=0}^{n} w_i x_i)$, kde pro $i \leq n$ $x_{i}$ je í-tý prvek vstupního vektoru, $w_{i}$ se označuje jako váha a většinou $w_{i} $ se bere z $\mathbb{R}$.  $\Theta$ se nazývá práh (bias) a slouží jako váha s konstantním vstupem 1.  $S(X)$ je aktivační funkce: $\mathbb{R} \rightarrow \mathbb{R}$ a $Y$ se obvykle označuje jako výstup perceptronu.
 \end{definice}
 Aktivační nebo také přenosová funkce má za úkol transformovat výstup neuronu, aby výstupní hodnota odpovídala výstupním hodnotám. Mezi nejjednodušší přenosové funkce patří binární funkce, kdy očekáváme od neuronu výstup typu ano, ne. Používají se i více složité funkce.
 \par
-\textit{Jednovrstvou neuronovou sítí} pak myslíme n perceptronů, tedy funkci $\mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$, kde $ítou$ složku výstupního vektoru dostaneme aplikací funkce odpovídající $ítému$ perceptronu na vstupní vektor.
+\textit{Jednovrstvou neuronovou sítí} pak myslíme n perceptronů, tedy funkci $\mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$, kde $í$-tou složku výstupního vektoru dostaneme aplikací funkce odpovídající $í$-tému perceptronu na vstupní vektor.
 \par
 Pokud zapojíme z výstupu jednoho perceptronu na vstup jiného, vznikne \textit{vícevrstvá neuronová sít}. Což znamená, že podmnožiny výstupů z první vrstvy neuronů neurčují přímo výstup, ale jsou opět zvoleny jako vstupní vektory pro další jednovrstvou neuronovou síť. Tímto postupem můžeme vytvářet velmi komplexní struktury.
 \par
@@ -37,9 +37,9 @@ Skrytá vrstva (hidden layer) je taková jednovrstvá neuronová síť, jejíž 
 \par
 Pro mé účely se jsem testoval řadu různých variant neuronových sítí, ale nejvíce se mi osvědčilo následující nastavení, které poskytovalo uspokojivé výsledky a rozumné časové nároky. 
 \par 
-Jako aktivační funkce jednotlivých perceptronů se mi nejvíce osvědčila často používaná se změněným oborem hodnot pro konkrétní výstup.
+Jako aktivační funkce jednotlivých perceptronů se mi nejvíce osvědčila funkce hyperbolického tangentu často používaná se změněným oborem hodnot pro konkrétní výstup.
 \par
-V rámci testovaní jsem zvolil jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné pro uspokojivé pro řešení prvních úkolů. Jejich architektura je následující. Pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen perceptron do kterého vstupuje vektor reálných čísel odpovídající vektoru všech hodnot přečtených ze senzorů.  Pro dosažení lepších řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektury.Případně vyzkoušet vliv vícero vrstev. 
+V rámci testovaní jsem zvolil jednoduchou architekturu jednovrstvé neuronové sítě, což se ukázalo jako dostatečné pro uspokojivé pro řešení prvních úkolů. Jejich architektura je následující. Pro každé reálné číslo, které očekává robot jako vstup pro efektor, byl připojen perceptron do kterého vstupuje vektor reálných čísel odpovídající vektoru všech hodnot přečtených ze senzorů.  Pro dosažení lepších řešení by zde bylo možné nasadit NEAT algoritmus či hledat více specifičtější architektury, případně vyzkoušet vliv vícero vrstev. 
 \subsection*{Evoluční algoritmy}
 Neuronovou sít si lze představit jako množinu vektorů, kde jeden perceptron odpovídá vektoru reálných čísel (vah vstupů + práh $v =(x_0,x_1...x_n,\Theta)$. V kontextu evolučních algoritmů se pro optimalizaci vektorů reálných čísel nejčastěji používají ES a DE, I z tohoto důvodu jsem zvolil zmíněné algoritmy jako zástupce pro optimalizaci chování heterogenní skupiny robotů. Oba zmíněné algoritmy důkladně popisuji v kapitole \ref{sec:DE} a \ref{sec:ES} a má implementace se od popisu v úvodu liší pouze v malý detailech. Do detailu si je lze prohlédnout v přiložené dokumentaci a kódu. 
 \par
@@ -65,15 +65,16 @@ V rámci testovaní jsem vyzkoušel mnoho různých nastavení parametrů EA. V 
 \newpage
 \section{Wood Scene}
 Vzorem Wood Scene scénáře byla těžba dřeva, představme si dřevorubce s motorovou pilou a silné dělníky nakládající zpracované stromy do transportérů a svážející materiál na společnou hromadu. Roboti odpovídají těmto lidským rolím, samozřejmě je jejich činnost značně zjednodušena. V obou případech je cílem maximalizovat počet zpracovaného dřeva na daném místě, což vyžaduje od obou druhů agentů spolupráci. \par
-Robotické hejno se ve Wood Scene snaží natěžit a převést, co největší množství dřeva na místo označené rádiovým signálem. Rádiové senzory poskytují robotům sílu signálu a vysílaný kód. Pro místo určené na kupení dřeva je určen unikátní kód 2 a je umístěn doprostřed mapy. Žádný jiný rádiový vysílač vysílající signály s kódem 2 se na mapě nenachází.  
+Robotické hejno se ve Wood Scene snaží natěžit a převést co největší množství dřeva na místo označené rádiovým signálem. Rádiové senzory poskytují robotům sílu signálu a vysílaný kód. Pro místo určené na kupení dřeva je určen unikátní kód 2 a je umístěn doprostřed mapy. Žádný jiný rádiový vysílač vysílající signály s kódem 2 se na mapě nenachází.  
 \par
 Celé hejno čítá 9 robotů, jedná se o dva různé druhy, které se liší velikostí, rychlostí, senzory i efektory. Na začátku experimentu jsou náhodně rozmístěny do středu mapy na stejném místě jako se rozprostírá skladovací prostor. Dále jsou na mapě náhodně umístěny stromy. Robot v kontextu scénáře nazývaný Scout odpovídá \uv{dřevorubci} v teoretickém vzoru, pohybuje se rychle, má menší rozměry, umí nalezený strom zpracovat na dřevo pro komunikaci má přidělený unikátní kód 0. Oproti tomu robot \uv{dělník} se pohybuje pomaleji, je větší, neumí zpracovávat stromy, ale disponuje nakladačem (vykladačem) a kontejnerem na 5 objektů. 
  \par 
 Souhrnně hejno musí strom nalézt, přepracovat na dřevo, poté naložit a odvézt do středu. Celý tento proces zahrnuje typické úkoly pro robotický swarm jako rozprostření, vyhýbání se překážkám, komunikaci mezi jednotlivými agenty, nalezení cesty apod. Z návrhu je zřejmé, že na procesu se musí podílet oba druhy robotů.
 \par
-V rámci bakalářské práce byla připraven program zajišťující jednoduchou vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena obdélníkovou hranicí a chová se jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva, roboti jej zaznamenají jako rádiový signál. Hnědá kolečka zastupují pokácené dřevo. V některých podúkolech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplněny červenou barvou, jejich senzory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. 
+V rámci bakalářské práce byl připraven program zajišťující vizualizaci chování robotů. Jeho vizuální výstup můžete vidět na obrázku \ref{obr04:WoodSceneRandomStart}. Na ní si vysvětlíme jednotlivé entity nacházející se na mapě. Mapa je ohraničena obdélníkovou hranicí a chová se jako zeď. Zelené kroužky znázorňují stromy, které ještě nebyly objeveny. Objevený strom změní barvu na žlutou. Modře označený prostor je určen pro uskladnění zpracovaného dřeva, roboti jej zaznamenají jako rádiový signál. Hnědá kolečka zastupují pokácené dřevo. V některých podúkolech se objevuje dřevo už při inicializaci, proto ještě neobjevené má tmavší barvu a objevené světlejší. Pro roboty je v tomto prostoru vysílán rádiový signál. Roboti jsou vyplnění červenou barvou, jejich senzory a efektory mají černou barvu. Pro každý rádiový signál je určena jedna unikátní barva s alfa kanálem. 
 \par
-Pro potvrzení, že scénář není triviálně řešitelný. Bylo vygenerováno tisíc náhodných chování. Hodnoceny byly dle fitness funkce podúkolu kooperace popsaný níže. Nejlepší z nich můžete vidět těsně po inicializaci mapy \ref{obr04:WoodSceneRandomStart}. Výsledek krátce před 10 000. iterací je zachycen v obrázku \ref{obr04:WoodSceneRandomEnd}. Největší světla zelená plocha je volný prostor, kde se mohou roboti pohybovat. Světle růžový kruh je právě rádiové vysílání, protože všichni roboti vysílají současně je barva celkem sytá. Tmavě fialový kruh označuje místo pro uskladnění, obvykle má modrý odstín, ale protože jej překrývají signály robotů zbarvil se do fialové. Na obrázku \ref{obr04:WoodSceneRandomEnd} vidíme, že se robotům povedlo jeden strom pokácet a dokonce uložit. Většina velkých robotů se dostala do kolize a menší roboti nedokázali objevit ani pětinu stromů.
+Pro potvrzení, že scénář není triviálně řešitelný. Bylo vygenerováno tisíc náhodných chování. Hodnoceny byly dle fitness funkce podúkolu kooperace popsaných níže. Nejlepší z nich můžete vidět těsně po inicializaci mapy \ref{obr04:WoodSceneRandomStart}. Výsledek krátce před 10 000. iterací je zachycen v obrázku \ref{obr04:WoodSceneRandomEnd}. Největší světle zelená plocha je volný prostor, kde se mohou roboti pohybovat. Světle růžový kruh je právě rádiové vysílání, protože všichni roboti vysílají současně je barva celkem sytá. Tmavě fialový kruh označuje místo pro uskladnění, obvykle má modrý odstín, ale protože jej překrývají signály robotů zbarvil se do fialové. Na obrázku \ref{obr04:WoodSceneRandomEnd} vidíme, že se robotům povedlo jeden strom pokácet a uložit. Většina velkých robotů se dostala do kolize a menší roboti nedokázali objevit ani pětinu stromů.
+\clearpage
 \begin{figure}[p]\centering
 	\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/StartRandom.png}
 	\caption{Příklad WoodScene mapy: start náhodného chování}
@@ -89,7 +90,7 @@ Pro potvrzení, že scénář není triviálně řešitelný. Bylo vygenerováno
 \subsection*{Roboti}
 Devítičlenné hejno obsahuje 5 Scout robotů a 4 Worker roboty. U každého z robotů popíši jejich efektory a senzory. Pro každý druh robota je připravena jedna shodná neuronová sít. Jedinec odpovídá vektoru vah neuronové sítě. Pokud v rámci experimentu optimalizuji chování více druhů robotů, jedinec jsou dva vektory vah pro každý druh robota jedna neuronová síť. Proto fitness funkce hodnotí jejich výsledné snažení dohromady a evoluční operátory pracují nad celou dvojicí. Podívejme se na jednotlivé druhy podrobně.
 \subsubsection{Scout robot}
-Jedná se o robota, který má na starosti průzkum mapy a kácení nalezených stromů. Na zpracování dřeva používá efektor, nazývám jej refaktor, který má podobu úsečky a vyčnívá z čela robota. Pro zpracovaní musí refaktor kolidovat se stromem v mapě, poté je strom prohozen za entitu dřeva. Aby mohl komunikovat má přidělený rádiový signál s kódem 0, při jeho vysílání přidá na mapu signál jako kruh se středem odpovídajícím pozici robota. Jedná se o menšího robota, oproti Worker robotovi je rychlejší a jeho senzory mají větší dosah. Tabulka \ref{tab04:Scout} obsahuje základní charakteristiky, počty a dosahy jednotlivých senzorů a efektorů.
+Scout robot je robot, který má na starosti průzkum mapy a kácení nalezených stromů. Na zpracování dřeva používá efektor, nazývám jej refaktor, který má podobu úsečky a vyčnívá z čela robota. Pro zpracovaní musí refaktor kolidovat se stromem v mapě, poté je strom prohozen za entitu dřeva. Aby mohl komunikovat má přidělený rádiový signál s kódem 0, při jeho vysílání přidá na mapu signál jako kruh se středem odpovídajícím pozici robota. Jedná se o menšího robota, oproti Worker robotovi je rychlejší a jeho senzory mají větší dosah. Tabulka \ref{tab04:Scout} obsahuje základní charakteristiky, počty a dosahy jednotlivých senzorů a efektorů.
 \par 
 \begin{table}[h]\centering
 \begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
@@ -167,7 +168,7 @@ Worker robot se stará o manipulaci a následný transport objektů na mapě. Po
 \end{table}
 \clearpage
 \subsection*{Vyhodnocování Fitness}
-Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace. I když se úspěšnost v podúkolech  vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
+Fitness funkce pro ohodnocení WoodScene scénáře probíhá vždy až na konci simulace a má podobu váženého součtu charakteristik mapy. I když se úspěšnost v podúkolech vždy posuzuje jinak, celou fitness funkci lze shrnout do následujícího cílů. Roboti jsou odměňováni za: 
 \begin{enumerate}
         \item \textit{nalezené stromy} - stromy o které zavadil line senzor 
         \item \textit{pokácené stromy} - stromy, které refaktor změnil 
@@ -181,16 +182,15 @@ Trestáni za:
 \end{enumerate}
 
 \subsection*{Podúkoly} 
-Rozdělil jsem hlavní cíl na následující podúkoly. Jejich obtížnost postupně roste a finální metaúkol už odpovídá řešenému problému. Pro ES a DE jsem použil stejné, abych bylo možné porovnat jejich fungování. 
+Rozdělil jsem hlavní cíl na následující podúkoly. Jejich obtížnost postupně roste a finální metaúkol už odpovídá řešenému problému. Pro ES a DE jsem použil stejné, aby bylo možné porovnat jejich fungování. 
 \begin{enumerate}
         \item vygenerování robotů - Na začátku je vygenerováno chování robotů naprosto náhodně. Pro každého robota, je vygenerována náhodná jednovrstvá neuronová síť. 
-        \item učení chůze - Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali, co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí (záporným ohodnocením) a na nalezené stromy (kladným ohodnocením).
+        \item učení chůze - Pro oba roboty je velmi důležité, aby se pohybovali bez kolizí po celé mapě a objevovali co největší prostor. Roboti jsou vyvíjeni odděleně a fitness se soustředí na počet kolizí (záporným ohodnocením) a na nalezené stromy (kladným ohodnocením).
         \item těžba stromů - Scout roboty, kteří se už obstojně po mapě pohybují, je třeba naučit kácet stromy. Proto dalším  cílem ve fitness funkci je počet pokácených stromů. Nicméně stále také na počet stromů nalezených. 
         \item převoz dřeva - Správně pohybující chceme naučit sbírat vytěžené dřevo. Fitness hodnotí počet sebraného dřeva, případně i uskladněné dřevo. Na těchto mapách jsou už na začátku připraveny pouze entity zpracovaného dřeva.
         \item kooperace - V posledním experimentu, se hodnotí pouze sebrané a uskladněné dřevo. A evolvují se oba druhy robotů současně. 
 \end{enumerate}
 U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté graf s průběhem fitness jednotlivých EA plus jejich vzájemné porovnání. ES v rámci mutačních operátorů vytváří několik zmutovaných jedinců a na základě jejich fitness utváří potomka. Vyhodnocování fitness je časově nejnáročnější výpočet, protože se musí probíhat na mapě celá simulace. Aby časy běhu DE a ES byly srovnatelné, odpovídá velikost populace u DE, velikosti populace krát počet mutovaných jedinců u ES. Při porovnání EA zobrazuji průměrné hodnoty fitness jedinců v rámci daného podúkolu. 
-\newpage
 	\subsubsection{Scout chůze - nastavení experimentu}
 	Nejdříve jsem se zaměřil na schopnost pohybu jednotlivých robotů po mapě. Oddělil jsem oba druhy od sebe, protože díky rychlejšímu pohybu Scout robotů EA optimalizovalo pouze jejich pohyb. Roboti byli oceněni za nalezené stromy, tato fitness je nutila rozprostřít se po mapě. Následuje tabulka s nastavením fitness a EA.
 	\par
@@ -224,12 +224,12 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 		\caption{Wood Scout chůze - nastavení experimentu}\label{tab04:ScoutWalk}
 	\end{table}
     Výsledky experimentu ilustrují grafy na další stránce. Jednotlivé průběhy fitness na obrázku \ref{obr04:WalkESvsDE} ukazují střední hodnotu fitness a její rozptyl v závislosti na generaci, jedinci jsou kvůli přehlednosti sloučeni po 10 generacích. V obou případech docházelo k největšímu růstu do 200 generace (v grafech 20). Oba EA lze označit jako úspěšné, protože vygenerovaná chování objevila více než 50\% stromů na mapě, v případě DE dokonce více dvě třetiny. U ES jsem nepoužíval elitismus, proto křivka více osciluje než je tomu u DE.
-	\begin{figure}[t]\centering
+    \newpage
+	\begin{figure}[h]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorWalkMem}
 		\caption{ Wood Scout chůze - porovnání průměrné fitness ES a DE}
 		\label{obr04:WalkESvsDE}
 	\end{figure}
-	\clearpage
 	
 	\subsubsection{Worker chůze - nastavení experimentu}
 	Worker chůze aplikuje podobný postup jako v předchozím experimentu na Worker roboty. Jen jsem nehodnotil počet nalezených stromů, ale do každé mapy jsem umístil už zpracované stromy. Roboti tedy byli oceněni za nalezení právě tohoto dřeva. Opět fitness funkce nutí roboty, co nejvíce se rozprostřít po mapě a navíc ještě vyhýbat se nepokáceným stromům.
@@ -264,7 +264,7 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 		\caption{Wood Worker chůze - nastavení experimentu}
 		\label{tab04:WorkerWalk}
 	\end{table}
-		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu DE v obrázku \ref{obr04:WWalkESvsDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje křivka ES od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x zpracovaného než ten pomocí ES. Nutno dodat, že náhodná pozice se entit na mapě se líší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům v \ref{obr04:WWalkESvsDE}..
+		DE dokázal už ve 200. generaci najít většinu zpracovaného dřevo na mapě, jak můžeme vidět na grafu DE v obrázku \ref{obr04:WWalkESvsDE}. ES neoptimalizovalo v tomto případě příliš rychle a uvízlo v lokalním optimu, jak ukazuje křivka ES od 200. generace. Nejlepší jedinec optimalizovaný pomocí DE byl schopen nalézt až 3x více zpracovaného dřeva než ten pomocí ES. Nutno dodat, že náhodná pozice entit na mapě se liší pro ES a DE. Zkoušel jsme, proto měnit seed u generátoru náhodných čísel a výsledky odpovídaly grafům v \ref{obr04:WWalkESvsDE}..
 		\begin{figure}[t]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerWalkMem}
 		\caption{Wood Worker chůze - porovnání průměrné fitness ES a DE}
@@ -276,6 +276,7 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 	
 	\subsubsection{Scout kácení - nastavení experimentu}
 	Dalším úkolem pro Scout robota bylo nalezené stromy pokácet. Použil jsem tedy optimalizované neuronové sítě z experimentu Scout chůze a tentokrát přidal do fitness pozitivní body za pokácené stromy. Refaktor je o mnoho kratší než line sensory, proto pro kácení musí robot ke stromu přijet blíže. Abych ještě více vylepšil pohyb po mapě, tak každá kolize byla potrestána negativním bodem do fitness. Přesné nastavení obsahuje následující tabulka.
+	\par
 	\begin{table}[h]\centering
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -308,15 +309,14 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 		\caption{Wood Scout kácení - nastavení experimentu}
 	\end{table}
 	Dále můžete vidět grafy popisující průběh fitness u DE, ES a porovnání jejich průměrné fitness. Z \ref{obr04:CutESvsDE} můžeme vyčíst, že použité DE více cílí na exploataci a ES na exploraci. DE jsou díky tomu mnohem náchylnější k uvíznutí v lokálním optimu.  Fitness se v tomto případě skládá ze dvou složek, pro jedince bylo mnohem jednodušší stromy objevovat a náhodou nějaké pokácet. V prvních 650 generacích DE se tedy drží tento trend a pak se objeví jedinci, kteří cílí na kácení. Toto chování se rychle rozšířilo a fitness celé populace okolo 700. generace prudce vzrostla. Zatímco fitness v ES rostla postupně, ale nedosáhla tak vysoké úrovně jako DE. Nejlepší jedinci pokácí více než 60\% stromů. 
-	\begin{figure}[t]\centering
+	\newpage
+	\begin{figure}[h]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WCuttorCutMem}
 		\caption{Wood Scout kácení - porovnání průměrné fitness ES a DE}
 		\label{obr04:CutESvsDE}
-	\end{figure}
-	\clearpage
-	
+	\end{figure}	
 	\subsubsection{Worker sbírání - nastavení experimentu}
-	Worker v rámci zadání musí řešit více složitý úkol než Scout robot. Celý proces uložení se skládá nejdříve z nalezení dřeva, naložení, poté přesunu místa pro skladování a nakonec vyložení. Optimalizace fungovala lépe po rozdělení na část nakládání, kterou se zabývá tento experiment a na část vykládání, na kterou se podíváme později.  Ve fitness jsem se soustředil na správné entity v kontejneru a na jejich počet. Abych nezahodil dobré chování, které dokáže dřevo i ukládat, za uložení dřeva dostali roboti také pozitivní body. Níže můžete vidět tabulku s konkrétním nastavením. \par
+	Worker v rámci zadání musí řešit více složitý úkol než Scout robot. Celý proces uložení se skládá nejdříve z nalezení dřeva, naložení, poté přesunu do místa pro skladování a nakonec vyložení. Optimalizace fungovala lépe po rozdělení na část nakládání, kterou se zabývá tento experiment a na část vykládání, na kterou se podíváme později.  Ve fitness jsem se soustředil na správné entity v kontejneru a na jejich počet. Abych nezahodil dobré chování, které dokáže dřevo i ukládat, za uložení dřeva dostali roboti také pozitivní body. Níže můžete vidět tabulku s konkrétním nastavením. \par
 	\begin{table}[h]\centering
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -395,17 +395,16 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 		\caption{Wood Worker ukládání doprostřed  - nastavení experimentu}
 		\label{tab04:WorkerStore}
 	\end{table}
-   	Lokace skladovacího místa působila robotům velké obtíže, proto růst fitness byl mnohem mírnější než u předchozích experimentů. DE dokázala už optimalizované chování rychleji vylepšovat narozdíl od ES, která doplácí na velkou míru explorace viz. \ref{obr04:StockESvsDE}. Nejlepší jedinci jsou ovšem už schopni plnit obstojně hlavní úkol Worker robotů. Objevila se obtíž s efektivním urovnáním zpracovaného dřeva na skladovací místo. Pokoušel jsem se tento problém řešit, přidáním kladných bodů za menší vzdálenost mezi středem skladovacího místa a uloženým dřevem. Nesáhl jsem, však lepších výsledků než v tomto experimentu. 
-	\begin{figure}[t]\centering
+   	Lokace skladovacího místa působila robotům velké obtíže, proto růst fitness byl mnohem mírnější než u předchozích experimentů. DE dokázala už optimalizované chování rychleji vylepšovat narozdíl od ES, která doplácí na velkou míru explorace viz. \ref{obr04:StockESvsDE}. Nejlepší jedinci jsou ovšem už schopni plnit obstojně hlavní úkol Worker robotů. Objevila se obtíž s efektivním urovnáním zpracovaného dřeva na skladovací místo. Pokoušel jsem se tento problém řešit přidáním kladných bodů za menší vzdálenost mezi středem skladovacího místa a uloženým dřevem. Nedosáhl jsem však lepších výsledků než v tomto experimentu. 
+   	\newpage
+	\begin{figure}[h]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/DEvsES/WorkerStockMem}
 		\caption{Wood Worker ukládání doprostřed  - porovnání průměrné fitness ES a DE}
 		\label{obr04:StockESvsDE}
 	\end{figure}
-
-
-	\clearpage
 	\subsubsection{Kooperace  hlavní úkol  - nastavení experimentu}
 	V rámci posledního úkolu jsem složil už optimalizovaná chování dohromady, abych vytvořil heterogenní hejno řešící problém Wood Scene scénáře. Spojoval jsem náhodné chování pro Scout robota s náhodným u Worker robota, aby se našla nejlepší jejich kombinace, tak bylo nutné navýšit počet generací na 4000. Fitness funkce(\ref{tab04:Coop}) byla v tomto případě průnik posledních experimentů Worker ukládání doprostřed a Scout kácení. 
+	\newpage
 	\begin{table}[h]\centering   
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -449,13 +448,13 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 		\caption{Wood hlavní úkol  - porovnání průměrné fitness ES a DE}
 		\label{obr04:CoopESvsDE}
 	\end{figure}
-	\clearpage
+	\newpage
 	
 	\subsection*{Výsledky Experimentu}
-	Výsledkem posloupnosti všech podúkolů vzniklo poměrně velmi komplexní chování. Finální neuronové sítě ať u Worker robotů, či Scout robotů se zvládají vyhýbat překážkám. Scout roboti kácí stromy, které naleznou. Worker roboti nakládají zpracované dřevo, pokud na něj narazí, když zachytí signál úložiště, tak vyloží aktuální náklad. Některá chování byla také schopna předejít zaseknutí o nějaký shluk objektů, pokud byl  jejich pohyb vpřed neúspěšný, tak po několika pokusech roboti vycouvali a vydali se cestou okolo kritického místa. U většiny se také objevilo použití rádiových signálů jako prostředku pro největší možné rozptýlení po mapě, jakmile zachytí cizí signál vydají se opačným směrem. Průběh fitness jednotlivých podúkolů je zachycena na předchozích grafech \ref{obr04:Walk} až \ref{obr04:StockES}. V tabulce \ref{tab04:WoodStat} můžete vyčíst průměrné počty nalezených stromů, uskladněného materiálu, apod ze 100 simulací mapy. 
+	Výsledkem posloupnosti všech podúkolů vzniklo poměrně velmi komplexní chování. Finální neuronové sítě ať u Worker robotů, či Scout robotů se zvládají vyhýbat překážkám. Scout roboti kácí stromy, které naleznou. Worker roboti nakládají zpracované dřevo, pokud na něj narazí, když zachytí signál úložiště, tak vyloží aktuální náklad. Některá chování byla také schopna předejít zaseknutí o nějaký shluk objektů, pokud byl  jejich pohyb vpřed neúspěšný, tak po několika pokusech roboti vycouvali a vydali se cestou okolo kritického místa. U většiny se také objevilo použití rádiových signálů jako prostředku pro největší možné rozptýlení po mapě, jakmile zachytí cizí signál vydají se opačným směrem. Průběh fitness jednotlivých podúkolů je zachycena na předchozích grafech \ref{obr04:WalkESvsDE} až \ref{obr04:StockESvsDE}. V tabulce \ref{tab04:WoodStat} můžete vyčíst průměrné počty nalezených stromů, uskladněného materiálu, apod ze 100 simulací mapy. 
 	
 	Ač se jedná o nejlepší dosažené chování objevují se nějaké nedostatky. Worker robot se občas dostane do pozice, ze které není schopen vyjet, jedná se především o kolize s vícero entitami. Tento problém by mohlo vyřešit použití vícevrstvých sítí či evolučního algoritmu evolvujícího i architekturu sítě. Skládání zpracovaného materiálu po obvodu skladiště není efektivní způsob, jak do něj naskládat maximální množství dřeva. V tomto případě jsem se snažil vylepšit tento nedostatek promítnutím vzdálenosti dřeva od středu skladiště do celkové fitness, ovšem bez znatelného zlepšení v chování. Nejspíše by bylo třeba použít rádiový senzor poskytující více informací o směru k zachycenému signálu. 
-	
+	\clearpage
 		\begin{table}[h]\centering   
 		\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 			\toprule
@@ -489,7 +488,7 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 		\caption{Wood Scene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
 		\label{tab04:WoodStat}
 	\end{table}
-	\newpage 
+	\clearpage 
 	\begin{figure}[p]\centering
 		\includegraphics[width=\columnwidth]{../img/WoodMap/pictures/end.png}
 		\caption{Wood nejlepší jedinec - 10000 iterací simulace}
@@ -502,17 +501,17 @@ U každého experimentu uvedu myšlenku, tabulku s přesným nastavením a poté
 	\end{figure}
 	\clearpage
 \section{Mineral Scene}
-Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti, kteří mají různé cíle. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
+Tento scénář si bere jako inspiraci strategické hry např. Starcraft \citep*{starcraft} a hypotetické přežití robotů na cizí planetě, kde si budou muset obstarat vlastní nerostné suroviny pro běh. Opět je klíčová spolupráce mezi roboty, kdy roboti mají různé cíle. Jejich společným cílem je maximalizovat množství vyrobeného paliva.
 \par 
-V Mineral Scene scénáři se palivo se vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot \textit{Refactor}. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. 
+V Mineral Scene scénáři se palivo vyrábí z minerálů, které jsou náhodně rozmístěny po mapě. Transformaci minerálu na palivo dokáže pouze největší robot \textit{Refactor}. V mapě se dále nacházejí překážky a volné palivo, které mohou roboti ihned po sebrání použít. V rámci hlavního cíle roboti musí nejdříve nalézt minerál, Refactor jej přeměnit a pak případně předat ostatním robotům. 
 \par
-V Mineral Scene figurují dohromady tři rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot \textit{Mineral Scout} disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti \textit{Mineral Worker} se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva) označen v simulaci jako Mineral Refactor se přemisťuje nejpomaleji, má možnost přeměnit minerál na palivo. 
+V Mineral Scene figurují dohromady tři rozliční roboti, všichni potřebují pro pohyb odlišné množství paliva. Nejmenší robot \textit{Mineral Scout} disponuje pouze senzory k exploraci prostředí a rádiovým vysílačem pro komunikaci se skupinou, opět má unikátní kód  jako v předchozím scénáři. Robot střední velikosti \textit{Mineral Worker} se pohybuje o něco pomaleji než Mineral Scout, ale umí přesouvat objekty i více najednou. Robot pro přeměnu minerálu (suroviny na výrobu paliva), označen v simulaci jako Mineral Refactor, se přemisťuje nejpomaleji a má možnost přeměnit minerál na palivo. 
 \par
-Jedná se o složitější cíl než v předchozím scénáři. V mapě se vyskytují navíc překážky a celkový počet entit na mapě je vyšší. Zatímco ve Wood Scene je místo pevně místo přesunu surovin pěkně dané, zde se musí transportní roboti hledat Refaktor roboty.
+Jedná se o složitější cíl než v předchozím scénáři. V mapě se vyskytují navíc překážky a celkový počet entit na mapě je vyšší. Zatímco ve Wood Scene je místo přesunu surovin pevně dané, zde musí transportní roboti hledat Refaktor roboty.
 \par 
 Více detailů u obrázků \ref{obr04:MineralSceneRandomStart}.
 \newpage
-Na obrázku \ref{obr04:MineralSceneRandomStart} je vyobrazena vizualizace daného scénáře. Roboti jsou vybarveni červenou barvou a jednotlivé druhý od sebe lze snadno rozeznat podle velikosti (nejmenší Scout robot, poté Worker robot a největší Refaktor robot), Zelené kroužky představují minerály, pokud je minerál objevený hejnem obarví se žlutě. Šedivou barvou jsou vyvedeny překážky a palivo černou.
+Na obrázku \ref{obr04:MineralSceneRandomStart} je vyobrazena vizualizace daného scénáře. Roboti jsou vybarveni červenou barvou a jednotlivé druhy od sebe lze snadno rozeznat podle velikosti (nejmenší Scout robot, poté Worker robot a největší Refaktor robot), Zelené kroužky představují minerály pokud je minerál objevený hejnem obarví se žlutě. Šedivou barvou jsou vyvedeny překážky a černou palivo.
 
 \begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralRandom.png}
@@ -521,7 +520,7 @@ Na obrázku \ref{obr04:MineralSceneRandomStart} je vyobrazena vizualizace danéh
 \end{figure}
 \clearpage 
 \subsection*{Roboti}
-V Mineral Scene scénáři se vyskytuje 12 robotů. V hejnu se vyskytují 3 různé druhy robotů: Scout robot, Worker robot, Refaktor robot. V implementaci jsou odlišeni od předchozího experimentu prefixem Mineral. Jejich ovládání stejně jako v předchozím experimentu probíhá pomocí neuronových sítí. Jedinec má opět podobu vektoru vah jednotlivých neuronových sítí a hodnoceno je celé hejno. Každý robot má nádrž na palivo a každá iterace mapy ho stojí jednu jednotka paliva. Nyní popíšeme jednotlivé roboty.
+V Mineral Scene scénáři se vyskytuje 12 robotů. V hejnu se vyskytují 3 různé druhy robotů: Scout robot, Worker robot, Refaktor robot. V implementaci jsou odlišeni od předchozího experimentu prefixem Mineral. Jejich ovládání stejně jako v předchozím experimentu probíhá pomocí neuronových sítí. Jedinec má opět podobu vektoru vah jednotlivých neuronových sítí a hodnoceno je celé hejno. Každý robot má nádrž na palivo a každá iterace mapy ho stojí jednu jednotku paliva. Nyní popíšeme jednotlivé roboty.
 \subsubsection{Scout robot}
 Jak název napovídá Scout robot prozkoumává mapu. Oproti Wood Scene nemá žádnou další funkci. Ze všech robotů se pohybuje nejrychleji a díky malé velikosti dokáže projíždět i užšími prostory. Informace o prostředí získává pomocí úsečkových senzorů a velkého kruhového senzoru, který poskytuje počet jednotlivých druhů entit v celém okruhu. Pro komunikaci se zbytkem používá rádiový signál s kódem 0. 
 \par  
@@ -606,7 +605,7 @@ Mineral Worker roboti zastupují úlohu transportu minerálů. Pohybují se rych
 \end{table}
 \clearpage
 \subsubsection{Refaktor robot}
-Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na jednotku paliva. Pro přeměnu musí být minerál připraven na vrcholu kontejneru a po procesu přeměny se místo minerálu objeví palivo. Refaktor robot je však oproti ostatním robotů značně neohrabaný, zvláště kvůli jeho velikosti. Poloměr Refaktor robota odpovídá dvěma Worker robotům (resp. čtyřem Scout robotům). Pohybuje se z nich také nejpomaleji. Jeho rádiové signály nesou kód 2. Nakladače (vykladače) má do všech čtyrech světových směrů. 
+Nenahraditelnou roli zastává Mineral Refaktor, dokáže totiž měnit minerál na jednotku paliva. Pro přeměnu musí být minerál připraven na vrcholu kontejneru a po procesu přeměny se místo minerálu objeví palivo. Refaktor robot je však oproti ostatním robotů značně neohrabaný, zvláště kvůli jeho velikosti. Poloměr Refaktor robota odpovídá dvěma Worker robotům (resp. čtyřem Scout robotům). Pohybuje se z nich také nejpomaleji. Jeho rádiové signály nesou kód 2. Nakladače (vykladače) má do všech čtyrech světových směrů. 
 \par  
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
@@ -653,7 +652,7 @@ Nenahraditelnou roli zastává Mineral Scene, dokáže totiž měnit minerál na
 \end{table}
 \clearpage
 \subsection*{Vyhodnocování Fitness}
-Fitness funkce pro Mineral Scene scénář jsem, po dobrých zkušenostech z předchozího experimentu, použil vážený součet následujících charakteristik mapy po konci simulace. Tento součet je specifický pro každý podúkol zvlášť. Kvůli komplexnosti toho úkolu a velikosti hejna v jednotlivých podúkolech nevystupují roboti vždy v plném počtu, ale nejdříve se optimalizuje chování pro pár jedinců od každého druhu. I tak bylo potřeba zmenšit velikost populace pro rozumnou dobu času běhu. Pozitivní hodnocení roboti získávali za: 
+Jako fitness funkci pro Mineral Scene scénář jsem, po dobrých zkušenostech z předchozího experimentu, použil vážený součet následujících charakteristik mapy po konci simulace. Tento součet je specifický pro každý podúkol zvlášť. Kvůli komplexnosti tohoto úkolu a velikosti hejna v jednotlivých podúkolech nevystupují roboti vždy v plném počtu, ale nejdříve se optimalizuje chování pro pár jedinců od každého druhu. I tak bylo potřeba zmenšit velikost populace pro rozumnou dobu času běhu. Pozitivní hodnocení roboti získávali za: 
 \begin{itemize}
 	\item \textit{objevené minerály} - minerály o které zavadil line senzor
 	\item \textit{uložené minerály} - minerály nacházející se v kontejnerech robotů 
@@ -666,15 +665,18 @@ A negativní pouze za:
 	\item \textit{kolize} - počet pokusů o pohyb který by vedl ke kolizi
 \end{itemize}
 \subsection*{Podúkoly}
-Podle výsledků předchozího experimentu jsem se tentokrát výhradně soustředil na DE, které vycházelo v celkovém důsledku jako lepší.
+Podle výsledků předchozího experimentu jsem se tentokrát výhradně soustředil na DE, které vycházelo lépe.
 \par 
-Opět jsem vygeneroval první neuronové sítě náhodně i další kroky jsou podobné jako v předchozím případě, nejdříve jsem navrhl fitness funkce pro učení chůze, vyhýbání, sbírání objektů a jejich skládání. Dále jsem však nebyla zřejmá posloupnost jednotlivých úkonů, proto fitness funkce odpovídá už výslednému cíli, množství vytvořeného paliva a sebraným minerálů.
+Opět jsem vygeneroval první neuronové sítě náhodně i další kroky jsou podobné jako v předchozím případě, nejdříve jsem navrhl fitness funkce pro učení chůze, vyhýbání, sbírání objektů a jejich skládání. Dále však nebyla zřejmá posloupnost jednotlivých úkonů, proto fitness funkce odpovídá už výslednému cíli, množství vytvořeného paliva a sebraným minerálů.
 \par 
-Od následující stránky se budu soustředit na jednotlivé podúkoly. U každého metaúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhem fitness, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  y osa zobrazuje hodnotu fitness, x osa odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. 
+Od následující stránky se budu soustředit na jednotlivé podúkoly. U každého podúkolu bude uveden krátký popis cíle jednotlivého experimentu, obrázek s grafy průběhu fitness, stručné shrnutí chování a grafů s průběhy. Grafy budou vždy stejného formátu,  osa $y$ zobrazuje hodnotu fitness, osa $x$ odpovídá číslu generace, pro lepší čitelnost jsou generace sdruženy po 10. 
 \clearpage
 
 \subsubsection{Scout chůze - nastavení experimentu}
-Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Opět jsem roboty oddělil, aby optimalizace neupřednostňovala ty rychlejší. Náhodně vygenerované neuronové sítě pro řízení Scout robotů. Poté jsou optimalizovány pomocí fitness, která oceňuje chování podle počtu objevených minerálů.
+Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Opět jsem roboty oddělil, aby optimalizace neupřednostňovala ty rychlejší. Nejprve byly vygenerované náhodné neuronové sítě pro řízení Scout robotů. Poté byly optimalizovány pomocí fitness, která oceňuje chování podle počtu objevených minerálů.
+\par
+Z grafu \ref{obr04:MineralScoutWalk} lze vyčíst, že ani větší množství entit v mapě nevadilo pro optimalizaci slušného chování pro vyhýbání se překážkám a prohledávání mapy. Nejlepší chování dokáže odhalit okolo 75\% minerálů na mapě.
+\par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -684,19 +686,13 @@ Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Op
 		Počet generací: & 1000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
-	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
-		\textbf{Fitness funkce}\\
+		\textbf{Fitness funkce a objekty na mapě}\\
 		\midrule
 		Hodnota nalezeného minerálu &  100 \\
 		Ostatní hodnoty: & 0\\
-		\toprule
-		\textbf{Objekty na mapě}\\
-		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
@@ -706,19 +702,16 @@ Stejně jako u předchozího scénáře, jsem roboty nejdříve učil pohybu. Op
 	\caption{Mineral Scout chůze - nastavení experimentu}
 	\label{tab04:MineralScoutWalk}
 \end{table}
-Z grafu \ref{obr04:MineralScoutWalk} lze vyčíst, že ani větší množství entit v mapě nevadilo pro optimalizaci slušného chování pro vyhýbání se překážkám a prohledávání mapy. Nejlepší chování dokáže odhalit okolo 75\% minerálů na mapě.
-\clearpage
-\begin{figure}[t]\centering
-	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralScoutWalk}
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/MineralMap/MineralScoutWalk}
 	\caption{Mineral Scout chůze -  průběh fitness DE}
 	\label{obr04:MineralScoutWalk}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
-
 \subsubsection{Worker chůze - nastavení experimentu}
-I pro Worker robota bylo potřeba optimalizovat chůzi v mapě. Stejně jako u Scout robotů byli Worker roboti odměňovány za nalezené Minerály. 
+I pro Worker robota bylo potřeba optimalizovat chůzi v mapě. Stejně jako u Scout robotů byli Worker roboti odměňováni za nalezené minerály. 
 \par
+Nejlepší chování u Worker robota dokáže objevit více než čtvrtinu minerálů, jak ukazuje obrázek \ref{obr04:MineralWorkerWalk} Což je také uspokojivý výsledek, přihlédneme-li k tomu, že Scout robot má poloviční rychlost a velikost než Worker robota. Navíc díky delším senzorům objevuje Scout robot objekty na větší vzdálenosti. 
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -734,34 +727,29 @@ I pro Worker robota bylo potřeba optimalizovat chůzi v mapě. Stejně jako u S
 	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
-		\textbf{Fitness funkce}\\
+		\textbf{Fitness funkce a objekty na mapě}\\
 		\midrule
 		Hodnota nalezeného minerálu &  100 \\
 		Ostatní hodnoty: & 0\\
-		\toprule
-		\textbf{Objekty na mapě}\\
-		\midrule
 		Počet minerálů: & 300\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\caption{Mineral Worker chůze - nastavení experimentu}
 	\label{tab04:MineralWorkerWalk}
 \end{table}
-Nejlepší chování u Worker robota dokáže objevit více než čtvrtinu minerálů, jak ukazuje obrázek \ref{obr04:MineralWorkerWalk} Což je také uspokojivý výsledek, přihlédneme-li k tomu, že Scout robot má poloviční rychlost a velikost než Worker robota. Navíc díky delším senzorům objevuje Scout robot objekty na větší vzdálenosti. 
-\clearpage
-\begin{figure}[t]\centering
-	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerWalk}
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/MineralMap/MineralWorkerWalk}
 	\caption{Mineral Worker chůze -  průběh fitness DE}
 	\label{obr04:MineralWorkerWalk}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
+
 \clearpage
 
 \subsubsection{Worker sbírání - nastavení experimentu}
-Stejně jako ve Wood Scene bylo klíčové sbírání už zpracováného dřeva, tak v Mineral Scene jsem cílil na maximální počet sebraného paliva. Na rozdíl od Wood Scene však není zcela jasné, kam ukládat sebrané minerály. Aby v budoucích podúkolech umisťovali roboti, co nejblíže k Refaktor robotům, přidal jsem proto prozatímně do středu mapy pomocný rádiový signál se stejným kódem jako mají Refaktor roboti. 
+Na rozdíl od Wood Scene zde není zcela jasné, kam mají Worker roboti ukládat sebrané minerály. Aby je v budoucích podúkolech umisťovali roboti, co nejblíže k Refaktor robotům, přidal jsem prozatímně do středu mapy pomocný rádiový signál se stejným kódem jako mají Refaktor roboti. 
+\par
+Roboti v prvních 500 generacích zaplní své kontejnery minerály, což může pozorovat na  grafu \ref{obr04:MineralWorkerPickUp}. Dále dokonce dováželi roboti do středu několik minerálů. 
 \par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -772,44 +760,35 @@ Stejně jako ve Wood Scene bylo klíčové sbírání už zpracováného dřeva,
 		Počet generací: & 3000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
-		\textbf{Fitness funkce}\\
+		\textbf{Fitness funkce a objekty na mapě}\\
 		\midrule
 		Pomocný rádiový signál: & Ano\\
 		Hodnota nalezeného minerálu &  1\\
 		Hodnota minerálu v pomoc. signálu & 1010\\ 
 		Hodnota uložených minerálů & 1000\\
 		Ostatní hodnoty: & 0\\
-		\toprule
-		\textbf{Objekty na mapě}\\
-		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 100\\
 		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\caption{Mineral Worker sbírání - nastavení experimentu}
 	\label{tab04:MineralWorkerPickUp}
 \end{table}
-Roboti v prvních 500 generacích zaplní své kontejnery minerály, což může pozorovat na  grafu \ref{obr04:MineralWorkerPickUp}. Dále dokonce dováželi roboti do středu několik minerálů. 
-\clearpage
-\begin{figure}[t]\centering
-	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerPickup}
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/MineralMap/MineralWorkerPickup}
 	\caption{Mineral Worker sbírání - průběh fitness}
 	\label{obr04:MineralWorkerPickUp}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
-
 \subsubsection{Worker skládání - nastavení experimentu}
-V dalším metaúkolu jsem se soustředil výhradně na skládání minerálů do středu na místo označeném kódem 2. Konkrétní nastavení experimentu popisuje jako tabulka \ref{tab04:MineralWorkerStore}. Oproti předchozímu scénáři optimalizuji Workery v plném počtu, aby se optimalizovala komunikace a rozptylování Worker robotů. 
+V dalším metaúkolu jsem se soustředil výhradně na skládání minerálů do středu na místo označené kódem 2. Konkrétní nastavení experimentu popisuje tabulka \ref{tab04:MineralWorkerStore}. Oproti předchozímu scénáři optimalizuji Workery v plném počtu, aby se optimalizovala komunikace a rozptylování Worker robotů. 
 \par  
+Výsledek tohoto podúkolu odpovídá Wood Scene - sbírání, roboti dokázali do středu převést přibližně 10 minerálů, opět měli obtíže s uspořádáním. Vizuální výsledek potvrzuje graf \ref{obr04:MineralWorkerStore}.
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -819,13 +798,10 @@ V dalším metaúkolu jsem se soustředil výhradně na skládání minerálů d
 		Počet generací: & 6000\\
 		Počet iterací map & 1000\\
 		Velikost generace(DE) & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
-	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
-		\textbf{Fitness funkce}\\
+		\textbf{Fitness funkce a objekty na mapě}\\
 		\midrule
 		Pomocný rádiový signál: & Ano\\
 		Hodnota nalezeného minerálu &  1\\
@@ -844,19 +820,18 @@ V dalším metaúkolu jsem se soustředil výhradně na skládání minerálů d
 	\caption{Mineral Worker skládání - nastavení experimentu}
 	\label{tab04:MineralWorkerStore}
 \end{table}
-Výsledek tohoto podúkolu odpovídá Wood Scene - sbírání, roboti dokázali do středu převést přibližně 10 minerálů, opět měli obtíže s uspořádáním. Vizuální výsledek potvrzuje graf \ref{obr04:MineralWorkerStore}.
 \clearpage
-\begin{figure}[t]\centering
+\begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerPickup}
 	\caption{Mineral Worker skládání -  průběh fitness DE}
 	\label{obr04:MineralWorkerStore}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
-\clearpage
-
+\par
 \subsubsection{Refaktor chůze - nastavení experimentu}
 Poslední metaúkol zabývající chůzí byl pro Refaktor robota i v jeho případě byl hodnocen podle počtu nalezených minerálů jako u ostatních robotů. Tabulka \ref{obr04:MineralRefaktorWalk} ukazuje přesné nastavení metaúkolu.
 \par
+Už v 200 generaci dokážou Refaktor robot odhalí jednu pětinu minerálů, jak je vidět v průběhu grafu na \ref{obr04:MineralRefaktorWalk}. Ač podle fitness se zdá, že roboti prohledávají mapu a vyhýbají se překážkám. Po krátkém zkoumání jejich chování jsem zjistil, že používají nakladače a přehazují překážky za sebe.
+\newline
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -888,18 +863,16 @@ Poslední metaúkol zabývající chůzí byl pro Refaktor robota i v jeho pří
 	\caption{Mineral Refaktor chůze - nastavení experimentu}
 	\label{tab04:MineralRefaktorWalk}
 \end{table}
-Už v 200 generaci dokážou Refaktor robot odhalí jednu pětinu minerálů, jak je vidět v průběhu grafu na \ref{obr04:MineralRefaktorWalk}. Ač podle fitness se zdá, že roboti prohledávají mapu a vyhýbají se překážkám. Po krátkém zkoumání jejich chování jsem zjistil, že používají nakladače a přehazují překážky za sebe.
-\clearpage
 \begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralRefaktorWalk}
 	\caption{Mineral Refaktor chůze - průběh fitness u DE}
 	\label{obr04:MineralRefaktorWalk}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
-
 \subsubsection{Refaktor Worker kooperace - nastavení experimentu}
-Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Workera robota. Zamýšlel jsem, že Worker roboti seberou minerály a budou je přibližovat k Refaktor robotovi, který je bude přetvářet na palivo. Tomuto účelu jsem přizpůsobil ohodnocení fitness, jedinci jsou nejvíce oceněni za přeměněné palivo vložené do mapy či už v nádrži. Další podrobnosti v tabulce \ref{obr04:MineralRefactorWorkerCoop} 
+Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Workera robota. Zamýšlel jsem, že Worker roboti seberou minerály a budou je přibližovat k Refaktor robotovi, který je bude přetvářet na palivo. Tomuto účelu jsem přizpůsobil ohodnocení fitness, jedinci jsou nejvíce oceněni za přeměněné palivo vložené do mapy nebo už v nádrži. Další podrobnosti v tabulce \ref{obr04:MineralRefactorWorkerCoop} 
+\par
+Ač se podle grafu \ref{obr04:MineralRefactorWorkerCoop}, že optimalizaci obou robotů proběhla úspěšně. Ale po vizuální kontrole jsem zjistil, že se zlepšoval pouze Refaktor robot. EA však v rámci nejlepších chování nezapojila Worker robota.
 \par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -935,18 +908,17 @@ Jako první kooperativní metaúkol jsem zvolil spolupráci Refaktor robota s Wo
 	\caption{Mineral Refaktor Worker kooperace - nastavení experimentu}
 	\label{tab04:MineralRefactorWorkerCoop}
 \end{table}
-Ač se podle grafu \ref{obr04:MineralRefactorWorkerCoop}, že optimalizaci obou robotů proběhla úspěšně. Ale po vizuální kontrole jsem zjistil, že se zlepšoval pouze Refaktor robot. EA však v rámci nejlepších chování nezapojila Worker robota.
 \clearpage
 \begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralWorkerRefaktorCoop}
 	\caption{Mineral Refaktor Worker kooperace -  průběh fitness DE}
 	\label{obr04:MineralRefactorWorkerCoop}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. 
 \clearpage
 \subsubsection{ Hlavní úkol kooperace - nastavení experimentu}
 V rámci finálního podúkolu byla fitness nastavena, aby odpovídala hlavnímu cíli scénáře.  Oceňuje roboty pouze za přetvořené palivo a palivo v nádržích. V tomto podúkolu už figurují všechny druhy robotů. Další podrobnosti jsou zaneseny v tabulce \ref{tab04:MineralFullCoop}. 
 \par
+Křivka opět ukazuje  vzrůst fitness, hodnota se ustaluje kolem $4.1 \cdot10^7$ . Při přeměně minerálu vznikne 100 jednotek paliva. Roboti dostali na začátku simulace více paliva než potřebovali na běh, tohoto paliva jim zbylo 8 500 jednotek (ve fitness $0.85\cdot 10^7$ ). Takže výsledná fitness tohoto experimentu odpovídá přibližně 300 zpracovaným minerálům. Nejlepšímu chování se budeme věnovat v rámci výsledků experimentů \ref{subsec:MineralResult}.
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -957,47 +929,37 @@ V rámci finálního podúkolu byla fitness nastavena, aby odpovídala hlavnímu
 		Počet generací: & 2000\\
 		Počet iterací map & 1500\\
 		Velikost generace(DE) & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
-		\textbf{Fitness funkce}\\
+		\textbf{Fitness funkce a objekty na mapě}\\
 		\midrule
 		Hodnota přeměného paliva & 1000\\ 
 		Hodnota paliva v nádržích & 1000\\
 		Ostatní hodnoty: & 0\\
-		\toprule
-		\textbf{Objekty na mapě}\\
-		\midrule
 		Počet minerálů: & 400\\
 		Počet překážek & 100\\
 		Počet paliva & 0\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\caption{Mineral Refaktor Worker kooperace - nastavení experimentu}
 	\label{tab04:MineralFullCoop}
 \end{table}
-Křivka opět ukazuje  vzrůst fitness, hodnota se ustaluje kolem $4.1 \cdot10^7$ . Při přeměně minerálu vznikne 100 jednotek paliva. Roboti dostaly na začátku simulace více paliva než potřebovali na běh, tohoto paliva jim zbylo 8 500 jednotek (ve fitness $0.85\cdot 10^7$ ). Takže výsledná fitness tohoto experimentu odpovídá přibližně 300 zpracovaným minerálů. Nejlepšímu chování se budeme věnovat v rámci výsledků experimentů \ref{subsec:MineralResult}.
-\clearpage
+\newpage
 \begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/MineralMap/MineralFullCoop}
 	\caption{Mineral Refaktor Worker kooperace -  průběh fitness DE}
 	\label{obr04:MineralFullCoop}
 \end{figure}
-Modrá křivka odpovídá průměrné hodnotě fitness, světle modře je pak vybarvena oblast daná průměrem $\pm$ směrodatná odchylka fitness. Generace (osa y) jsou sdruženy po 10. Fitness je vydělena $10^7$, aby popisky nezabíraly příliš mnoho místa. 
-\clearpage
+
 \subsection*{Výsledky Experimentu}
 \label{subsec:MineralResult}
-Ač předchozí graf fitness \ref{obr04:MineralFullCoop} vypadal velmi optimisticky, výsledky \ref{tab04:MineralStat} z vícero běhů na různých mapách jim neodpovídají . 
+Ač předchozí graf fitness \ref{obr04:MineralFullCoop} vypadal velmi optimisticky, výsledky \ref{tab04:MineralStat} z vícero běhů na různých mapách jim neodpovídají.
 \par 
-Po dlouhém pozorování optimalizovaných jedinců jsem dospěl k závěru, že optimalizace probíhá ovšem u takto složitých úkolů se soustředila pouze na Refaktor robota.  A to z jednoduchého důvodu, protože sám o sobě dokázal nejvíce ovlivňovat fitness funkci pro optimalizaci byl tutíž nejvhodnější volbou. Dále jelikož úkony spojené s hlavním cílem scénářem byly velmi složité, tak se chování optimalizovalo v závislosti na aktuálně vygenerované mapě. Každému experimentu odpovídá jedna náhodně generovaná mapa kvůli jednoznačnosti ohodnocení fitness. Nicméně v jednodušších podúkolech dokázala DE vyevolvovat univerzální a úspěšné jedince. V další optimalizaci je na obtíž, že Refaktor robot zvládá všechny úkony sám a díky tomu by bylo potřeba navrhnout fitness reflektující tento hlavní problém, tak aby nutila ostatní roboty k činnosti. Například v rámci vah velkou hodnotou penalizovat malý pohyb menších robotů, případně hodnotit jen minerály objevené menšími roboty.
+Po dlouhém pozorování optimalizovaných jedinců jsem dospěl k závěru, že optimalizace se u takto složitých úkolů soustředila pouze na Refaktor robota.  A to z jednoduchého důvodu, protože sám o sobě dokázal nejvíce ovlivňovat fitness funkci pro optimalizaci byl tutíž nejvhodnější volbou. Dále jelikož úkony spojené s hlavním cílem scénáře byly velmi složité, tak se chování optimalizovalo v závislosti na aktuálně vygenerované mapě. Každému experimentu odpovídá jedna náhodně generovaná mapa kvůli jednoznačnosti ohodnocení fitness. Nicméně v jednodušších podúkolech dokázala DE vyevolvovat univerzální a úspěšné jedince. V další optimalizaci je na obtíž, že Refaktor robot zvládá všechny úkony sám a díky tomu by bylo potřeba navrhnout fitness reflektující tento hlavní problém, tak aby nutila ostatní roboty k činnosti. Například v rámci vah velkou hodnotou penalizovat malý pohyb menších robotů, případně hodnotit jen minerály objevené menšími roboty.
 \par 
-V tomto případě ani nepřikládám obrázek s koncem běhu tohoto chování, neboť je velmi podobný tomu z  náhodného běhu. Všechny chování nejlepší generace si lze prohlédnout v programu na přiloženém CD.
-\clearpage
-Pro otestování chování jsem použil mapu s nastavením podle tabulky \ref{tab04:MineralStat}. Jedná se opět o 100 různých běhů a v tabulce je možné vidět průměrné hodnoty charakteristik výsledku.
+Pro testovací běhy jsem použil mapu s nastavením podle tabulky \ref{tab04:MineralSetStat}. Jedná se opět o 100 různých běhů a v tabulce je možné vidět průměrné hodnoty charakteristik výsledku.
+\newpage
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1018,7 +980,9 @@ Pro otestování chování jsem použil mapu s nastavením podle tabulky \ref{ta
 		\multicolumn{2}{l}{}
 	\end{tabular}
 	\caption{Mineral Scene - nastavení mapy pro testovací experiment}
+	\label{tab04:MineralSetStat}
 \end{table}
+Výsledky testovacích běhů jsou zaneseny v tabulce \ref{tab04:MineralStat}. 
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1037,11 +1001,13 @@ Pro otestování chování jsem použil mapu s nastavením podle tabulky \ref{ta
 	\caption{Mineral Scene - výsledky simulace nejlepšího jedince, průměr ze 100 simulací testovacího experimentu}
 	\label{tab04:MineralStat}
 \end{table}
-\clearpage
+\par
+V tomto případě ani nepřikládám obrázek s koncem běhu tohoto chování, neboť je velmi podobný tomu z  náhodného běhu. Všechna chování nejlepší generace si lze prohlédnout v programu na přiloženém CD.
+\newpage
 \section{Competitive Scene}
-Poslední ze scénářů se týká soutěžení dvou týmů (hejn), kteří se snaží to druhé zničit. Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. 
+Poslední ze scénářů se týká soutěžení dvou týmů (hejn), kteří se snaží ty druhé zničit. Úspěšnost týmu je dána zachovanými jednotkami zdraví robotů a uděleným poškozením do nepřátelské skupiny robotů. 
  \par
- V mém Competitive Scene scénáři proti sobě stojí dvě hejna, která čítají dohromady 9 robotů. Mimo roboty v mapě jsou také náhodně rozmístěny překážky, který se musí roboti vyhýbat. Týmy začínají v první a poslední čtvrtině mapy, kde startují na náhodné pozici. 
+ V mém Competitive Scene scénáři proti sobě stojí dvě hejna, která čítají každá 9 robotů. Mimo roboty jsou v mapě také náhodně rozmístěny překážky, kterým se musí roboti vyhýbat. Týmy začínají v první a poslední čtvrtině mapy, kde startují na náhodné pozici. 
  \par 
 Hejno se skládá ze dvou druhů robotů. Roli průzkumníka zastává \textit{Scout robot}, který je malý a rychlý. I Scout robot může způsobovat poškození, ovšem pouze jednu pětinu oproti druhému robotovi, pro kterého používám v rámci tohoto scénáře název \textit{Fighter robot}. Fighter robot se pohybuje méně obratně, jelikož je dvakrát větší a pomalejší. 
 \par
@@ -1049,7 +1015,7 @@ V tomto scénáři maji všichni roboti k dispozici rádiové signály s kódy n
 \par 
 Popis jednotlivých entit v mapě se nachází u obrázku \ref{obr04:CompetitiveSceneRandomStart}
 \clearpage
-Na obrázku se nachází dvě devíti členná hejna. Jednotlivé týmy jsou od sebe odděleny barvou, modrá barva odpovídá týmu dvě a červená týmu jedna. Opět na mapě můžeme vidět rádiové signály, jedná se o kruhy s průhlednou barvou, jednotlivé kódy jsou barevně odlišeny. Šedivá kolečka pak znázorňují stejně jako v předchozím scénáři překážky.  
+Na obrázku se nachází dvě devítičlenná hejna. Jednotlivé týmy jsou od sebe odděleny barvou,  červená barva odpovídá týmu jedna a modrá týmu dva. Opět na mapě můžeme vidět rádiové signály, jedná se o kruhy s průhlednou barvou, jednotlivé kódy jsou barevně odlišeny. Šedivá kolečka pak znázorňují stejně jako v předchozím scénáři překážky.  
 \begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/CompetitiveStart.png}
 	\caption{Příklad Competitive Scene mapy: start náhodného chování}
@@ -1058,13 +1024,14 @@ Na obrázku se nachází dvě devíti členná hejna. Jednotlivé týmy jsou od 
 \clearpage 
 
 \subsection*{Roboti}
-Jak už jsem zmínil, ve Competitive Scene scénáři se objevují dva druhy robotů. V každém týmu se objevují 4 Scout roboty a 5 robotů typu Fighter. Pro účely správného vyhodnocování fitness zůstává po celou dobu běhu experiment nepřátelský tým řízený stejným chováním. Typicky je na začátku pro nepřátelským vygenerováno náhodné chování. Podoba jedinců opět odpovídá předchozím experimentům i v kontextu nepřátelských robotů. V implementaci má aktuálně optimalizovaný tým označení tým 1 a protivník tým 2. 
+Jak už jsem zmínil, ve Competitive Scene scénáři se objevují dva druhy robotů. V každém týmu se objevují 4 Scout roboti a 5 robotů typu Fighter. Pro účely správného vyhodnocování fitness zůstává po celou dobu běhu experimentu nepřátelský tým řízený stejným chováním. Typicky je na začátku pro nepřátelský tým vygenerováno náhodné chování. Podoba jedinců opět odpovídá předchozím experimentům i v kontextu nepřátelských robotů. V implementaci má aktuálně optimalizovaný tým označení tým 1 a protivník tým 2. 
 Teď se podíváme na jednotlivé roboty.
 \subsubsection{Fighter Scout robot}
 Roli lehkého útočníka ve scénáři zastává Scout robot. Jedná se o malého a obratného robota. Dokáže způsobit poškození za 100 bodů zdraví. K poškození slouží úsečkový efektor (v rámci implementace pojmenovaný \textit{Weapon}).  Efektory Weapon fungují na stejném principu jako ostatní úsečkové efektory, pro udělení poškození musí kolidovat s jiným robotem. V rámci tohoto experimentu je možné udílet poškození i robotům z vlastního týmu.  Jeho podrobnou specifikaci poskytuje tabulka \ref{tab04:CompetiveScout}
 \subsubsection{Fighter robot}
-Fighter robot je navržen jako těžký bitevník. Oproti Scout robotovi je větší a pomalejší. Nejmarkantnější rozdíl tvoří body zdraví a síla útoku. Fighter robot způsobuje pětkrát vyšší poškození a disponuje trojnásobkem bodů zdraví.  Navíc může útočit na jednou až čtyřmi zbraněmi najednou, zatímco Scout robot pouze třemi. I on může útočit do vlastních řad. 
+Fighter robot je navržen jako těžký bitevník. Oproti Scout robotovi je větší a pomalejší. Nejmarkantnější rozdíl tvoří body zdraví a síla útoku. Fighter robot způsobuje pětkrát vyšší poškození a disponuje trojnásobkem bodů zdraví.  Navíc může útočit najednou až čtyřmi zbraněmi, zatímco Scout robot pouze třemi. I on může útočit do vlastních řad. 
 Jeho konkrétní specifikaci lze nalézt v tabulce \ref{tab04:CompetitiveFighter}.
+\clearpage
 \begin{table}[h]\centering
 	\begin{tabular}{l@{\hspace{1.0cm}}D{.}{,}{2.2}D{.}{,}{2.2}D{.}{,}{2.3}}
 		\toprule
@@ -1147,7 +1114,7 @@ Jeho konkrétní specifikaci lze nalézt v tabulce \ref{tab04:CompetitiveFighter
 \end{table}
 \clearpage
 \subsection*{Vyhodnocování Fitness}
-Hlavní cíl Competitive Scene scénáře se skládá z mnoha úkonů. Proto jsem ho stejně jako v předchozích scénářích rozdělil na menší metaúkoly. Tradičně jsem začal s učením pohybu a vyhybáním se překážkám. Poté jsem pokračoval přes uchování, co nejvíce životních bodů, až po způsobení maximálního poškození protivníka. Fitness funkce má podobu váženého součtu stejně jako u Wood Scene a Mineral Scene. A používal jsem k optimalizaci pouze DE, která se ukázala v prvním scénáři jako účinnější metoda optimalizace chování. 
+Hlavní cíl Competitive Scene scénáře se skládá z mnoha úkonů. Proto jsem ho stejně jako v předchozích scénářích rozdělil na menší metaúkoly. Tradičně jsem začal s učením pohybu a vyhybáním se překážkám. Poté jsem pokračoval přes uchování co nejvíce životních bodů, až po způsobení maximálního poškození protivníka. Fitness funkce má podobu váženého součtu stejně jako u Wood Scene a Mineral Scene. A používal jsem k optimalizaci pouze DE, která se ukázala v prvním scénáři jako účinnější metoda optimalizace chování. 
 \par 
 Na konci simulace mapy jsou roboti oceněni za:  
 \begin{enumerate}
@@ -1167,12 +1134,12 @@ V prvních podúkolech opět tradičně figurují roboti odděleně. Jejich prin
 Po vzoru Wood Scene se jedná o : 
 \begin{enumerate}
 	\item vygenerování náhodného chování - Pro každého robota je vygenerována jednovrstvá neuronová síť s náhodnými vahami. 
-	\item učení chůze - Roboti se jsou odděleně optimalizovány, aby dokázali objevit, co nejvíce překážek a nedocházelo ke kolizím. 
-	\item šetření životů - Roboti se snaží udržet, co  největší počet zdravotních bodů. I tento scénář probíhá odděleně. 
+	\item učení chůze - Roboti se jsou odděleně optimalizováni, aby dokázali objevit, co nejvíce překážek a nedocházelo ke kolizím. 
+	\item šetření životů - Roboti se snaží udržet co  největší počet zdravotních bodů. I tento scénář probíhá odděleně. 
 	\item agresivní chování - Každý druh zvláště je optimalizován, aby působil maximální poškození. Roboti jsou oceňováni za způsobený útok a zabité roboty. 
 	\item agresivní spolupráce - V posledním podúkolu figuruje celé hejno. Fitness je určena tak, aby roboty vedla ke zničení nepřátelského týmu. 
 \end{enumerate}
-Na další stránce budou následovat jednotlivá přesná nastavení podúkolů. Popsány budou obvyklou formou, u každého metaúkolu bude uveden stručný obsah podúkolu, tabulka s přesným nastavením a graf s průběhem fitness. Gafy stále dodržují předchozí vzor, osa y znázorňuje hodnotu fitness, osa x odpovídá číslu generace. Generace jsou sdruženy po  10. Křivkou je vyvedena průměrná fitness a modrá plocha odpovídá průměru fitness $\pm$ směrodatná odchylka. 
+Na další stránce budou následovat jednotlivá přesná nastavení podúkolů. Popsány budou obvyklou formou, u každého metaúkolu bude uveden stručný obsah podúkolu, tabulka s přesným nastavením a graf s průběhem fitness. Gafy stále dodržují předchozí vzor, osa $y$ znázorňuje hodnotu fitness, osa $x$ odpovídá číslu generace. Generace jsou sdruženy po  10. Křivkou je vyvedena průměrná fitness a modrá plocha odpovídá průměru fitness $\pm$ směrodatná odchylka. 
 \clearpage
 
 \subsubsection{ Scout chůze - nastavení experimentu}
@@ -1186,8 +1153,6 @@ Podúkoly spojený s chůzí je podobný jako u předchozích scénářů, zvoli
 		Počet generací: & 1000\\
 		Počet iterací map: & 1000\\
 		Velikost generace(DE): & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -1217,10 +1182,7 @@ Tento podúkol odpovídá předchozí variantě pro Scout robota.
 		Počet generací: & 2000\\
 		Počet iterací map: & 1000\\
 		Velikost generace(DE): & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
-	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		\textbf{Fitness funkce}\\
@@ -1240,19 +1202,22 @@ Tento podúkol odpovídá předchozí variantě pro Scout robota.
 \clearpage
 
 \begin{figure}[t]\centering
-	\includegraphics[width=0.7\columnwidth]{../img/CompetitiveMap/ScoutWalk}
+	\includegraphics[width=0.75\columnwidth]{../img/CompetitiveMap/ScoutWalk}
 	\caption{Competitive Scout chůze - průběh fitness DE}
 	\label{obr04:CompetitiveScoutWalk}
 \end{figure}
-V grafu \ref{obr04:CompetitiveScoutWalk} můžeme vidět, že Scout robot dokáže nalézt přes 350 minerálů na mapě. Fighter objeví podle \ref{obr04:CompetitiveFighterWalk}  přes 150 minerálů mapy, což k přihlédnutí k délce senzorů a jeho velikost je také velmi dobrý výsledek.  
+V grafu \ref{obr04:CompetitiveScoutWalk} můžeme vidět, že Scout robot dokáže nalézt přes 350 překážek na mapě. Fighter objeví podle \ref{obr04:CompetitiveFighterWalk}  přes 150 překážek mapy, což k přihlédnutí k délce senzorů a jeho velikost je také velmi dobrý výsledek.  
 \begin{figure}[h]\centering
-	\includegraphics[width=0.7\columnwidth]{../img/CompetitiveMap/FighterWalk}
+	\includegraphics[width=0.75\columnwidth]{../img/CompetitiveMap/FighterWalk}
 	\caption{Competitive Fighter chůze - průběh fitness DE}
 	\label{obr04:CompetitiveFighterWalk}
 \end{figure}
-\clearpage
+\newpage
 \subsubsection{ Scout životy - nastavení experimentu}
-V následujícím podúkolu byly roboti optimalizování, aby nepůsobili poškození mezi sebou  týmu. Nicméně bylo stále žádoucí, aby objevovali celou mapu, proto ve fitness zůstávají kladné body i za objevení minerálů.\par
+V následujícím podúkolu byly roboti optimalizování, aby nepůsobili poškození mezi sebou  týmu. Nicméně bylo stále žádoucí, aby objevovali celou mapu, proto ve fitness zůstávají kladné body i za objevení překážek.
+\par
+Celkový součet bodů zdraví u Scout robotů je 2500 (bodů fitness 25000). Z průběhu průměrné hodnoty fitness na grafu \ref{obr04:CompetitiveKeep} můžeme vidět, že naprostá většina robotů v populaci, buď udržela své body zdraví či vyvážila jejich ztrátu nalezením dostatečného množství překážek. 
+\par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1262,10 +1227,7 @@ V následujícím podúkolu byly roboti optimalizování, aby nepůsobili poško
 		Počet generací: & 1000\\
 		Počet iterací map: & 1000\\
 		Velikost generace(DE): & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
-	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		\textbf{Fitness funkce}\\
@@ -1283,15 +1245,17 @@ V následujícím podúkolu byly roboti optimalizování, aby nepůsobili poško
 	\caption{Competitive Scout životy - nastavení experimentu}
 	\label{tab04:CompetitiveKeep}
 \end{table}
-Celkový součet bodů zdraví u Scout robotů je 2500 (bodů fitness 25000). Z průběhu průměrné hodnoty fitness na grafu \ref{obr04:CompetitiveKeep} můžeme vidět, že naprostá většina robotů v populaci, buď udržela své body zdraví či vyvážila jejich ztrátu nalezením dostatečného množství překážek. \clearpage
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/ScoutKeep}
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/CompetitiveMap/ScoutKeep}
 	\caption{Competitive Scout životy - průběh fitness DE}
 	\label{obr04:CompetitiveKeep}
 \end{figure}
-\clearpage
+\newpage
 \subsubsection{ Scout agresivní - nastavení experimentu}
-V posledním podúkolu, kde vystupují Scout roboti osamoceně. Fitness funkce cílí pouze na udělování poškození nepřátelským robotům a jejich zničení. \par
+V posledním podúkolu, kde vystupují Scout roboti osamoceně. Fitness funkce cílí pouze na udělování poškození nepřátelským robotům a jejich zničení. 
+\par
+DE je schopno už během první 200 generací aktivně útočit na nepřátelské Scout roboty. Mapa je však vzhledem k velikosti robota velká a tudíž je obtížné někoho z nepřátelského týmu najít a udržet se za ním. Díky těmto obtížím roste směrodatná odchylka s generacemi, jak můžeme sledovat na grafu \ref{obr04:CompetitiveAgresive}. Nejlepší jedinci, pak jsou schopni udělit až 500 bodů poškození, což je velmi dobrý výsledek vzhledem k obtížnosti úkolu.
+\par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1301,7 +1265,6 @@ V posledním podúkolu, kde vystupují Scout roboti osamoceně. Fitness funkce c
 		Počet generací: & 1000\\
 		Počet iterací map: & 1500\\
 		Velikost generace(DE): & 100\\
-		\bottomrule
 		\multicolumn{2}{l}{}
 	\end{tabular}
 	\par 
@@ -1316,22 +1279,21 @@ V posledním podúkolu, kde vystupují Scout roboti osamoceně. Fitness funkce c
 		\textbf{Objekty na mapě}\\
 		\midrule
 		Počet překážek: & 500\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
 	\caption{Competitive Scout agresivní - nastavení experimentu}
 	\label{tab04:CompetitiveAgresive}
 \end{table}
-DE je schopno už během první 200 generací aktivně útočit na nepřátelské Scout roboty. Mapa je však vzhledem k velikosti robota velká a tudíž je obtížné někoho z nepřátelského týmu najít a udržet se za ním. Díky těmto obtížím roste směrodatná odchylka s generacemi, jak můžeme sledovat na grafu \ref{obr04:CompetitiveAgresive}. Nejlepší jedinci, pak jsou schopni udělit až 500 bodů poškození, což je velmi dobrý výsledek vzhledem k obtížnosti úkolu.
-\clearpage
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/ScoutAgresive}
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/CompetitiveMap/ScoutAgresive}
 	\caption{Competitive Scout agresivní - průběh fitness DE}
 	\label{obr04:CompetitiveAgresive}
 \end{figure}
 \clearpage
 \subsubsection{ Fighter životy - nastavení experimentu}
 V tomto podúkolu chceme stejně jako ve variantě pro Scout robota, aby jedinci neničili roboty ze svého  týmu. Ovšem není žádoucí, aby se hejno stalo neaktivní, proto fitness stále kladně hodnotí objevené překážky. 
+\par 
+Čtyři Fighter roboti mají dohromady 6 000 bodů zdraví. Což odpovídá třetině hodnoty fitness nejlepšího jedince, jak je vidět na grafu \ref{obr04:CompetitiveFighterKeep}. Takže jedinci z finální populace neútočí na sebe a ještě jsou schopni objevit více než pětinu překážek na mapě. 
+\par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1341,10 +1303,7 @@ V tomto podúkolu chceme stejně jako ve variantě pro Scout robota, aby jedinci
 		Počet generací: & 2000\\
 		Počet iterací map: & 1000\\
 		Velikost generace(DE): & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
 	\end{tabular}
-	\par 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		\textbf{Fitness funkce}\\
@@ -1364,16 +1323,17 @@ V tomto podúkolu chceme stejně jako ve variantě pro Scout robota, aby jedinci
 	\caption{Competitive Fighter životy - nastavení experimentu}
 	\label{tab04:CompetitiveFighterKeep}
 \end{table}
-Čtyři Fighter roboti mají dohromady 6 000 bodů zdraví. Což odpovídá třetině hodnoty fitness nejlepšího jedince, jak je vidět na grafu \ref{obr04:CompetitiveFighterKeep}. Takže jedinci z finální populace neútočí na sebe a ještě jsou schopni objevit více než pětinu překážek na mapě. 
-\clearpage
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/FighterKeep}
+
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/CompetitiveMap/FighterKeep}
 	\caption{Competitive Fighter životy - průběh fitness DE}
 	\label{obr04:CompetitiveFighterKeep}
 \end{figure}
 \clearpage
 \subsubsection{ Fighter  agresivní - nastavení experimentu}
 Agresivní podúkol pro Fighter robota koresponduje s nastavení pro Scout robota. Konkrétní nastavení lze vyčíst z  tabulky \ref{tab04:CompetitiveFighterAgresive}. Kvůli velikosti mapy jsem přidal o jednoho Fightera robota více, než bylo v předchozím metaúkolu. \par
+Křivka v grafu \ref{obr04:CompetitiveFighterAgresive} ukazuje, že Fighter robot má ještě větší potíže najít nepřátele na mapě a udržet s nimi krok. Nejlepší jedinci jsou schopni zasáhnout jen 3x do nepřátel. 
+\par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
@@ -1383,10 +1343,7 @@ Agresivní podúkol pro Fighter robota koresponduje s nastavení pro Scout robot
 		Počet generací: & 1000\\
 		Počet iterací map: & 1500\\
 		Velikost generace(DE): & 100\\
-		\bottomrule
-		\multicolumn{2}{l}{}
-	\end{tabular}
-	\par 
+	\end{tabular} 
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
 		\toprule
 		\textbf{Fitness funkce}\\
@@ -1406,16 +1363,16 @@ Agresivní podúkol pro Fighter robota koresponduje s nastavení pro Scout robot
 	\caption{Competitive Fighter agresivní - nastavení experimentu}
 	\label{tab04:CompetitiveFighterAgresive}
 \end{table}
-Křivka v grafu \ref{obr04:CompetitiveFighterAgresive} ukazuje, že Fighter robot má ještě větší potíže najít nepřátele na mapě a udržet s nimi krok. Nejlepší jedinci jsou schopni zasáhnout jen 3x do nepřátel. 
-\clearpage
-\begin{figure}[p]\centering
-	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/FighterKeep}
+\begin{figure}[h]\centering
+	\includegraphics[width=0.75\columnwidth]{../img/CompetitiveMap/FighterKeep}
 	\caption{Competitive Fighter agresivní - průběh fitness DE}
 	\label{obr04:CompetitiveFighterAgresive}
 \end{figure}
 \clearpage
 \subsubsection{ Competitive Scene kooperace - nastavení experimentu}
 Finální podúkolem Competitive scénáře je kooperace, kde vystupuje už celé hejno. Ohodnocení fitness odpovídá hlavnímu úkolu celého scénáře. Cílem je tedy maximalizovat udělené body poškození a počet zničených robotů soupeře. 
+\par
+Z grafu \ref{obr04:CompetitiveCoopAgresive} můžeme vyčíst, že nejlepší jedinci jsou schopni udělit až 3600 bodů poškození, což lze považovat za velmi dobrý výsledek. Neboť to znamená, že během 1500 iterací bylo hejno schopno zničit až dva Fighter roboty a jednoho Scouta. Nejlepšímu z jedinců se budeme věnovat více v rámci výsledků experimentu. 
 \par
 \begin{table}[h]\centering   
 	\begin{tabular}{l@{\hspace{1.5cm}}D{.}{,}{3.2}D{.}{,}{1.2}D{.}{,}{2.3}}
@@ -1450,16 +1407,16 @@ Finální podúkolem Competitive scénáře je kooperace, kde vystupuje už cel�
 	\caption{Competitive kooperace - nastavení experimentu}
 	\label{tab04:CompetitiveCoopAgresive}
 \end{table}
-Z grafu \ref{obr04:CompetitiveCoopAgresive} můžeme vyčíst, že nejlepší jedinci jsou schopni udělit až 3600 bodů poškození, což lze považovat za velmi dobrý výsledek. Neboť to znamená, že během 1500 iterací bylo hejno zničit až dva Fighter roboty a jednoho Scouta. Nejlepšímu z jedinců se budeme věnovat více v rámci výsledků experimentu. 
-\begin{figure}[p]\centering
+\clearpage
+\begin{figure}[h]\centering
 	\includegraphics[width=\columnwidth]{../img/CompetitiveMap/CoopAgresive}
 	\caption{Competitive kooperace - průběh fitness DE}
 	\label{obr04:CompetitiveCoopAgresive}
 \end{figure}
-\clearpage
+\newpage
 \subsection*{Výsledky Experimentu}
- Nejlepší chování z Competitive Scene mělo řadu dobrých vlastností, umělo se efektivně pohybovat po mapě, v rámci komunikace rozptýlilo po větším území. \par
- Poslední  podúkol optimalizoval maximální poškození robotů, což mělo za důsledek, že celé hejno je agresivní na každého robota, kterého zachytí na svých senzorech., tzn. i na své vlastní kolegy. Opět se jedná o velmi komplexní scénář a chování v jednotlivých podúkolech je více než uspokojivé.\par
+ Nejlepší chování z Competitive Scene mělo řadu dobrých vlastností, umělo se efektivně pohybovat po mapě, v rámci komunikace se rozptýlilo po větším území. \par
+ Poslední  podúkol optimalizoval maximální poškození robotů, což mělo za důsledek, že celé hejno je agresivní na každého robota, kterého zachytí na svých senzorech, tzn. i na své vlastní kolegy. Opět se jedná o velmi komplexní scénář a chování v jednotlivých podúkolech je více než uspokojivé.\par
 Tento problém by měl být vyřešen úpravou fitness, kdy i v rámci posledního experimentu bude fitness funkce zahrnovat i pozitivní ohodnocení zbylých bodů zdraví. Případně použít složitější architektury neuronové sítě.  Ovšem z časových důvodů nebyly tyto alternativy vyzkoušeny. 
 \par
  
@@ -1499,15 +1456,15 @@ Tento problém by měl být vyřešen úpravou fitness, kdy i v rámci poslední
 \section{Shrnutí}
 DE společně s metodou podúkolů dokázala efektivně optimalizovat chování heterogenního hejna při řešení typických úloh pro robotický swarm. 
 \par 
-Jedná se především o pohyb v mapě, kde se roboti vyhýbají ostatním objektů i dalším členům hejna. Dále byli roboti schopni se rozptýlit po mapě. Hledání a sbírání objektů pro ně také nepředstavovalo problém. Pokud bylo hejno vedeno ke konkrétním úkonům jako tomu bylo v případě Wood Scene, byla evolvovaná chování schopna vykonávat i mnohem komplexnější úkoly zahrnující vzájemnou komunikaci, jako je například kácení stromů a jejich následné uskladnění. \par 
-Konkrétně ve Wood Scene scénáři, kde figurují dva druhy robotů z nichž jeden může provádět pouze transport a druhý pouze zpracování objektů. Dokázali nejlepší jedinci najít požadované objekty na mapě, provést jejich zpracovaní, následně v rámci komunikace předat informaci o jejich nalezení, po přijetí informace o objektech připravených k transportu je naložit a odvést na místo určení.   
+Jedná se především o pohyb v mapě, kde se roboti vyhýbají ostatním objektů i dalším členům hejna. Dále byli roboti schopni se rozptýlit po mapě. Hledání a sbírání objektům pro ně také nepředstavovalo problém. Pokud bylo hejno vedeno ke konkrétním úkonům jako tomu bylo v případě Wood Scene, byla evolvovaná chování schopna vykonávat i mnohem komplexnější úkoly zahrnující vzájemnou komunikaci, jako je například kácení stromů a jejich následné uskladnění. \par 
+Konkrétně ve Wood Scene scénáři, kde figurují dva druhy robotů z nichž jeden může provádět pouze transport a druhý pouze zpracování objektů, dokázali nejlepší jedinci najít požadované objekty na mapě, provést jejich zpracovaní, následně v rámci komunikace předat informaci o jejich nalezení, po přijetí informace o objektech připravených k transportu je naložit a odvést na místo určení.   
 \par
-DE se pro tyto účely ukázali jako vhodnější optimalizační nástroj, v rámci prvního experimentu proběhl několik testovacích běhů potvrzující tuto domněnku.\unsure{Budou asi jenom 3 a nevím, jestli komplet stejné jako u Wood Scene, windows na VM se restartoval po update}. 
+DE se pro tyto účely ukázali jako vhodnější optimalizační nástroj, v rámci prvního experimentu proběhlo několik testovacích běhů potvrzující tuto domněnku.
 \par
-V dalších dvou experimentech byli představeny limity zmíněného řešení. V těchto experimentech hejno mělo řešit obtížnější úlohy a v rámci podúkolů se optimalizovali více obecné cíle. Pro jejich jednoduché části jako například pohyb opět fungovala DE velmi dobře, ovšem poté se objevili problém u obecně zadaných podúkolů. 
+V dalších dvou experimentech byli představeny limity zmíněného řešení. V těchto experimentech hejno mělo řešit obtížnější úlohy a v rámci podúkolů se optimalizovali obecnější cíle. Pro jejich jednoduché části jako například pohyb opět fungovala DE velmi dobře, ovšem poté se objevili problém u obecně zadaných podúkolů. 
 \par 
-V Mineral Scene se nezdařilo zabránit evoluci, aby optimalizovalo pouze jednoho ze členů, který dokáže plnit veškeré úkony hlavní cíle scénáře. U Competitive Scene scénáře se bohužel nepodařilo v posledním podúkolu eliminovat nepřátelské chování k členům vlastního hejna. Pro evoluční algoritmus bylo jednodušší optimalizovat obecně nepřátelské chování i přesto, že ve fitness funkci bylo hejno odměňováno pouze za útok do nepřátel. 
+V Mineral Scene se nezdařilo zabránit evoluci, aby optimalizovala pouze jednoho ze členů, který dokáže plnit veškeré úkony hlavního cíle scénáře. U Competitive Scene scénáře se bohužel nepodařilo v posledním podúkolu eliminovat nepřátelské chování k členům vlastního hejna. Pro evoluční algoritmus bylo jednodušší optimalizovat obecně nepřátelské chování i přesto, že ve fitness funkci bylo hejno odměňováno pouze za útok do nepřátel. 
 \par 
-V případech obou méně úspěšných scénářů by pravděpodobně by bylo možné zabránit nežádoucímu chování, kdybychom jej jako negativní složku zahrnuli do fitness funkce a použili složitější architekturu neuronové sítě. Kvůli časové náročnosti simulací mapy nebyli tyto pokusy provedeny. 
+V případech obou méně úspěšných scénářů by pravděpodobně bylo možné zabránit nežádoucímu chování, kdybychom jej jako negativní složku zahrnuli do fitness funkce a použili složitější architekturu neuronové sítě. Kvůli časové náročnosti simulací mapy nebyly tyto pokusy provedeny. 
 \par
-V konečném důsledku se DE v kombinaci s konkrétními metaúkoly osvědčila jako vhodný optimalizační metoda chování heterogenního hejna. Nejlépe však funguje pokud jej programátor vede přímým směrem. 
+V konečném důsledku se DE v kombinaci s konkrétními metaúkoly osvědčila jako vhodný optimalizační metoda chování heterogenního hejna. Nejlépe však funguje pokud ji programátor vede přímým směrem. 
